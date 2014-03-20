@@ -2,11 +2,14 @@ rotund-pony
 ===========
 
 ##Help I'm a noob! How do?
-Assuming you've created a droplet on Digital Ocean and chosen the 
-'MEAN Stack' application, you're only two commands away.
+Install Nodejs (available as the 'MEAN Stack' application in
+ Digital Ocean). Now navigate into your app directory (i.e.
+ rotund-pony) and:
 
 ```
+#Install deps
 npm install express jade
+#Start the app
 node app.js
 ```
 
