@@ -8,7 +8,10 @@ Install Nodejs (available as the 'MEAN Stack' application in
 
 ```
 #Install deps
-npm install express jade
+npm install
+npm install -g bower
+#install client side packages
+bower install
 #Start the app
 node app.js
 ```
