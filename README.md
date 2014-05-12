@@ -14,3 +14,6 @@ node app.js
 ```
 
 You can then view your app at http://hostname:3000
+
+JIRA - http://ifloops.com:8080/
+Confluence - http://ifloops.com:8090/
