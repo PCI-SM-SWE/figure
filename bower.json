@@ -10,7 +10,7 @@
     "keywords": [
         "visualization"
     ],
-    "license": "PCI Proprietary",
+    "license": "Apache License, Version 2.0",
     "private": true,
     "ignore": [
         "**/.*",
