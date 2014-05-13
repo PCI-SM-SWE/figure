@@ -1,8 +1,8 @@
 rotund-pony
 ===========
 
-##Help I'm a noob! How do?
-Install Nodejs (available as the 'MEAN Stack' application in
+##Getting Started
+Install [Nodejs](http://nodejs.org/) (available as the 'MEAN Stack' application in
  Digital Ocean). Now navigate into your app directory (i.e.
  rotund-pony) and:
 
