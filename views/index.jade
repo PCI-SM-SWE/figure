@@ -1,5 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    h1= title
+    p Welcome to #{title}
+
+    a: img(src='images/icon.png')
+
+    script(src='bower_components/angular/angular.js')
+    script(src='bower_components/jquery/dist/jquery.js')
+    script(src='bower_components/d3/d3.js')
+    script(src='bower_components/angular/angular.js')
+    script(src='javascripts/app.js')
