@@ -20,3 +20,5 @@ You can then view your app at http://hostname:3000
 
 JIRA - http://ifloops.com/jira/
 Confluence - http://ifloops.com/confluence/
+
+Development Build Status [![Development Build Status](https://travis-ci.org/PCI-SM-SWE/rotund-pony.svg?branch=development)](https://travis-ci.org/PCI-SM-SWE/rotund-pony)
