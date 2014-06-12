@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Visualization">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="favicon.ico">
+
+<title>Data Visualization</title>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" href="stylesheets/style.css">
+
+</head>
+
+<body ng-init="page = 1"> <!-- CHANGE TO PAGE = 1 WHEN DONE -->
+	<!-- Header -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> 
+						<span class="icon-bar"></span> 
+						<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Data Visualization</a>
+			</div>
+
+			<!-- Removed Navbar elements for now
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+         -->
+		</div>
+	</div>
+	
+	
+	<!-- 1st Page -->
+	<section ng-show="page == 1">
+		<div class="container">
+		<div class="welcome-text">
+			<h1>Please Choose a Data Input Method</h1>
+		</div>
+		<!-- Top three-button grouping -->
+		<div class="btn-group btn-group-justified" ng-init="dataTab = 1">
+			<!-- Left button -->
+			<div class="btn-group">
+				<button type="button" class="btn btn-default"
+					ng-class="{active:dataTab == 1}" ng-click="dataTab = 1">
+					Enter Data   <span class="glyphicon glyphicon-pencil"></span></button>
+			</div>
+			<!-- Center button -->
+			<div class="btn-group">
+				<button type="button" class="btn btn-default"
+					ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
+					Uplaod Data   <span class="glyphicon glyphicon-folder-open"></span></button>
+			</div>
+			<!-- Right dropdown button -->
+			<div class="btn-group" ng-class="{active:dataTab == 3}" ng-click="dataTab = 3">
+				<button type="button" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
+					Sample Data <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li><a href="">Sample 1</a></li>
+					<li><a href="">Sample 2</a></li>
+				</ul>
+			</div>
+		</div>
+		<br>
+		<!-- Text area for manual data input -->
+		<textarea class="form-control" rows="15" placeholder="Enter Data Here"
+			ng-model="textArea" ng-show="dataTab == 1"></textarea>
+		<br>
+		<!-- Submit button -->
+		<div class="submit-button">
+			<a href="" class="btn btn-primary btn-lg" ng-class="{disabled:!textArea.length}" role="button"
+				ng-click="page = 2">Submit</a>
+		</div>
+	</div>
+	</section>
+
+
+	<!-- 2nd Page -->
+	<section ng-show="page == 2">
+		<div class="container-fluid">
+			<div class="row-fluid">
+			<!-- Back button -->
+				<div class="back-button">
+					<a href="" class="btn btn-primary btn-lg" role="button"
+						ng-click="page = 1">Back</a>
+				</div>
+			<!-- Submit button for page 2 -->
+				<div class="submit-button2">
+					<a href="" class="btn btn-primary btn-lg" role="button"
+						ng-click="page = 3">Submit</a>
+				</div>
+				<div class="welcome-text">
+					<h1>Please Choose a Graphical Representation</h1>
+				</div>
+			</div>
+			<br>
+			<div class="row-fluid">
+				<div class="col-xs-3 col-sm-3 col-md-3" ng-init="graphTab = 1">
+					<ul class="nav nav-tabs">
+						<li ng-class="{active:graphTab == 1}" ng-click="graphTab = 1">
+							<a href="">Bar</a>
+						</li>
+						<li ng-class="{active:graphTab == 2}" ng-click="graphTab = 2">
+							<a href="">Line</a>
+						</li>
+						<li ng-class="{active:graphTab == 3}" ng-click="graphTab = 3">
+							<a href="">Pie</a>
+						</li>
+					</ul>
+				</div>
+				<div class="pics col-xs-8 col-sm-8 col-md-8">
+					<br> 
+					<img src="images/bargraph.svg" class="img-responsive"
+						alt="Responsive image" ng-show="graphTab == 1"> 
+						<img src="images/linechart.svg" class="img-responsive"
+						alt="Responsive image" ng-show="graphTab == 2">
+				</div>
+				<br> <br> <br>
+				<div class="row-fluid">
+					<div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 1">A
+						bar graph displays data visually and is sometimes called a bar
+						chart or a bar graph. Data is displayed either horizontally or
+						vertically and allows viewers to compare items displayed. Data
+						displayed will relate to things like amounts, characteristics,
+						times and frequency etc. A bar graph displays information in a way
+						that helps us to make generalizations and conclusions quickly and
+						easily. A typical bar graph will have a label, axis, scales and
+						bars. Bar graphs are used to display all kinds of information such
+						as, numbers of females versus males in a school, sales of items
+						during particular times of a year. Bar graphs are ideal for
+						comparing two or more values.</div>
+					<div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 2">A
+						line chart or line graph is a type of chart which displays
+						information as a series of data points called 'markers' connected
+						by straight line segments. It is a basic type of chart common in
+						many fields. It is similar to a scatter plot except that the
+						measurement points are ordered (typically by their x-axis value)
+						and joined with straight line segments. Line Charts show how a
+						particular data changes at equal intervals of time. A line chart
+						is often used to visualize a trend in data over intervals of time
+						– a time series – thus the line is often drawn chronologically.</div>
+					<div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 3">A
+						pie chart is a circular chart divided into sectors, illustrating
+						numerical proportion. In a pie chart, the arc length of each
+						sector (and consequently its central angle and area), is
+						proportional to the quantity it represents. While it is named for
+						its resemblance to a pie which has been sliced, there are
+						variations on the way it can be presented.</div>
+				</div>
+			</div>
+	</section>
+	
+	<!-- 3rd Page -->
+	<section ng-show="page == 3">
+		<div class="container-fluid">
+			<div class="row-fluid">
+				<!-- Back button -->
+				<div class="back-button">
+					<a href="" class="btn btn-primary btn-lg" role="button"
+						ng-click="page = 2">Back</a>
+				</div>
+				<div class="welcome-text">
+					<h1>Please Finalize Visualization</h1>
+				</div>
+				<!-- Data field area to the left of screen for drag-and-drop -->
+				<div class="col-xs-3 col-sm-3 col-md-3 dataField">
+					<h3>Data Fields</h3>
+					<div class="well inner-table">
+						<table class="table table-hover table-condensed">
+							<tbody>
+								<tr>
+									<td>Data Ones</td>
+								</tr>
+								<tr>
+									<td>Data Two</td>
+								</tr>
+								<tr>
+									<td>Data Three</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<br> <br>
+				<form class="col-xs-7 col-sm-7 col-md-7 well">
+					<div class="form-group col-xs-4 col-sm-4 col-md-4">
+						<label for="exampleInputEmail1">X-Axis</label>
+						<input type="email" class="form-control" id="exampleInputEmail1"
+							placeholder="Drop variable here">
+					</div>
+					<div
+						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+						<label for="exampleInputEmail1">Y-Axis</label>
+						<input type="email" class="form-control" id="exampleInputEmail1"
+							placeholder="Drop variable here">
+					</div>
+					<div class="pics col-xs-11 col-sm-11 col-md-11">
+						<img src="images/bargraph.svg" class="img-responsive"
+							alt="Responsive image" ng-show="true">
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
+
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+	<script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
+	<script src="javascripts/angular.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.0/less.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		
+	<!-- In  case we want to change default color setting and such -->
+	<script>
+		$(document).ready(function() {
+			$('input[type=file]').bootstrapFileInput();
+		});
+	</script>
+</body>
+</html>
