@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html ng-app = "figure">
+
+<head>
+
+<link rel = "stylesheet" href = "stylesheets/style.css">
+<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.css">
+<link rel = "stylesheet" href = "bower_components/font-awesome/css/font-awesome.css">
+
+<script type = "text/javascript" src = "bower_components/angular/angular.js"></script>
+<script type = "text/javascript" src = "bower_components/jquery/dist/jquery.js"></script>
+<script type = "text/javascript" src = "bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+<script type = "text/javascript" src = "/socket.io/socket.io.js"></script>
+
+<script type = "text/javascript" src = "bower_components/d3/d3.js"></script>
+<script type = "text/javascript" src = "javascripts/lvl-uuid.js"></script>
+<script type = "text/javascript" src = "javascripts/lvl-drag-drop.js"></script>
+
+<script type = "text/javascript" src = "javascripts/jquery.csv-0.71.js"></script>
+
+<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type = "text/javascript" src = "javascripts/nv.d3.js"></script>
+<link rel = "stylesheet" href = "stylesheets/nv.d3.css">
+
+
+<script type = "text/javascript" src = "javascripts/client.js"></script>
+<script type = "text/javascript" src = "javascripts/app.js"></script>
+
+
+</head>
+
+<body ng-controller = "mainCtrl">
+
+<div class = "panel panel-info row text-center col-md-12" style = "position: fixed; z-index: 999999; margin-left: -3.1%; margin-top: -4.5%; opacity: 0.7">
+	<div class = "panel-heading" style = "margin-left: -15px; margin-right: -15px;">
+		<h1>Data Visualization</h1>
+	</div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<ul class = "nav nav-pills">
+	<li id = "tab1" class = "active" ng-click = "selectTab (1)">
+		<a data-toggle = "tab">Input Data or Choose</a>
+	</li>
+	<li id = "tab2" class = "dropdown" style = "-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
+		<a id = "sampleData" data-toggle = "dropdown" class = "dropdown-toggle" ng-click = "selectTab (2);">Sample Data<b class = "caret"></b></a> 
+		<ul class = "dropdown-menu">
+			<li><a ng-click = "selectSampleData (1)">Line Graph Sample Data</a></li>
+			<li><a ng-click = "selectSampleData (2)">Pie Chart Sample Data</a></li>		
+		</ul>
+	</li>
+</ul>
+
+<div>	
+	<br>
+	<textarea id = "data" rows = "20" cols = "245" style = "resize: none;" placeholder = "Enter Data Here" spellcheck = "false"></textarea>	
+</div>
+
+<br>
+<br>
+<br>
+
+
+<div class = "row">
+	<div class = "col-md-3">
+		<div id = "a" class="btn-group">
+		  <a id = "visualizationDropdown" class="btn btn-primary"><i class="fa"></i>Select Visualization</a>
+		  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+		    <span class="fa fa-caret-down"></span></a>
+		  <ul class="dropdown-menu">
+		  	<li><a ng-repeat = "v in visualizationList" ng-click = "selectVisualization (v)"><i class="fa"></i>{{v}}</a></li>
+		  </ul>
+		</div>
+	</div>
+	
+	<div class = "col-md-4" style = "margin-left: -9%;">
+		<textarea id = "visualizationDescription" rows = "20" cols = "50" style = "resize: none;"></textarea>
+	</div>
+
+	<div class = "col-md-6" style = "margin-left: -5%; width: 55%;">
+		<div class = "panel panel-danger row text-center">
+			<div class = "panel-heading">
+				<h3>Visualization Preview</h3>
+			</div>
+			<img id = "previewImage" width = "825" height = "400">
+		</div>
+	</div>
+</div>
+
+<br>
+<br>
+<br>
+
+
+<div class = "row">
+	<div class = "col-md-2">
+		<div style = "border-style: solid; overflow: scroll; height: 250px;">
+			<ul id = "fields" class = "nav nav-pills">
+				
+			</ul>
+		</div>
+	</div>
+	
+	<div class = "col-md-9" style = "margin-left: 20px; border: 1px solid; width: 1213px; height: 247px;" >
+		<br>
+	
+		<div id = "dropArea" style = "display: inline;">
+		
+		</div>
+		<!-- <canvas width = "50" height = "50" style = "border: 1px solid" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></canvas>
+		<textarea rows = "2" cols = "10" style = "resize: none;" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></textarea> -->
+		
+		<!-- <textarea rows = "12" cols = "200" style = "resize: none;" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></textarea> -->
+	</div>
+	
+	<div id = "chart" class = "panel panel-danger row text-center col-md-9" style = "margin-top: 1%; margin-left: 18%; width: 80.3%; height: 100%;">
+		
+		<svg id = "chart svg" style = "width: 100%; height: 100%;"></svg>
+	</div>
+</div>
+
+
+
+
+
+</body>
+
+</html>

@@ -14,7 +14,8 @@ var app = express();
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//app.set('view engine', 'jade');
+app.engine ('html', require('ejs').renderFile);
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -30,11 +31,17 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', function (req, res);
+{
+	res.render ('index.html');	
+});
 app.get('/users', user.list);
 app.get('/upload', data.upload);
 app.post('/upload', data.csv(app.get('data')));
 
-http.createServer(app).listen(app.get('port'), function () {
+var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
+
+var server_handler = require ('./server_handler.js');
+server_handler.listen (server);
