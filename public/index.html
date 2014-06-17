@@ -19,7 +19,7 @@
 
 </head>
 
-<body ng-init="page = 1"> <!-- CHANGE TO PAGE = 1 WHEN DONE -->
+<body  ng-controller="MainCtrl" ng-init="page = 1"> <!-- CHANGE TO PAGE = 1 WHEN DONE -->
 	<!-- Header -->
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -31,7 +31,7 @@
 						<span class="icon-bar"></span> 
 						<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Data Visualization</a>
+				<a class="navbar-brand" href="" ng-click="page = 1">Data Visualization</a>
 			</div>
 
 			<!-- Removed Navbar elements for now
@@ -51,7 +51,7 @@
 	<section ng-show="page == 1">
 		<div class="container">
 		<div class="welcome-text">
-			<h1>Please Choose a Data Input Method</h1>
+			<h1 ng-click="test()">Please Choose a Data Input Method</h1>
 		</div>
 		<!-- Top three-button grouping -->
 		<div class="btn-group btn-group-justified" ng-init="dataTab = 1">
@@ -74,15 +74,15 @@
 					Sample Data <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a href="">Sample 1</a></li>
-					<li><a href="">Sample 2</a></li>
+					<li><a id="sample1" href="" ng-click="sample1()">Charm City Circulator</a></li>
+					<li><a href="" ng-click="test()">Sample 2</a></li>
 				</ul>
 			</div>
 		</div>
-		<br>
+		<br>{{test}}
 		<!-- Text area for manual data input -->
-		<textarea class="form-control" rows="15" placeholder="Enter Data Here"
-			ng-model="textArea" ng-show="dataTab == 1"></textarea>
+		<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
+			ng-model="textArea" ng-show="dataTab == 1 || dataTab == 3"></textarea>
 		<br>
 		<!-- Submit button -->
 		<div class="submit-button">
@@ -229,10 +229,14 @@
 	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 	<script src="http://gregpike.net/demos/bootstrap-file-input/bootstrap.file-input.js"></script>
+	<script src='/socket.io/socket.io.js' type='text/javascript'></script>
 	<script src="javascripts/angular.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/less.js/1.7.0/less.min.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+	<!-- Socket io script -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="javascripts/client_handler.js"></script>
 	<!-- In  case we want to change default color setting and such -->
 	<script>
 		$(document).ready(function() {
