@@ -14,6 +14,8 @@ app.controller('MainCtrl', function($scope) {
 		$('#sample1').click(function() { 
 			$('#area').val(data);
 		});
+		var results = $.parse(data);
+		console.log(results);
+		$scope.fields = results.results.fields;
 	});
-	
 });
