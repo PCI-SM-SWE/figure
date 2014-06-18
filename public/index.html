@@ -17,6 +17,23 @@
 <!-- Custom styles for this template -->
 <link rel="stylesheet" href="stylesheets/style.css">
 
+<!-- Testing for Drag and Drop -->
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("Text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("Text");
+    ev.target.appendChild(document.getElementById(data));
+}
+</script>
+
 </head>
 
 <body  ng-controller="MainCtrl" ng-init="page = 1"> <!-- CHANGE TO PAGE = 1 WHEN DONE -->
@@ -194,7 +211,9 @@
 					<div class="well inner-table">
 						<table class="table table-hover table-condensed">
 							<tbody>
-								<tr ng-repeat="field in fields">
+							<!-- tr missing  ng-repeat="field in fields" for test pursposes-->
+								<tr>
+									<td id="Sample" draggable="true" ondragstart="drag(event)">Sample</td>
 									<td>{{field}}</td>
 								</tr>
 							</tbody>
@@ -208,7 +227,8 @@
 						<input type="email" class="form-control" id="exampleInputEmail1"
 							placeholder="Drop variable here">
 					</div>
-					<div
+					<!-- TEST CODE HERE on div: id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"-->
+					<div 
 						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 						<label for="exampleInputEmail1">Y-Axis</label>
 						<input type="email" class="form-control" id="exampleInputEmail1"
