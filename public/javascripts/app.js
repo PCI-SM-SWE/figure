@@ -32,6 +32,8 @@ app.controller ('mainCtrl', function ($scope)
 		    }, 1000);
 		});
 		
+		
+		//Choropleth Map
 		 var map = L.mapbox.map('map', 'examples.map-i86nkdio')
 		    .setView([37.8, -96], 4);
 
