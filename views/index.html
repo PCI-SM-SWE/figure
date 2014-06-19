@@ -3,7 +3,7 @@
 <html ng-app = "figure">
 
 <head>
-
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <link rel = "stylesheet" href = "stylesheets/style.css">
 <link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.css">
 <link rel = "stylesheet" href = "bower_components/font-awesome/css/font-awesome.css">
@@ -24,17 +24,37 @@
 <script type = "text/javascript" src = "javascripts/nv.d3.js"></script>
 <link rel = "stylesheet" href = "stylesheets/nv.d3.css">
 
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+<script type = "text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+<link rel = "stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'/>
+<script type = "text/javascript" src = "javascripts/us-states.js"></script>
 
 <script type = "text/javascript" src = "javascripts/client.js"></script>
 <script type = "text/javascript" src = "javascripts/app.js"></script>
 
+<style>
 
+#map { position:absolute; top:0; bottom:0; width:100%; }
+.map-legend .swatch {
+  width:20px;
+  height:20px;
+  float:left;
+  margin-right:10px;
+  }
+.leaflet-popup-close-button {
+  display: none;
+  }
+.leaflet-popup-content-wrapper {
+  pointer-events: none;
+  }
+</style>
 </head>
 
 <body ng-controller = "mainCtrl">
-
-<div class = "panel panel-info row text-center col-md-12" style = "position: fixed; z-index: 999999; margin-left: -3.1%; margin-top: -4.5%; opacity: 0.7">
-	<div class = "panel-heading" style = "margin-left: -15px; margin-right: -15px;">
+<div class = "panel panel-info row text-center col-md-12 col-xs-12" style = "position: fixed; z-index: 999999; opacity: 0.7; margin-top: -52px;">
+	<div class = "panel-heading" style = "margin-left: -70px;">
 		<h1>Data Visualization</h1>
 	</div>
 </div>
@@ -53,14 +73,15 @@
 		<a id = "sampleData" data-toggle = "dropdown" class = "dropdown-toggle" ng-click = "selectTab (2);">Sample Data<b class = "caret"></b></a> 
 		<ul class = "dropdown-menu">
 			<li><a ng-click = "selectSampleData (1)">Line Graph Sample Data</a></li>
-			<li><a ng-click = "selectSampleData (2)">Pie Chart Sample Data</a></li>		
+			<li><a ng-click = "selectSampleData (2)">Pie Chart Sample Data</a></li>	
+			<li><a ng-click = "selectSampleData (3)">Choropleth Map Sample Data</a></li>	
 		</ul>
 	</li>
 </ul>
 
-<div>	
+<div class = "row">	
 	<br>
-	<textarea id = "data" rows = "20" cols = "245" style = "resize: none;" placeholder = "Enter Data Here" spellcheck = "false"></textarea>	
+	<textarea id = "data" class = "col-md-12 col-xs-12" rows = "20" style = "resize: none;" placeholder = "Enter Data Here" spellcheck = "false"></textarea>	
 </div>
 
 <br>
@@ -69,7 +90,7 @@
 
 
 <div class = "row">
-	<div class = "col-md-3">
+	<div class = "col-lg-3 col-md-3 col-sm-4 col-xs-5">
 		<div id = "a" class="btn-group">
 		  <a id = "visualizationDropdown" class="btn btn-primary"><i class="fa"></i>Select Visualization</a>
 		  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -80,16 +101,21 @@
 		</div>
 	</div>
 	
-	<div class = "col-md-4" style = "margin-left: -9%;">
-		<textarea id = "visualizationDescription" rows = "20" cols = "50" style = "resize: none;"></textarea>
+	<div class = "col-lg 4 col-md-4 col-sm-3 col-xs-3" style = "margin-right: 2%;">
+		<div class = "panel panel-warning row text-center">
+			<div class = "panel-heading">
+				<h3>Description</h3>
+			</div>
+			<textarea class = "col-lg-12 col-md-12 col-sm-12 col-xs-12" rows = "8" id = "visualizationDescription" style = "resize: none;"></textarea>
+		</div>
 	</div>
 
-	<div class = "col-md-6" style = "margin-left: -5%; width: 55%;">
+	<div class = "col-lg-4 col-md-4 col-sm-4 col-xs-3">
 		<div class = "panel panel-danger row text-center">
 			<div class = "panel-heading">
 				<h3>Visualization Preview</h3>
 			</div>
-			<img id = "previewImage" width = "825" height = "400">
+			<img id = "previewImage" class = "col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		</div>
 	</div>
 </div>
@@ -100,35 +126,40 @@
 
 
 <div class = "row">
-	<div class = "col-md-2">
-		<div style = "border-style: solid; overflow: scroll; height: 250px;">
-			<ul id = "fields" class = "nav nav-pills">
+	<div class = "col-lg-2 col-md-2 col-sm-4 col-xs-4">
+		<div class = "panel panel-primary row text-center">
+			<div class = "panel-heading">
+				<h3>Draggable Fields</h3>
+			</div>
+			<div style = "overflow: scroll; height: 250px;">
+			
+				<ul id = "fields" class = "nav nav-pills">
+					
+				</ul>
+			</div>			
+		</div>
+	</div>
+	
+	<div class = "col-lg-9 col-md-9 col-sm-7 col-xs-7" style = "margin-left: 20px; height: 247px;" >
+		
+		<div class = "panel panel-success row">
+			<div class = "panel-heading text-center">
+				<h3>Droppable Area</h3>
+			</div>			
 				
-			</ul>
+			<br>
+			<div id = "dropArea" style = "display: inline;">			
+				
+			</div>					
 		</div>
 	</div>
 	
-	<div class = "col-md-9" style = "margin-left: 20px; border: 1px solid; width: 1213px; height: 247px;" >
-		<br>
-	
-		<div id = "dropArea" style = "display: inline;">
+	<div id = "chart" class = "panel panel-danger row text-center col-lg-9 col-md-9 col-sm-9 col-xs-9" style = "margin-top: 1%; margin-left: 18%; height: 600px;">
 		
-		</div>
-		<!-- <canvas width = "50" height = "50" style = "border: 1px solid" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></canvas>
-		<textarea rows = "2" cols = "10" style = "resize: none;" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></textarea> -->
-		
-		<!-- <textarea rows = "12" cols = "200" style = "resize: none;" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)"></textarea> -->
+		<div id = 'map'></div>	
 	</div>
 	
-	<div id = "chart" class = "panel panel-danger row text-center col-md-9" style = "margin-top: 1%; margin-left: 18%; width: 80.3%; height: 100%;">
-		
-		<svg id = "chart svg" style = "width: 100%; height: 100%;"></svg>
-	</div>
 </div>
-
-
-
-
 
 </body>
 
