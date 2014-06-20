@@ -84,7 +84,7 @@ function drop(ev) {
 			<div class="btn-group">
 				<button type="button" class="btn btn-default"
 					ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
-					Uplaod Data   <span class="glyphicon glyphicon-folder-open"></span></button>
+					Upload Data   <span class="glyphicon glyphicon-folder-open"></span></button>
 			</div>
 			<!-- Right dropdown button -->
 			<div class="btn-group" ng-class="{active:dataTab == 3}" ng-click="dataTab = 3">
@@ -93,8 +93,8 @@ function drop(ev) {
 					Sample Data <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li><a id="sample1" href="" ng-click="sample1()">Charm City Circulator</a></li>
-					<li><a href="" ng-click="test()">Sample 2</a></li>
+					<li><a href="" ng-click="sampleData(1)">Charm City Circulator</a></li>
+					<li><a href="" ng-click="sampleData(2)">Sample Pie Chart Data</a></li>
 				</ul>
 			</div>
 		</div>
@@ -140,23 +140,22 @@ function drop(ev) {
 			<div class="row-fluid">
 				<div class="col-xs-3 col-sm-3 col-md-3" ng-init="graphTab = 1">
 					<ul class="nav nav-tabs">
-						<li ng-class="{active:graphTab == 1}" ng-click="graphTab = 1;">
+						<li ng-class="{active:graphTab == 1}" ng-click="graphTab = 1; selectVisualizationType()">
 							<a href="">Bar</a>
 						</li>
-						<li ng-class="{active:graphTab == 2}" ng-click="graphTab = 2;">
+						<li ng-class="{active:graphTab == 2}" ng-click="graphTab = 2; selectVisualizationType()">
 							<a href="">Line</a>
 						</li>
-						<li ng-class="{active:graphTab == 3}" ng-click="graphTab = 3;">
+						<li ng-class="{active:graphTab == 3}" ng-click="graphTab = 3; selectVisualizationType()">
 							<a href="">Pie</a>
 						</li>
 					</ul>
 				</div>
 				<div class="pics col-xs-8 col-sm-8 col-md-8">
 					<br> 
-					<img src="images/bargraph.svg" class="img-responsive"
-						alt="Responsive image" ng-show="graphTab == 1"> 
-						<img src="images/linechart.svg" class="img-responsive"
-						alt="Responsive image" ng-show="graphTab == 2">
+					<img src="images/bargraph.svg" class="img-responsive" alt="Responsive image" ng-show="graphTab == 1"> 
+					<img src="images/linechart.svg" class="img-responsive" alt="Responsive image" ng-show="graphTab == 2">
+					<img src="images/piechart.png" class="img-responsive" alt="Responsive image" ng-show="graphTab == 3">
 				</div>
 				<br> <br> <br>
 				<div class="row-fluid">
@@ -253,9 +252,10 @@ function drop(ev) {
 					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 						<label>Count(Optional)</label>
 						<input id = "countField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
-					</div>
-					<div class="col-xs-11 col-sm-11 col-md-11">
+					</div>					
+					<div id = "chart" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 20%;">
 						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
+						<svg id = "chart svg" style = "width: 100%; height: 60%;"></svg>
 					</div>
 				</form>
 			</div>

@@ -12,9 +12,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		jQuery.event.props.push('dataTransfer');
 	});
 
-	$scope.sample1 = function()
+	$scope.sampleData = function(num)
 	{
-		client.sample1Request(function(data)
+		client.sampleDataRequest(num, function(data)
 		{
 			console.log(data);
 			//callback(data);
@@ -24,6 +24,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			dataObjectArray = results.results.rows;
 			$scope.fields = results.results.fields;
 
+			$('#fields').empty();
 			var i;
 
 			for (i = 0; i < $scope.fields.length; i++)
@@ -45,9 +46,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				});	
 
 				$('#fields').append (tr);
-
 			}
 		});
+	};
+
+	var xAxis;
+	var yAxis;
+	var valueField;
+	var countField;
+
+	$scope.selectVisualizationType = function ()
+	{
+		readyToGraph ();
 	};
 
 	$scope.dropped = function (dragEl, dropEl)
@@ -63,11 +73,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	
 		readyToGraph ();
 	};
-
-	var xAxis;
-	var yAxis;
-	var valueField;
-	var countField;
 
 	function readyToGraph ()
 	{
@@ -87,12 +92,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else if ($scope.graphTab == 2 && xAxis != '' && yAxis != '')
 		{
-			console.log ('plotLine ()');
-			plotLine ();
+			console.log ('plotLine()');
+			plotLine();
 		}
 		else if ($scope.graphTab == 3 && valueField != '')
 		{
-			//plot pie chart
+			console.log ('plotPie()');
+			plotPie();
 		}
 	}
 
@@ -179,6 +185,78 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			
 			return chart;		
 		});				
+	}
+
+	function addToArray (array, element)
+	{
+		var i; 
+		
+		for (i = 0; i < array.length; i++)
+		{
+			if (array[i]['label'] == element)
+			{
+				array[i]['value']++;
+				return (array);
+			}
+		}		
+		
+		array.push ({'label': element, 'value': 1});
+		return (array);		
+	}
+	
+	function plotPie ()
+	{
+		$('svg').empty ();
+		//$('#title').remove ();
+		//chartTitle = $('#chartTitle').val ();
+		
+		var cumulativeArray = new Array ();
+		var valueLabel = $('#valueField').val();
+		var countField = $('#countField').val();
+		var i;
+		
+		chartData = new Array ();
+		
+		//dataObjectArray = [{'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 2}, {'orangeBoardings': 2}, {'orangeBoardings': 3}]
+		if (countField == '')
+		{
+			for (i = 0; i < dataObjectArray.length; i++)
+			{
+				var value = dataObjectArray[i][valueLabel];
+				
+				if (value != '')
+					chartData = addToArray (chartData, value);
+			}
+			
+			//chartData = [{'label': 'orangeBoardings', 'value': 1}, {'label': 'orangeBoardings', 'value': 2}, {'label': 'orangeBoardings', 'value': 3}];
+		}
+		else
+		{
+			for (i = 0; i < dataObjectArray.length; i++)
+			{				
+				chartData.push ({'label': dataObjectArray[i][valueLabel], 'value': dataObjectArray[i][countField]});
+			}			
+		}
+		console.log (JSON.stringify (chartData));		
+		
+		//$('#chart').prepend ('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
+		
+		nv.addGraph(function() 
+		{
+			var chart = nv.models.pieChart()
+			.x(function(d) { return d.label; })
+			.y(function(d) { return d.value; })
+			.showLabels(true);
+
+			d3.select('#chart svg')
+			.datum(chartData)
+			.transition().duration(350)
+			.call(chart);
+			
+			nv.utils.windowResize(chart.update());	
+			
+			return chart;
+		});		
 	}
 	
 	// $scope.sample1(function(data) {

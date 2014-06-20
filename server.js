@@ -88,15 +88,34 @@ var io = require('socket.io')(server);
 //	});
 //}
 
-io.on('connection', function(socket) {
-	socket.on('sample1 requested', function(response) {
+io.on('connection', function(socket)
+{
+	socket.on('sample1 requested', function(response)
+	{
 		console.log("Sample 1 requested");
-		getFile('C:/Users/Tolga/git/rotund-pony/public/sample_data/Charm_City_Circulator_Ridership.csv', function(data) {
+		getFile('./public/sample_data/Charm_City_Circulator_Ridership.csv', function(data)
+		{
 			socket.emit('sample1 data', data);
 		});
 	});
-	socket.on('sample1 received', function(response) {
+	
+	socket.on('sample1 received', function(response)
+	{
 		console.log("Sample 1 sent succesfully");
+	});
+
+	socket.on('sample2 requested', function(response)
+	{
+		console.log("Sample 2 requested");
+		getFile('./public/sample_data/pie_chart_sample_data.csv', function(data)
+		{
+			socket.emit('sample2 data', data);
+		});
+	});
+	
+	socket.on('sample2 received', function(response)
+	{
+		console.log("Sample 2 sent succesfully");
 	});
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
