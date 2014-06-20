@@ -364,9 +364,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
      		 //onEachFeature: onEachFeature
  		}).addTo(map);
 	}
-
-
-
 }]);
 
 $(document).on('change', '.btn-file :file', function() {
