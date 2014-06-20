@@ -81,12 +81,13 @@ function drop(ev) {
 					Enter Data   <span class="glyphicon glyphicon-pencil"></span></button>
 			</div>
 			<!-- Center button -->
-			<div class="btn-group">
-				<button type="button" class="btn btn-default"
-					ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
-					Upload Data   <span class="glyphicon glyphicon-folder-open"></span></button>
-			</div>
-			<!-- Right dropdown button -->
+				<div class="btn-group">
+					<button type="button" class="btn btn-default"
+						ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
+						Upload Data <span class="glyphicon glyphicon-folder-open"></span>
+					</button>
+				</div>
+				<!-- Right dropdown button -->
 			<div class="btn-group" ng-class="{active:dataTab == 3}" ng-click="dataTab = 3">
 				<button type="button" class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
@@ -102,6 +103,20 @@ function drop(ev) {
 		<!-- Text area for manual data input -->
 		<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
 			ng-model="textArea" ng-show="dataTab == 1 || dataTab == 3" style = "resize: none;"></textarea>
+		<div class="col-xs-6 col-sm-6 col-md-6" ng-show="dataTab == 2">
+            <h4>Upload Files</h4>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn-file">
+                    	<input type="file" class="btn-file" multiple>
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+            </div>
+            <span class="help-block">
+                Please select a file to upload from your computer
+            </span>
+        </div>
 		<br>
 		<!-- Submit button -->
 		<!-- 
