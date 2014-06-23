@@ -7,9 +7,52 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var client = new Handler(socket);
 	var dataObjectArray;
 
+	function generateFields ()
+	{
+		$('#fields').empty();
+		var i;
+
+		for (i = 0; i < $scope.fields.length; i++)
+		{
+			var tr = document.createElement ('tr');
+			tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
+			tr.setAttribute ('x-lvl-draggable', 'true');
+			tr.setAttribute ('draggable', 'true');
+			tr.setAttribute ('id', $scope.fields[i]);
+			tr.setAttribute ('class', 'ui-draggable');
+
+			var td = document.createElement ('td');
+			td.innerHTML = $scope.fields[i];
+			
+			tr.appendChild (td);
+
+			angular.element(document).injector().invoke(function($compile) {
+				$compile(tr)($scope);
+			});	
+
+			$('#fields').append (tr);
+		}
+	}
+
 	$(document).ready (function ()
 	{
 		jQuery.event.props.push('dataTransfer');
+
+		$("#area").bind ('paste', function(e)
+		{
+		    var elem = $(this);
+
+		    setTimeout (function()
+		    {		       
+		    	var data = $('#area').val();
+				var results = $.parse(data);
+				console.log(results.results.rows[0]);
+				dataObjectArray = results.results.rows;
+				$scope.fields = results.results.fields;
+
+		    	generateFields ();
+		    }, 1000);
+		});
 	});
 
 	$scope.sampleData = function(num)
@@ -17,36 +60,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		client.sampleDataRequest(num, function(data)
 		{
 			console.log(data);
-			//callback(data);
+
 			$('#area').val(data);
 			var results = $.parse(data);
 			console.log(results.results.rows[0]);
 			dataObjectArray = results.results.rows;
 			$scope.fields = results.results.fields;
-
-			$('#fields').empty();
-			var i;
-
-			for (i = 0; i < $scope.fields.length; i++)
-			{
-				var tr = document.createElement ('tr');
-				tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
-				tr.setAttribute ('x-lvl-draggable', 'true');
-				tr.setAttribute ('draggable', 'true');
-				tr.setAttribute ('id', $scope.fields[i]);
-				tr.setAttribute ('class', 'ui-draggable');
-
-				var td = document.createElement ('td');
-				td.innerHTML = $scope.fields[i];
 			
-				tr.appendChild (td);
+			generateFields ();
+			
 
-				angular.element(document).injector().invoke(function($compile) {
-				  $compile(tr)($scope);
-				});	
-
-				$('#fields').append (tr);
-			}
 		});
 	};
 
@@ -54,6 +77,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var yAxis;
 	var valueField;
 	var countField;
+	var locationField;
+	var choroplethValueField;
 
 	$scope.selectVisualizationType = function ()
 	{
@@ -76,19 +101,24 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function readyToGraph ()
 	{
-		xAxis = $('#xAxis').val ();
-		yAxis = $('#yAxis').val ();
-		valueField = $('#valueField').val ();
-		countField = $('#countField').val ();
+		xAxis = $('#xAxis').val();
+		yAxis = $('#yAxis').val();
+		valueField = $('#valueField').val();
+		countField = $('#countField').val();
+		locationField = $('#locationField').val();
+		choroplethValueField = $('#choroplethValueField').val();
 
 		console.log ('xAxis: ' + xAxis);
 		console.log ('yAxis: ' + yAxis);
 		console.log ('valueField: ' + valueField);
 		console.log ('countField: ' + countField);
+		console.log ('locationField ' + locationField);
+		console.log ('choroplethValueField ' + choroplethValueField);
 
 		if ($scope.graphTab == 1 && xAxis != '' && yAxis != '')
 		{
-			//graph bar graph
+			console.log ('plotBar()');
+			plotBar();
 		}
 		else if ($scope.graphTab == 2 && xAxis != '' && yAxis != '')
 		{
@@ -100,6 +130,49 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log ('plotPie()');
 			plotPie();
 		}
+		else if ($scope.graphTab == 4 && locationField != '' && choroplethValueField != '')
+		{
+			console.log ('plotChoroplethMap ()');
+			plotChoroplethMap();
+		}
+	}
+
+	function plotBar ()
+	{
+		$('svg').empty ();
+		console.log (JSON.stringify(dataObjectArray));
+
+		var i;
+		var values = new Array ();
+
+		for (i = 0; i < dataObjectArray.length; i++)
+		{
+			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseInt(dataObjectArray[i][yAxis])});
+		}
+
+		var chartData = new Array ();
+		chartData[0] = {key: yAxis, values: values};
+
+		console.log(JSON.stringify(chartData));
+
+		nv.addGraph(function()
+		{
+			var chart = nv.models.discreteBarChart()
+      				.x(function(d) { return d.label })    //Specify the data accessors.
+      				.y(function(d) { return d.value })
+      				.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+      				.tooltips(false)        //Don't show tooltips
+      				.showValues(true)       //...instead, show the bar value right on top of each bar.
+      				.transitionDuration(350);
+
+     		d3.select('#chart1')
+      		.datum(chartData)
+      		.call(chart);
+
+    	  	nv.utils.windowResize(chart.update);
+
+      		return chart;
+  		});
 	}
 
 	function plotLine ()
@@ -113,11 +186,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var chartData;			
 		var i;
 		var isDate = false;
-		
-		console.log ('(' + xAxis + ')');
-		console.log ('(' + yAxis + ')');
-		
-		
+				
 		if (xAxis == 'date')
 			isDate = true;
 		
@@ -180,8 +249,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			
 			chart.yAxis.axisLabel (yAxis).tickFormat (d3.format (',g'));
 			
-			d3.select ('#chart svg').datum (chartData).call (chart);
-			//nv.utils.windowResize(chart.update());		
+			d3.select ('#chart1').datum (chartData).call (chart);
+			nv.utils.windowResize(chart.update);		
 			
 			return chart;		
 		});				
@@ -215,7 +284,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var countField = $('#countField').val();
 		var i;
 		
-		chartData = new Array ();
+		var chartData = new Array ();
 		
 		//dataObjectArray = [{'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 2}, {'orangeBoardings': 2}, {'orangeBoardings': 3}]
 		if (countField == '')
@@ -248,25 +317,53 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			.y(function(d) { return d.value; })
 			.showLabels(true);
 
-			d3.select('#chart svg')
+			d3.select('#chart2')
 			.datum(chartData)
 			.transition().duration(350)
 			.call(chart);
 			
-			nv.utils.windowResize(chart.update());	
+			nv.utils.windowResize(chart.update);	
 			
 			return chart;
 		});		
 	}
+	function getStyle(feature)
+	{
+		return {
+			weight: 2,
+			opacity: 0.1,
+			color: 'black',
+			fillOpacity: 0.7,
+			fillColor: getColor(feature.properties.density)
+		};
+ 	}
+
+  	// get color depending on population density value
+  	function getColor(d)
+  	{
+  		return d > 1000 ? '#8c2d04' :
+  		d > 500  ? '#cc4c02' :
+  		d > 200  ? '#ec7014' :
+  		d > 100  ? '#fe9929' :
+  		d > 50   ? '#fec44f' :
+  		d > 20   ? '#fee391' :
+  		d > 10   ? '#fff7bc' :
+  		'#ffffe5';
+  	}
 	
-	// $scope.sample1(function(data) {
-	// 	$('#sample1').click(function() { 
-	// 		$('#area').val(data);
-	// 	});
-	// 	var results = $.parse(data);
-	// 	console.log(results);
-	// 	$scope.fields = results.results.fields;
-	// });
+		function plotChoroplethMap ()
+	{
+		 var map = L.mapbox.map('map', 'examples.map-i86nkdio')
+    		.setView([37.8, -96], 4);
+
+  		var popup = new L.Popup({ autoPan: false });
+
+  		// statesData comes from the 'us-states.js' script included above
+  		var statesLayer = L.geoJson(statesData,  {
+      		style: getStyle,
+     		 //onEachFeature: onEachFeature
+ 		}).addTo(map);
+	}
 }]);
 
 $(document).on('change', '.btn-file :file', function() {
