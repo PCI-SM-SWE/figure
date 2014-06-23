@@ -135,7 +135,7 @@ io.on('connection', function(socket)
 	socket.on('sample4 requested', function(response)
 			{
 		console.log("Sample 4 requested");
-		getFile('./public/sample_data/upload_testing.csv', function(data)
+		getFile('./public/sample_data/upload_testing2.csv', function(data)
 				{
 			socket.emit('sample4 data', data);
 				});
