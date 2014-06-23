@@ -117,6 +117,20 @@ io.on('connection', function(socket)
 	{
 		console.log("Sample 2 sent succesfully");
 	});
+	
+	socket.on('sample3 requested', function(response)
+			{
+		console.log("Sample 3 requested");
+		getFile('./public/sample_data/upload_testing.csv', function(data)
+				{
+			socket.emit('sample3 data', data);
+				});
+			});
+
+	socket.on('sample3 received', function(response)
+			{
+		console.log("Sample 3 sent succesfully");
+			});
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
 //		console.log(data);
