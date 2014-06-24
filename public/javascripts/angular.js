@@ -116,6 +116,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		xAxis = '';
 		yAxis = '';
+		grouping = '';
 		valueField = '';
 		countField = '';
 		locationField = '';
@@ -245,7 +246,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var colors = ['#ff7f0e', '#2ca02c', '#7777ff'];
 		var colorsIndex = 0;
 		var individualData;
-		var group = dataObjectArray[0][grouping];		
+		var group;
+
+		if (grouping != '')
+			group = dataObjectArray[0][grouping];	
+		else
+			group = false;	
 
 		if (xAxis == 'date')
 			isDate = true;
@@ -257,7 +263,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			var xValue = dataObjectArray[i][xAxis];
 			var yValue = dataObjectArray[i][yAxis];
 			
-			if (group != dataObjectArray[i][grouping])
+			if (group != false && group != dataObjectArray[i][grouping])
 			{
 				individualData = {values: values, key: group, color: colors[colorsIndex]};
 				chartData.push(individualData);
@@ -286,6 +292,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				values.push ({x: xValue, y: parseFloat(yValue)});						
 			}
+		}
+
+		if (group == false)
+		{
+			individualData = {values: values, key: group, color: colors[colorsIndex]};
+			chartData.push(individualData);
 		}
 
 		console.log (JSON.stringify (chartData));
