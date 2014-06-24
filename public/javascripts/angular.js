@@ -51,6 +51,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$scope.fields = results.results.fields;
 
 		    	generateFields ();
+
+		    	console.log(JSON.stringify(dataObjectArray));
 		    }, 1000);
 		});
 	});
@@ -68,11 +70,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$scope.fields = results.results.fields;
 			
 			generateFields ();
+
+			console.log(JSON.stringify(dataObjectArray));
 		});
 	};
 
 	var xAxis;
 	var yAxis;
+	var grouping;
 	var valueField;
 	var countField;
 	var locationField;
@@ -91,6 +96,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			$('#xAxisLine').val('');
 			$('#yAxisLine').val('');
+			$('#groupingLine').val('');
 			$('#lineGraph').empty();
 
 			//clear optional grouping field
@@ -111,7 +117,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		xAxis = '';
 		yAxis = '';
 		valueField = '';
-		countfield = '';
+		countField = '';
 		locationField = '';
 		choroplethValueField = '';
 
@@ -148,6 +154,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			xAxis = $('#xAxisLine').val();
 			yAxis = $('#yAxisLine').val();
+			grouping = $('#groupingLine').val();
 
 			if (xAxis != '' && yAxis != '')
 			{
@@ -230,22 +237,35 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		//$('#title').remove ();
 		//chartTitle = $('#chartTitle').val ();
 		
-		var values = new Array ();		
+		var values = new Array();		
 		var dateArray;
-		var chartData;			
+		var chartData = new Array();			
 		var i;
 		var isDate = false;
-				
+		var colors = ['#ff7f0e', '#2ca02c', '#7777ff'];
+		var colorsIndex = 0;
+		var individualData;
+		var group = dataObjectArray[0][grouping];		
+
 		if (xAxis == 'date')
 			isDate = true;
 		
-		console.log (isDate);
+		console.log ('isDate: ' + isDate);
 		
 		for (i = 0; i < dataObjectArray.length; i++)
 		{				
 			var xValue = dataObjectArray[i][xAxis];
 			var yValue = dataObjectArray[i][yAxis];
 			
+			if (group != dataObjectArray[i][grouping])
+			{
+				individualData = {values: values, key: group, color: colors[colorsIndex]};
+				chartData.push(individualData);
+				colorsIndex = colorsIndex + 1;
+				group = dataObjectArray[i][grouping];
+				values = new Array();
+			}
+
 			if (yValue == '')
 				yValue = '0';
 			
@@ -254,7 +274,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if (xValue.indexOf ('/') != -1)
 					dateArray = xValue.split ('/');
 				else if (xValue.indexOf ('-') != -1)
-					dateArray = xvalue.split ('-');
+					dateArray = xValue.split ('-');
 				
 				xValue = new Date (dateArray[2], dateArray[0] - 1, dateArray[1]);
 				xValue = xValue.getTime ();
@@ -266,13 +286,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 		}
 
-		console.log (JSON.stringify (values));
-			
-		chartData = [
-	                 {
-	                	 values: values,
-	                	 color: '#ff7f0e'
-	                 }];		
+		console.log (JSON.stringify (chartData));
+
+		//return;
+				
 	
 		//$('#chart').prepend ('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
 		
@@ -384,169 +401,136 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var statesLayer;
 	var closeTooltip;	
 	
-	 function getStyle(feature) {
-	     
-		 console.log (feature.properties.density + '-' + getColor(feature.properties.density));
-		 return {
-	          weight: 2,
-	          opacity: 0.1,
-	          color: 'black',
-	          fillOpacity: 0.7,
-	          fillColor: getColor(feature.properties.density)
-	      };
-	  }
-	  
-	  // get color depending on population density value
-	  function getColor(d) {	
-		  return d > 1000 ? '#8c2d04' :
-	          d > 500  ? '#cc4c02' :
-	          d > 200  ? '#ec7014' :
-	          d > 100  ? '#fe9929' :
-	          d > 50   ? '#fec44f' :
-	          d > 20   ? '#fee391' :
-	          d > 10   ? '#fff7bc' :
-	          '#ffffe5';
-	  }
-	
+	function getStyle(feature) 
+	{
+		console.log (feature.properties.density + '-' + getColor(feature.properties.density));
+		
+		return {
+			weight: 2,
+			opacity: 0.1,
+			color: 'black',
+			fillOpacity: 0.7,
+			fillColor: getColor(feature.properties.density)
+		};
+	}
+
+	// get color depending on population density value
+	function getColor(d)
+	{	
+		return d > 1000 ? '#8c2d04' :
+			d > 500  ? '#cc4c02' :
+			d > 200  ? '#ec7014' :
+			d > 100  ? '#fe9929' :
+			d > 50   ? '#fec44f' :
+			d > 20   ? '#fee391' :
+			d > 10   ? '#fff7bc' :
+			'#ffffe5';
+	}
+		
 
   
-  function onEachFeature(feature, layer) {
-      console.log('onEachFeature');
-	  layer.on({
-          mousemove: mousemove,
-          mouseout: mouseout,
-          click: zoomToFeature
-      });
-  }
+	function onEachFeature(feature, layer)
+	{
+		console.log('onEachFeature');
+		layer.on({
+			mousemove: mousemove,
+			mouseout: mouseout,
+			click: zoomToFeature
+		});
+	}
   
-  function mousemove(e) {
-      var layer = e.target;
+function mousemove(e)
+{
+	var layer = e.target;
 
-      popup.setLatLng(e.latlng);
-      popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
-          layer.feature.properties.density + ' people per square mile');
+	popup.setLatLng(e.latlng);
+	popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
+	layer.feature.properties.density + ' people per square mile');
 
-      if (!popup._map) 
-    	  popup.openOn(map);
-      window.clearTimeout(closeTooltip);
+	if (!popup._map) 
+		popup.openOn(map);
+	window.clearTimeout(closeTooltip);
 
-      // highlight feature
-      layer.setStyle({
-          weight: 3,
-          opacity: 0.3,
-          fillOpacity: 0.9
-      });
+	// highlight feature
+	layer.setStyle({
+		weight: 3,
+		opacity: 0.3,
+		fillOpacity: 0.9
+	});
 
-      if (!L.Browser.ie && !L.Browser.opera) {
-          layer.bringToFront();
-      }
-  }
+	if (!L.Browser.ie && !L.Browser.opera)
+		layer.bringToFront();
+}
 
-  function mouseout(e) {
-      statesLayer.resetStyle(e.target);
-      closeTooltip = window.setTimeout(function() {
-          map.closePopup();
-      }, 100);
-  }
+function mouseout(e)
+{
+	statesLayer.resetStyle(e.target);
+	closeTooltip = window.setTimeout(function() {
+		map.closePopup();
+	}, 100);
+}
 
-  function zoomToFeature(e) {
-      map.fitBounds(e.target.getBounds());
-  }
-  
-  function getLegendHTML() {
-	    var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-	    labels = [],
-	    from, to;
+function zoomToFeature(e)
+{
+	map.fitBounds(e.target.getBounds());
+}
 
-	    for (var i = 0; i < grades.length; i++) {
-	      from = grades[i];
-	      to = grades[i + 1];
+function getLegendHTML()
+{
+	var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+	labels = [],
+	from, to;
 
-	      labels.push(
-	        '<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
-	        from + (to ? '&ndash;' + to : '+')) + '</li>';
-	    }
+	for (var i = 0; i < grades.length; i++)
+	{
+		from = grades[i];
+		to = grades[i + 1];
 
-	    return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
-	  }
+		labels.push(
+		'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
+		from + (to ? '&ndash;' + to : '+')) + '</li>';
+	}
+
+	return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
+}
+
 	function plotChoroplethMap ()
 	{
-		
+
 		var i;
 		var locationField = $('#locationField').val ();
 		var valueField = $('#valueField'). val ();
-		
-		/*console.log (JSON.stringify (dataObjectArray));
-		
-		for (i = 0; i < statesData.features.length; i++)
-		{
-			delete statesData.features[i].properties.density;
-			statesData.features[i].properties[valueField] = dataObjectArray[i][valueField];
-		}*/
-		
 
 		map = L.mapbox.map('map', 'examples.map-i86nkdio')
-	    .setView([37.8, -96], 4);
+		.setView([37.8, -96], 4);
+
+		popup = new L.Popup({ autoPan: false });	  
+
+		console.log (statesData);
+		statesLayer = L.geoJson(statesData,  {
+		style: getStyle,
+		onEachFeature: onEachFeature
+		}).addTo(map);	  
 
 
+		map.legendControl.addLegend(getLegendHTML());
 
-	  popup = new L.Popup({ autoPan: false });	  
-	  
-	  console.log (statesData);
-	  statesLayer = L.geoJson(statesData,  {
-	      style: getStyle,
-	      onEachFeature: onEachFeature
-	  }).addTo(map);	  
-	 
+		$('.leaflet-zoom-animated').attr('width', '2000');
+		$('.leaflet-zoom-animated').attr('height', '629');
+		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
 
-	  map.legendControl.addLegend(getLegendHTML());
-	  
-	 //$('.leaflet-zoom-animated').removeAttr('viewBox');
+		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
+		e.setAttribute ('viewBox', '0 0 2000 629')
+		e.setAttribute ('id', 'temp');
+		var x;
+		var y;
+		var z;
 
-	  $('.leaflet-zoom-animated').attr('width', '2000');
-	  $('.leaflet-zoom-animated').attr('height', '629');
-	 $('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
-
- 	var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-	 e.setAttribute ('viewBox', '0 0 2000 629')
-	e.setAttribute ('id', 'temp');
-	 var x;
-	 var y;
-	 var z;
-
-	//  $('.leaflet-zoom-animated').mouseup(function()
-	//  {	 	
-	//  	window.setTimeout (function()
-	// 	{
-	// 		//$('.leaflet-zoom-animated').removeAttr('viewBox');
-
-	// 		var attr = $('.leaflet-map-pane').attr('style');
-	// 		attr = attr.substring (attr.indexOf ('(') + 1);
-			
-	// 		var x = attr.substr(0, attr.indexOf('px'));			
-	// 		attr = attr.substring(attr.indexOf('px') + 4);
-
-	// 		var y = attr.substr(0, attr.indexOf('px'));
-	// 		attr = attr.substring(attr.indexOf('px') + 4);
-
-	// 		var z = attr.substr(0, attr.indexOf('px'));
-
-			
-	// 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
-	// 		//$('.leaflet-zoom-animated').removeAttr('viewBox');
-			
-	// 		// document.getElementById('temp').removeAttribute('viewBox');
-	//  	// 	e.setAttribute ('viewBox', x + ' ' + y + '2000 629')
-	 	
-
-	// 	}, 0);
-	// });
-
-	 setInterval(function()
-	 {
-	 		var attr = $('.leaflet-map-pane').attr('style');
+		setInterval(function()
+		{
+			var attr = $('.leaflet-map-pane').attr('style');
 			attr = attr.substring (attr.indexOf ('(') + 1);
-			
+
 			var x = attr.substr(0, attr.indexOf('px'));			
 			attr = attr.substring(attr.indexOf('px') + 4);
 
@@ -555,81 +539,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var z = attr.substr(0, attr.indexOf('px'));
 
-			
+
 			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-	 	document.getElementById('temp').removeAttribute('viewBox');
-	 	//console.log(document.getElementsByClassName('leaflet-zoom-animated')[0]);
-	 
-	 }, 0);
-	//  $('.leaflet-zoom-animated').mouseup(function()
-	//  {	 	
-	//  	window.setTimeout (function()
-	// 	{
-	// 		$('.leaflet-zoom-animated').removeAttr('viewBox');
-
-	// 		var attr = $('.leaflet-map-pane').attr('style');
-	// 		attr = attr.substring (attr.indexOf ('(') + 1);
-			
-	// 		var x = attr.substr(0, attr.indexOf('px'));			
-	// 		attr = attr.substring(attr.indexOf('px') + 4);
-
-	// 		var y = attr.substr(0, attr.indexOf('px'));
-	// 		attr = attr.substring(attr.indexOf('px') + 4);
-
-	// 		var z = attr.substr(0, attr.indexOf('px'));
-
-			
-	// 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
-	// 		//$('.leaflet-zoom-animated').removeAttr('viewBox');
-			
-	// 		// var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-	//  	// 	e.setAttribute ('viewBox', x + ' ' + y + '2000 629')
-	// 	}, 0);
-	// });
-
-	 // $('.leaflet-zoom-animated').mouseup(function()
-	 // {	 	
-	 // 	$('.leaflet-zoom-animated').removeAttr('viewBox');
-	 // });
-
-	
-// 	 setInterval(function()
-// 	 {
-// 	 	window.setTimeout (function()
-// 		{
-// 			//$('.leaflet-zoom-animated').removeAttr('viewBox');
-
-// 			var attr = $('.leaflet-map-pane').attr('style');
-// 			attr = attr.substring (attr.indexOf ('(') + 1);
-			
-// 			x = attr.substr(0, attr.indexOf('px'));			
-// 			attr = attr.substring(attr.indexOf('px') + 4);
-
-// 			y = attr.substr(0, attr.indexOf('px'));
-// 			attr = attr.substring(attr.indexOf('px') + 4);
-
-// 			z = attr.substr(0, attr.indexOf('px'));
-
-			
-// 			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
-// 			//$('.leaflet-zoom-animated').removeAttr('viewBox');
-// 			e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-//  	 	 	e.setAttribute ('viewBox', x + ' ' + y + ' 2000 629')
-			
-			
-// 		}, 0);
-// 	 }, 5);
+			document.getElementById('temp').removeAttribute('viewBox');
+		}, 0);
 	}
 }]);
-
-// $('.leaflet-zoom-animated').mouseup(function()
-// 	{
-// 		e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-// 	 	 	e.setAttribute ('viewBox', x + ' ' + y + ' 2000 629')
-// 	});
-
-
 
 
 $(document).on('change', '.btn-file :file', function() 
@@ -640,7 +556,8 @@ $(document).on('change', '.btn-file :file', function()
 	input.trigger('fileselect', [numFiles, label]);
 });
 
-$(document).ready( function() {
+$(document).ready(function() 
+{
 	$('.btn-file :file').on('fileselect', function(event, numFiles, label) 
 	{
 
@@ -657,5 +574,13 @@ $(document).ready( function() {
 				alert(log);
 		}
 
+		$(document).on('change', '.btn-file :file', function()
+		{
+			var input = $(this),
+			numFiles = input.get(0).files ? input.get(0).files.length : 1,
+			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			console.log(input);
+			input.trigger('fileselect', [numFiles, label]);
+		});
 	});
 });
