@@ -1,4 +1,4 @@
-var socket = io('http://localhost:4000');
+var socket = io('http://localhost:80');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -278,20 +278,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				
 				xValue = new Date (dateArray[2], dateArray[0] - 1, dateArray[1]);
 				xValue = xValue.getTime ();
-<<<<<<< HEAD
 				values.push ({x: xValue, y: parseFloat (yValue)});
-=======
 				values.push ({x: xValue, y: parseFloat(yValue)});
->>>>>>> branch 'development' of https://github.com/PCI-SM-SWE/rotund-pony.git
 			}
 			else
-<<<<<<< HEAD
-				values.push ({x: parseFloat (xValue), y: parseFloat (yValue)});				
-=======
+				values.push ({x: parseFloat (xValue), y: parseFloat (yValue)});
 			{
 				values.push ({x: xValue, y: parseFloat(yValue)});						
 			}
->>>>>>> branch 'development' of https://github.com/PCI-SM-SWE/rotund-pony.git
 		}
 
 		console.log (JSON.stringify (chartData));
