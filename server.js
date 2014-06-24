@@ -69,9 +69,9 @@ function getFile(path, callback) {
 		});
 }
 
-server.listen(4000, function()
+server.listen(80, function()
 {
-	console.log("Server listening on port 4000.");
+	console.log("Server listening on port 80.");
 });
 
 // Socket IO begins
