@@ -286,13 +286,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				xValue = xValue.getTime ();
 
 				values.push ({x: xValue, y: parseFloat(yValue)});
-
 			}
 			else
 			{
 				values.push ({x: xValue, y: parseFloat(yValue)});						
 			}
-
 		}
 
 		if (group == false)
