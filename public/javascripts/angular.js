@@ -147,7 +147,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		for (i = 0; i < dataObjectArray.length; i++)
 		{
-			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseInt(dataObjectArray[i][yAxis])});
+			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseFloat(dataObjectArray[i][yAxis])});
 		}
 
 		var chartData = new Array ();
@@ -209,10 +209,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				
 				xValue = new Date (dateArray[2], dateArray[0] - 1, dateArray[1]);
 				xValue = xValue.getTime ();
-				values.push ({x: xValue, y: parseInt (yValue)});
+				values.push ({x: xValue, y: parseFloat (yValue)});
 			}
 			else
-				values.push ({x: parseInt (xValue), y: parseInt (yValue)});				
+				values.push ({x: parseFloat (xValue), y: parseFloat (yValue)});				
 		}
 
 		console.log (JSON.stringify (values));
