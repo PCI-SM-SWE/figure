@@ -122,10 +122,14 @@
                     	<input type="file" class="btn-file" multiple>
                     </span>
                 </span>
-                <input type="text" class="form-control" readonly>
+                <input type="text" class="form-control" ng-model="uploadArea" readonly>
             </div>
-            <span class="help-block">
-                Please select a file to upload from your computer
+			<div class="submit-button">
+				<button class="btn btn-primary" type="submit"
+					role="button" ng-click="fileUpload()">Submit</button>
+			</div>
+			<span class="help-block">
+            	Please select a file to upload from your computer
             </span>
         </div>
 		<br>
@@ -352,6 +356,8 @@
 	<script src="javascripts/client_handler.js"></script>
 	<!-- For Parsing CSV -->
 	<script src="javascripts/papa-parser.js" type="text/javascript"></script>
+	
+	<script src="javascripts/delivery.js"></script>
 	
 	<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
 	<script type = "text/javascript" src = "javascripts/nv.d3.js"></script>

@@ -7,7 +7,8 @@
 	"dependencies": {
 		"mime": "1.2.11",
 		"redis": "0.10.3",
-		"socket.io": "1.0.5"
+		"socket.io": "1.0.5",
+		"delivery": "0.0.3"
 	},
 	"devDependencies": {
 		"mime": "1.2.11",
