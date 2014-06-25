@@ -154,7 +154,7 @@ io.on('connection', function(socket) {
 
 /*
  * Using delivery to send uploaded files to the server, then back from the server to the
- * client, having converted the contents of the file to a strig to be parsed client-side(for now)
+ * client, having converted the contents of the file to a string to be parsed client-side(for now)
  */
 io.sockets.on('connection', function(socket){
 	var delivery = dl.listen(socket);
