@@ -76,6 +76,7 @@ server.listen(80, function()
 
 // Socket IO begins
 var io = require('socket.io')(server);
+var dl  = require('delivery');
 
 //function handler(req, res) {
 //	fs.readFile(__dirname + '/index.html', function(err, data) {
@@ -88,8 +89,7 @@ var io = require('socket.io')(server);
 //	});
 //}
 
-io.on('connection', function(socket)
-{
+io.on('connection', function(socket) {
 	socket.on('sample1 requested', function(response)
 	{
 		console.log("Sample 1 requested");
@@ -151,6 +151,26 @@ io.on('connection', function(socket)
 //		console.log(data);
 //	});
 });
+
+/*
+ * Using delivery to send uploaded files to the server, then back from the server to the
+ * client, having converted the contents of the file to a strig to be parsed client-side(for now)
+ */
+io.sockets.on('connection', function(socket){
+	var delivery = dl.listen(socket);
+	delivery.on('receive.success',function(file){
+
+		fs.writeFile(file.name,file.buffer, function(err){
+			if(err){
+				console.log('File could not be saved.');
+			}else{
+				console.log('File ' + file.name + ' recieved');
+				socket.emit('file data', file.buffer.toString());
+			};
+		});
+	});
+});
+
 
 //var chatServer = require('./public/javascripts/server_handler.js');
 //chatServer.listen(server);

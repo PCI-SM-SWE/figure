@@ -74,6 +74,23 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(JSON.stringify(dataObjectArray));
 		});
 	};
+	
+	$scope.fileUpload = function() {
+		client.fileUploadRequest(function(data) {
+			
+			console.log(data);
+
+			$('#area').val(data);
+			var results = $.parse(data);	
+			console.log(results.results.rows[0]);
+			dataObjectArray = results.results.rows;
+			$scope.fields = results.results.fields;
+			
+			generateFields ();
+
+			console.log(JSON.stringify(dataObjectArray));
+		});
+	};
 
 	var xAxis;
 	var yAxis;
@@ -656,31 +673,46 @@ $(document).on('change', '.btn-file :file', function()
 	input.trigger('fileselect', [numFiles, label]);
 });
 
-$(document).ready(function() 
-{
-	$('.btn-file :file').on('fileselect', function(event, numFiles, label) 
-	{
+$(document).ready(function() {
+	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
 
 		var input = $(this).parents('.input-group').find(':text'),
 		log = numFiles > 1 ? numFiles + ' files selected' : label;
 
-		if( input.length ) 
-		{
+		if( input.length ) {
 			input.val(log);
 		} 
-		else 
-		{
+		else {
 			if( log ) 
 				alert(log);
 		}
 
-		$(document).on('change', '.btn-file :file', function()
-		{
+		$(document).on('change', '.btn-file :file', function() {
 			var input = $(this),
 			numFiles = input.get(0).files ? input.get(0).files.length : 1,
-			label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+					label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 			console.log(input);
 			input.trigger('fileselect', [numFiles, label]);
+		});
+	});
+});
+
+$(function() {
+	var socket = io.connect('localhost:80');
+	
+	socket.on('connect', function(){
+		var delivery = new Delivery(socket);
+		
+		delivery.on('delivery.connect',function(delivery) {
+			$("button[type=submit]").click(function(evt) {
+				var file = $("input[type=file]")[0].files[0];
+				delivery.send(file);
+				evt.preventDefault();
+			});
+		});
+
+		delivery.on('send.success',function(fileUID) {
+			console.log("file was successfully sent.");
 		});
 	});
 });

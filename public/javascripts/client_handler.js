@@ -14,6 +14,12 @@ Handler.prototype.sampleDataRequest = function(num, callback)
 	});
 }
 
+Handler.prototype.fileUploadRequest = function(callback) {
+	var response = socket.on('file data', function(data) {
+		callback(data);
+	});
+}
+
 
 //		socket.on('news', function(data) {
 //			console.log(data);
