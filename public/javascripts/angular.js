@@ -207,8 +207,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log ('yAxis: ' + yAxis);
 		console.log ('valueField: ' + valueField);
 		console.log ('countField: ' + countField);
-		console.log ('locationField ' + locationField);
-		console.log ('choroplethValueField ' + choroplethValueField);
+		console.log ('locationField: ' + locationField);
+		console.log ('choroplethValueField: ' + choroplethValueField);
 	}
 
 	function plotBar ()
@@ -249,65 +249,126 @@ app.controller('MainCtrl', ['$scope', function($scope)
   		});
 	}
 
+	function parseDateTime(value)
+	{
+		value = value.trim();
+
+		var dateArray;
+		var timeArray;
+		var split = value.split(" ");
+		var date;
+		var time;
+
+		if (split.length == 1)
+			date = split[0];
+		else if (split.length == 2)
+		{
+			date = split[0];
+			time = split[1];
+		}
+
+		if (date.indexOf ('/') != -1)
+			dateArray = date.split ('/');
+		else if (date.indexOf ('-') != -1)
+			dateArray = date.split ('-');
+		
+		if(time != undefined && time.indexOf(':') != -1)
+			timeArray = time.split(':');
+		else
+			return (new Date(dateArray[2], dateArray[0] - 1, dateArray[1]));
+
+		return (new Date (dateArray[2], dateArray[0] - 1, dateArray[1], timeArray[0], timeArray[1], timeArray[2], 0));
+	}	
+
 	function plotLine ()
 	{	
 		$('#lineGraph').empty ();
 		//$('#title').remove ();
 		//chartTitle = $('#chartTitle').val ();
 		
-		var values = new Array();		
-		var dateArray;
+		var values = new Array();			
 		var chartData = new Array();			
-		var i;
-		var isDate = false;
-		var colors = ['#ff7f0e', '#2ca02c', '#7777ff'];
+		var isDateTime = false;
+		var colors = ['#FF0000', '#0000FF', '#00FF00', '#6600FF', '#FF00FF', '#663300', '#666699'];
 		var colorsIndex = 0;
 		var individualData;
 		var group;
+		var groupExists;
+		var xValue;
+		var yValue;
 
 		if (grouping != '')
-			group = dataObjectArray[0][grouping];	
+			group = dataObjectArray[0][grouping];			
 		else
 			group = false;	
 
-		if (xAxis == 'date')
-			isDate = true;
+		if (xAxis == 'date' || xAxis == 'time')
+		{
+			console.log(dataObjectArray[0]);
+			console.log(xAxis);
+			isDateTime = true;
+			xValue = parseDateTime(dataObjectArray[0][xAxis].toString()).getTime ();
+			values.push ({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
+		}
+		else
+		{
+			values.push ({x: dataObjectArray[0][xAxis], y: parseFloat(dataObjectArray[0][yAxis])});	
+		}
+	
+		console.log('isDateTime: ' + isDateTime);		
 		
-		console.log ('isDate: ' + isDate);
-		
-		for (i = 0; i < dataObjectArray.length; i++)
-		{				
-			var xValue = dataObjectArray[i][xAxis];
-			var yValue = dataObjectArray[i][yAxis];
-			
+		for (var i = 1; i < dataObjectArray.length; i++)
+		{					
 			if (group != false && group != dataObjectArray[i][grouping])
 			{
-				individualData = {values: values, key: group, color: colors[colorsIndex]};
-				chartData.push(individualData);
-				colorsIndex = colorsIndex + 1;
+				console.log('group: ' + group);
+
+				groupExists = false;
+
+				for (var j = 0; j < chartData.length; j++)
+				{
+					if (chartData[j].key.substr(0, 25) == group.substr(0, 25))
+					{
+						var newValues = chartData[j].values;
+
+						for (var k = 0; k < values.length; k++)
+							newValues.push(values[k]);
+
+						chartData[j].values = newValues;
+						groupExists = true;
+						break;
+					}
+				}
+
+				if (groupExists == false)
+				{
+					individualData = {values: values, key: group.substr(0, 25), color: colors[colorsIndex]};
+					chartData.push(individualData);
+					colorsIndex = (colorsIndex + 1) % colors.length;
+
+					console.log (JSON.stringify(individualData));
+				}
+			
 				group = dataObjectArray[i][grouping];
 				values = new Array();
+
+				// console.log ('chartData: ' + JSON.stringify (chartData));
+				// return;
 			}
+
+			xValue = dataObjectArray[i][xAxis];
+			yValue = dataObjectArray[i][yAxis];
 
 			if (yValue == '')
 				yValue = '0';
 			
-			if (isDate == true)
-			{
-				if (xValue.indexOf ('/') != -1)
-					dateArray = xValue.split ('/');
-				else if (xValue.indexOf ('-') != -1)
-					dateArray = xValue.split ('-');
-				
-				xValue = new Date (dateArray[2], dateArray[0] - 1, dateArray[1]);
-				xValue = xValue.getTime ();
-
+			if (isDateTime == true)
+			{				
+				xValue = parseDateTime(xValue).getTime ();
 				values.push ({x: xValue, y: parseFloat(yValue)});
 			}
 			else
-			{
 				values.push ({x: xValue, y: parseFloat(yValue)});						
-			}
 		}
 
 		if (group == false)
@@ -315,37 +376,67 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			individualData = {values: values, key: group, color: colors[colorsIndex]};
 			chartData.push(individualData);
 		}
+		else
+		{
+			groupExists = false;
+
+			for (var j = 0; j < chartData.length; j++)
+			{
+				if (chartData[j].key.substr(0, 25) == group.substr(0 ,25))
+				{
+					var newValues = chartData[j].values;
+
+					for (var k = 0; k < values.length; k++)
+						newValues.push(values[k]);
+
+					chartData[j].values = newValues;
+					groupExists = true;
+					break;
+				}
+			}
+
+			if (groupExists == false)
+			{
+				individualData = {values: values, key: group.substr(0, 25), color: colors[colorsIndex]};
+				chartData.push(individualData);
+
+				console.log (JSON.stringify(individualData));
+			}
+		}
 
 		console.log (JSON.stringify (chartData));
-
+		console.log(chartData.length);
 		//return;
-				
+		
 	
 		//$('#chart').prepend ('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
 		
 		nv.addGraph (function ()
 		{
 			var chart = nv.models.lineChart()
-			.margin ({left: 100, right: 70})
+			.margin ({left: 100, right: 30, bottom: 150})
 			.useInteractiveGuideline (true)
 			.transitionDuration (350)
 			.showYAxis (true)
 			.showXAxis (true);
 			
+			chart.xAxis.rotateLabels(-45);
+
 			chart.xAxis.showMaxMin (true);
-			chart.xAxis.axisLabel (xAxis)
+			chart.xAxis.axisLabel (xAxis);
 			
-			if (isDate == true)
+			if (isDateTime == true)
 			{
 				chart.xAxis.tickFormat (function (d)
 				{
-					return d3.time.format ('%x')(new Date (d));
+					return d3.time.format ('%c')(new Date (d));
 				});
 			}
 			else
 				chart.xAxis.tickFormat (d3.format (',g'));
 			
-			chart.yAxis.axisLabel (yAxis).tickFormat (d3.format (',g'));
+			chart.yAxis.axisLabel (yAxis);
+			chart.yAxis.tickFormat (d3.format (',g'));
 			
 			d3.select ('#lineGraph').datum (chartData).call (chart);
 			nv.utils.windowResize(chart.update);		
@@ -355,10 +446,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	function addToArray (array, element)
-	{
-		var i; 
-		
-		for (i = 0; i < array.length; i++)
+	{		
+		for (var i = 0; i < array.length; i++)
 		{
 			if (array[i]['label'] == element)
 			{
@@ -379,15 +468,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 		var cumulativeArray = new Array ();
 		var valueLabel = $('#valueField').val();
-		var countField = $('#countField').val();
-		var i;
-		
+		var countField = $('#countField').val();		
 		var chartData = new Array ();
 		
 		//dataObjectArray = [{'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 2}, {'orangeBoardings': 2}, {'orangeBoardings': 3}]
 		if (countField == '')
 		{
-			for (i = 0; i < dataObjectArray.length; i++)
+			for (var i = 0; i < dataObjectArray.length; i++)
 			{
 				var value = dataObjectArray[i][valueLabel];
 				
@@ -399,7 +486,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else
 		{
-			for (i = 0; i < dataObjectArray.length; i++)
+			for (var i = 0; i < dataObjectArray.length; i++)
 			{				
 				chartData.push ({'label': dataObjectArray[i][valueLabel], 'value': dataObjectArray[i][countField]});
 			}			
@@ -469,60 +556,60 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
   
-function mousemove(e)
-{
-	var layer = e.target;
-
-	popup.setLatLng(e.latlng);
-	popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
-	layer.feature.properties.density + ' people per square mile');
-
-	if (!popup._map) 
-		popup.openOn(map);
-	window.clearTimeout(closeTooltip);
-
-	// highlight feature
-	layer.setStyle({
-		weight: 3,
-		opacity: 0.3,
-		fillOpacity: 0.9
-	});
-
-	if (!L.Browser.ie && !L.Browser.opera)
-		layer.bringToFront();
-}
-
-function mouseout(e)
-{
-	statesLayer.resetStyle(e.target);
-	closeTooltip = window.setTimeout(function() {
-		map.closePopup();
-	}, 100);
-}
-
-function zoomToFeature(e)
-{
-	map.fitBounds(e.target.getBounds());
-}
-
-function getLegendHTML()
-{
-	var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
-	labels = [],
-	from, to;
-
-	for (var i = 0; i < grades.length; i++)
+	function mousemove(e)
 	{
-		from = grades[i];
-		to = grades[i + 1];
+		var layer = e.target;
 
-		labels.push(
-		'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
-		from + (to ? '&ndash;' + to : '+')) + '</li>';
+		popup.setLatLng(e.latlng);
+		popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
+		layer.feature.properties.density + ' people per square mile');
+
+		if (!popup._map) 
+			popup.openOn(map);
+		window.clearTimeout(closeTooltip);
+
+		// highlight feature
+		layer.setStyle({
+			weight: 3,
+			opacity: 0.3,
+			fillOpacity: 0.9
+		});
+
+		if (!L.Browser.ie && !L.Browser.opera)
+			layer.bringToFront();
 	}
 
-	return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
-}
+	function mouseout(e)
+	{
+		statesLayer.resetStyle(e.target);
+		closeTooltip = window.setTimeout(function() {
+			map.closePopup();
+		}, 100);
+	}
+
+	function zoomToFeature(e)
+	{
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function getLegendHTML()
+	{
+		var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+		labels = [],
+		from, to;
+
+		for (var i = 0; i < grades.length; i++)
+		{
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+			'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
+			from + (to ? '&ndash;' + to : '+')) + '</li>';
+		}
+
+		return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
+	}
 
 	function plotChoroplethMap ()
 	{
