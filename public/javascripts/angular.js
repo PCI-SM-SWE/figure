@@ -1,4 +1,4 @@
-var socket = io('localhost:80');
+var socket = io('datapuking.com');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -75,9 +75,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 	
-	$scope.fileUpload = function() {
-		client.fileUploadRequest(function(data) {
-			
+	$scope.fileUpload = function()
+	{
+		client.fileUploadRequest(function(data)
+		{			
 			console.log(data);
 
 			$('#area').val(data);
@@ -211,6 +212,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log ('choroplethValueField: ' + choroplethValueField);
 	}
 
+
+	//---------------------------------BAR-----------------------------------------
 	function plotBar ()
 	{
 		$('#barGraph').empty ();
@@ -249,6 +252,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
   		});
 	}
 
+
+	//----------------------------------------------Line------------------------------------------
 	function parseDateTime(value)
 	{
 		value = value.trim();
@@ -258,7 +263,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var split = value.split(" ");
 		var date;
 		var time;
-
+	
 		if (split.length == 1)
 			date = split[0];
 		else if (split.length == 2)
@@ -271,6 +276,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			dateArray = date.split ('/');
 		else if (date.indexOf ('-') != -1)
 			dateArray = date.split ('-');
+		else
+			return (parseFloat(value));
 		
 		if(time != undefined && time.indexOf(':') != -1)
 			timeArray = time.split(':');
@@ -296,19 +303,28 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var groupExists;
 		var xValue;
 		var yValue;
+		var limit = 65;
 
 		if (grouping != '')
 			group = dataObjectArray[0][grouping];			
 		else
 			group = false;	
 
-		if (xAxis == 'date' || xAxis == 'time')
+		if (xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time')
 		{
 			console.log(dataObjectArray[0]);
 			console.log(xAxis);
+			console.log(dataObjectArray[0][xAxis]);
 			isDateTime = true;
-			xValue = parseDateTime(dataObjectArray[0][xAxis].toString()).getTime ();
-			values.push ({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
+			xValue = parseDateTime(dataObjectArray[0][xAxis].toString());
+
+			if (xValue instanceof Date == true)
+				values.push ({x: xValue.getTime(), y: parseFloat(dataObjectArray[0][yAxis])});
+			else
+			{
+				values.push ({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
+				isDateTime = false;
+			}
 		}
 		else
 		{
@@ -327,7 +343,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				for (var j = 0; j < chartData.length; j++)
 				{
-					if (chartData[j].key.substr(0, 25) == group.substr(0, 25))
+					if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
 					{
 						var newValues = chartData[j].values;
 
@@ -342,7 +358,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (groupExists == false)
 				{
-					individualData = {values: values, key: group.substr(0, 25), color: colors[colorsIndex]};
+					individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
 					chartData.push(individualData);
 					colorsIndex = (colorsIndex + 1) % colors.length;
 
@@ -364,16 +380,21 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			
 			if (isDateTime == true)
 			{				
-				xValue = parseDateTime(xValue).getTime ();
-				values.push ({x: xValue, y: parseFloat(yValue)});
+				xValue = parseDateTime(xValue.toString());
+
+				if (xValue instanceof Date == true)
+					values.push ({x: xValue.getTime(), y: parseFloat(yValue)});
+				else
+					values.push ({x: xValue, y: parseFloat(yValue)});				
 			}
 			else
 				values.push ({x: xValue, y: parseFloat(yValue)});						
-		}
+		}//end for
 
+		//adding last element
 		if (group == false)
 		{
-			individualData = {values: values, key: group, color: colors[colorsIndex]};
+			individualData = {values: values, key: yAxis, color: colors[colorsIndex]};
 			chartData.push(individualData);
 		}
 		else
@@ -382,7 +403,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			for (var j = 0; j < chartData.length; j++)
 			{
-				if (chartData[j].key.substr(0, 25) == group.substr(0 ,25))
+				if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
 				{
 					var newValues = chartData[j].values;
 
@@ -397,7 +418,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (groupExists == false)
 			{
-				individualData = {values: values, key: group.substr(0, 25), color: colors[colorsIndex]};
+				individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
 				chartData.push(individualData);
 
 				console.log (JSON.stringify(individualData));
@@ -445,6 +466,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});				
 	}
 
+
+	//-------------------------- PIE ------------------------------------------
 	function addToArray (array, element)
 	{		
 		for (var i = 0; i < array.length; i++)
@@ -471,7 +494,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var countField = $('#countField').val();		
 		var chartData = new Array ();
 		
-		//dataObjectArray = [{'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 1}, {'orangeBoardings': 2}, {'orangeBoardings': 2}, {'orangeBoardings': 3}]
 		if (countField == '')
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
@@ -481,8 +503,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if (value != '')
 					chartData = addToArray (chartData, value);
 			}
-			
-			//chartData = [{'label': 'orangeBoardings', 'value': 1}, {'label': 'orangeBoardings', 'value': 2}, {'label': 'orangeBoardings', 'value': 3}];
 		}
 		else
 		{
@@ -513,6 +533,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});		
 	}
 
+
+	//-------------------------- MAP GRAPHING ----------------------------------
 	var map;
 	var popup;
 	var statesLayer;
@@ -662,7 +684,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			document.getElementById('temp').removeAttribute('viewBox');
 		}, 0);
 	}
-}]);
+}]);//end controller
 
 
 $(document).on('change', '.btn-file :file', function() 
@@ -697,21 +719,26 @@ $(document).ready(function() {
 	});
 });
 
-$(function() {
-	var socket = io.connect('localhost:80');
+$(function()
+{
+	var socket = io.connect('datapuking.com');
 	
-	socket.on('connect', function(){
+	socket.on('connect', function()
+	{
 		var delivery = new Delivery(socket);
 		
-		delivery.on('delivery.connect',function(delivery) {
-			$("button[type=submit]").click(function(evt) {
+		delivery.on('delivery.connect',function(delivery)
+		{
+			$("button[type=submit]").click(function(evt)
+			{
 				var file = $("input[type=file]")[0].files[0];
 				delivery.send(file);
 				evt.preventDefault();
 			});
 		});
 
-		delivery.on('send.success',function(fileUID) {
+		delivery.on('send.success',function(fileUID)
+		{
 			console.log("file was successfully sent.");
 		});
 	});

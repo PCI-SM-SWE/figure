@@ -89,7 +89,8 @@ var dl  = require('delivery');
 //	});
 //}
 
-io.on('connection', function(socket) {
+io.on('connection', function(socket)
+{
 	socket.on('sample1 requested', function(response)
 	{
 		console.log("Sample 1 requested");
@@ -119,32 +120,32 @@ io.on('connection', function(socket) {
 	});
 	
 	socket.on('sample3 requested', function(response)
-			{
+	{
 		console.log("Sample 3 requested");
 		getFile('./public/sample_data/choropleth_map_sample_data.csv', function(data)
-				{
+		{
 			socket.emit('sample3 data', data);
-				});
-			});
+		});
+	});
 
-	socket.on('sample3received', function(response)
-			{
+	socket.on('sample3 received', function(response)
+	{
 		console.log("Sample 3 sent succesfully");
-			});
+	});
 
 	socket.on('sample4 requested', function(response)
-			{
+	{
 		console.log("Sample 4 requested");
 		getFile('./public/sample_data/upload_testing2.csv', function(data)
-				{
+		{
 			socket.emit('sample4 data', data);
-				});
-			});
+		});
+	});
 
 	socket.on('sample4 received', function(response)
-			{
+	{
 		console.log("Sample 4 sent succesfully");
-			});
+	});
 
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
@@ -156,14 +157,18 @@ io.on('connection', function(socket) {
  * Using delivery to send uploaded files to the server, then back from the server to the
  * client, having converted the contents of the file to a strig to be parsed client-side(for now)
  */
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', function(socket)
+{
 	var delivery = dl.listen(socket);
-	delivery.on('receive.success',function(file){
 
-		fs.writeFile(file.name,file.buffer, function(err){
-			if(err){
+	delivery.on('receive.success',function(file)
+	{
+		fs.writeFile('./test/' + file.name,file.buffer, function(err)
+		{
+			if(err)
 				console.log('File could not be saved.');
-			}else{
+			else
+			{
 				console.log('File ' + file.name + ' recieved');
 				socket.emit('file data', file.buffer.toString());
 			};
