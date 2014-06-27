@@ -91,33 +91,33 @@ var dl  = require('delivery');
 
 io.on('connection', function(socket) {
 	socket.on('sample1 requested', function(response)
-	{
+			{
 		console.log("Sample 1 requested");
 		getFile('./public/sample_data/Charm_City_Circulator_Ridership.csv', function(data)
-		{
+				{
 			socket.emit('sample1 data', data);
-		});
-	});
-	
+				});
+			});
 	socket.on('sample1 received', function(response)
-	{
+			{
 		console.log("Sample 1 sent succesfully");
-	});
+			});
+
 
 	socket.on('sample2 requested', function(response)
-	{
+			{
 		console.log("Sample 2 requested");
 		getFile('./public/sample_data/pie_chart_sample_data.csv', function(data)
-		{
+				{
 			socket.emit('sample2 data', data);
-		});
-	});
-	
+				});
+			});
 	socket.on('sample2 received', function(response)
-	{
+			{
 		console.log("Sample 2 sent succesfully");
-	});
-	
+			});
+
+
 	socket.on('sample3 requested', function(response)
 			{
 		console.log("Sample 3 requested");
@@ -126,11 +126,11 @@ io.on('connection', function(socket) {
 			socket.emit('sample3 data', data);
 				});
 			});
-
 	socket.on('sample3received', function(response)
 			{
 		console.log("Sample 3 sent succesfully");
 			});
+
 
 	socket.on('sample4 requested', function(response)
 			{
@@ -140,15 +140,35 @@ io.on('connection', function(socket) {
 			socket.emit('sample4 data', data);
 				});
 			});
-
 	socket.on('sample4 received', function(response)
 			{
 		console.log("Sample 4 sent succesfully");
 			});
 
+	
+// Sending list of previously uploaded files to client
+	fs.readdir('./uploaded_files', function(err, files) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			socket.emit('uploaded files', files);
+		}
+	});
+	
+// Sending data previously uploaded
+	socket.on('stored data requested', function(name) {
+		console.log(name + " requested");
+		getFile('./uploaded_files/' + name, function(data) {
+			socket.emit(name + ' data', data);
+		});
+		socket.on(name + ' received', function(response) {
+			console.log(name + " sent succesfully");
+		})
+	});;
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
-//		console.log(data);
+//	console.log(data);
 //	});
 });
 
@@ -160,7 +180,7 @@ io.sockets.on('connection', function(socket){
 	var delivery = dl.listen(socket);
 	delivery.on('receive.success',function(file){
 
-		fs.writeFile(file.name,file.buffer, function(err){
+		fs.writeFile('./uploaded_files/'+file.name,file.buffer, function(err){
 			if(err){
 				console.log('File could not be saved.');
 			}else{
