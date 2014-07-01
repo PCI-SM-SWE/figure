@@ -6,10 +6,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 {
 	var client = new Handler(socket);
 	var dataObjectArray;
+	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
 
 	function generateFields ()
 	{
-		$('#fields').empty();
+		$('.fields').empty();
 
 		for (var i = 0; i < $scope.fields.length; i++)
 		{
@@ -29,7 +30,31 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile(tr)($scope);
 			});	
 
-			$('#fields').append (tr);	
+			$('.fields').append (tr);	
+		}
+	}
+
+	function generateOperators()
+	{
+		for (var i = 0; i < operators.length; i++)
+		{
+			var tr = document.createElement ('tr');
+			tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
+			tr.setAttribute ('x-lvl-draggable', 'true');
+			tr.setAttribute ('draggable', 'true');
+			tr.setAttribute ('id', operators[i]);
+			tr.setAttribute ('class', 'ui-draggable');
+
+			var td = document.createElement ('td');
+			td.innerHTML = operators[i];
+			
+			tr.appendChild (td);
+
+			angular.element(document).injector().invoke(function($compile) {
+				$compile(tr)($scope);
+			});	
+
+			$('.operators').append (tr);	
 		}
 	}
 
@@ -50,6 +75,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$scope.fields = results.results.fields;
 
 				generateFields ();
+				generateOperators();
 
 				console.log(JSON.stringify(dataObjectArray));
 			}, 1000);
@@ -69,6 +95,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$scope.fields = results.results.fields;
 			
 			generateFields ();
+			generateOperators();
 
 			console.log(JSON.stringify(dataObjectArray));
 		});
