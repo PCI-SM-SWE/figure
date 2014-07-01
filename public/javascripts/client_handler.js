@@ -20,6 +20,21 @@ Handler.prototype.fileUploadRequest = function(callback) {
 	});
 }
 
+Handler.prototype.storedDataRequest = function(name, callback) {
+	socket.emit('stored data requested', name);
+	console.log(name);
+	var response = socket.on(name + ' data', function(data) {
+		socket.emit(name + ' received');
+		callback(data);
+	});
+}
+
+Handler.prototype.filesList = function(callback) {
+	var response = socket.on('uploaded files', function(files) {
+		callback(files);
+	});
+}
+
 
 //		socket.on('news', function(data) {
 //			console.log(data);

@@ -105,6 +105,7 @@ io.on('connection', function(socket)
 		console.log("Sample 1 sent succesfully");
 	});
 
+
 	socket.on('sample2 requested', function(response)
 	{
 		console.log("Sample 2 requested");
@@ -118,7 +119,8 @@ io.on('connection', function(socket)
 	{
 		console.log("Sample 2 sent succesfully");
 	});
-	
+
+
 	socket.on('sample3 requested', function(response)
 	{
 		console.log("Sample 3 requested");
@@ -128,10 +130,11 @@ io.on('connection', function(socket)
 		});
 	});
 
-	socket.on('sample3 received', function(response)
+	socket.on('sample3received', function(response)
 	{
 		console.log("Sample 3 sent succesfully");
 	});
+
 
 	socket.on('sample4 requested', function(response)
 	{
@@ -147,15 +150,36 @@ io.on('connection', function(socket)
 		console.log("Sample 4 sent succesfully");
 	});
 
+	
+// Sending list of previously uploaded files to client
+	fs.readdir('./uploaded_files', function(err, files) {
+		if(err) {
+			console.log(err);
+		}
+		else {
+			socket.emit('uploaded files', files);
+		}
+	});
+	
+// Sending data previously uploaded
+	socket.on('stored data requested', function(name) {
+		console.log(name + " requested");
+		getFile('./uploaded_files/' + name, function(data) {
+			socket.emit(name + ' data', data);
+		});
+		socket.on(name + ' received', function(response) {
+			console.log(name + " sent succesfully");
+		})
+	});;
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
-//		console.log(data);
+//	console.log(data);
 //	});
 });
 
 /*
  * Using delivery to send uploaded files to the server, then back from the server to the
- * client, having converted the contents of the file to a strig to be parsed client-side(for now)
+ * client, having converted the contents of the file to a string to be parsed client-side(for now)
  */
 io.sockets.on('connection', function(socket)
 {
@@ -163,9 +187,9 @@ io.sockets.on('connection', function(socket)
 
 	delivery.on('receive.success',function(file)
 	{
-		fs.writeFile('./test/' + file.name,file.buffer, function(err)
-		{
+		fs.writeFile('./uploaded_files/'+file.name,file.buffer, function(err){
 			if(err)
+			{
 				console.log('File could not be saved.');
 			else
 			{

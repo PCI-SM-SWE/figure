@@ -91,6 +91,48 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(JSON.stringify(dataObjectArray));
 		});
 	};
+	
+	function storedData(name) {
+		alert("1");
+		client.storedDataRequest(name, function(data) {
+			
+			console.log(data);
+
+			$('#area').val(data);
+			var results = $.parse(data);	
+			console.log(results.results.rows[0]);
+			dataObjectArray = results.results.rows;
+			$scope.fields = results.results.fields;
+			
+			generateFields ();
+
+			console.log(JSON.stringify(dataObjectArray));
+		});
+	};
+	
+	function populateFileList() {
+		client.filesList(function(data) {
+			console.log(data);
+			
+			$('#storedList').empty();
+			var i;
+			for(i = 0; i < data.length; i++) {
+				var li = document.createElement ('li');
+				var a = document.createElement('a');
+				a.setAttribute('href', '');
+				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
+//				a.onclick = storedData("'" + data[i] + "'");
+				a.innerHTML = data[i];	
+				li.appendChild(a);
+				$('#storedList').append(li);
+			}
+		});
+	}
+	$(document).ready( function() {
+		populateFileList();
+	});
+	
+	
 
 	var xAxis;
 	var yAxis;

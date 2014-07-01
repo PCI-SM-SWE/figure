@@ -47,7 +47,7 @@
 
 </head>
 
-<body  ng-controller="MainCtrl" ng-init="page = 1"> <!-- CHANGE TO PAGE = 1 WHEN DONE -->
+<body  ng-controller="MainCtrl" ng-init="page = 1">
 	<!-- Header -->
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -83,21 +83,31 @@
 		</div>
 		<!-- Top three-button grouping -->
 		<div class="btn-group btn-group-justified" ng-init="dataTab = 1">
-			<!-- Left button -->
+			<!-- Manual entry button -->
 			<div class="btn-group">
 				<button type="button" class="btn btn-default"
 					ng-class="{active:dataTab == 1}" ng-click="dataTab = 1">
 					Enter Data   <span class="glyphicon glyphicon-pencil"></span></button>
 			</div>
-			<!-- Center button -->
+			<!-- Upload button -->
 				<div class="btn-group">
 					<button type="button" class="btn btn-default"
 						ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
 						Upload Data <span class="glyphicon glyphicon-folder-open"></span>
 					</button>
 				</div>
-				<!-- Right dropdown button -->
+			<!-- My files dropdown button -->
 			<div class="btn-group" ng-class="{active:dataTab == 3}" ng-click="dataTab = 3">
+				<button type="button" class="btn btn-default dropdown-toggle"
+					data-toggle="dropdown">
+					My Uploads <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" id="storedList">
+				<!--<li><a id="storedList" href="" ng-repeat="item in list" ng-click="storedData(item)">{{item}}</a></li>-->
+				</ul>
+			</div>
+				<!-- Sample dropdown button -->
+			<div class="btn-group" ng-class="{active:dataTab == 4}" ng-click="dataTab = 4">
 				<button type="button" class="btn btn-default dropdown-toggle"
 					data-toggle="dropdown">
 					Sample Data <span class="caret"></span>
@@ -111,11 +121,8 @@
 			</div>
 		</div>
 		<br>
-		<!-- Text area for manual data input -->
-		<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
-			ng-model="textArea" ng-show="dataTab == 1 || dataTab == 3" style = "resize: none;"></textarea>
 		<div class="col-xs-6 col-sm-6 col-md-6" ng-show="dataTab == 2">
-            <h4>Upload Files</h4>
+            <h4>Upload a CSV File</h4>
             <div class="input-group">
                 <span class="input-group-btn">
                     <span class="btn-file">
@@ -124,14 +131,20 @@
                 </span>
                 <input type="text" class="form-control" ng-model="uploadArea" readonly>
             </div>
+            <!-- Submit button for upload -->
 			<div class="submit-button">
 				<button class="btn btn-primary" type="submit"
 					role="button" ng-click="fileUpload()">Submit</button>
 			</div>
+			<!--
 			<span class="help-block">
             	Please select a file to upload from your computer
             </span>
+             -->
         </div>
+		<!-- Text area for manual data input -->
+		<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
+			ng-model="textArea" ng-show="true" style = "resize: none;"></textarea>
 		<br>
 		<!-- Submit button -->
 		<!-- 
@@ -392,7 +405,6 @@
 	<link  rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'>
 
 	<script src="javascripts/angular.js"></script>
-	
 
 	<script>
 		$(document).ready(function() {
