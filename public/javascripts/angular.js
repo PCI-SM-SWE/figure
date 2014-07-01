@@ -110,24 +110,28 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 	
-	function populateFileList() {
-		client.filesList(function(data) {
+	function populateFileList()
+	{
+		client.filesList(function(data)
+		{
 			console.log(data);
 			
 			$('#storedList').empty();
-			var i;
-			for(i = 0; i < data.length; i++) {
+			
+			for(var i = 0; i < data.length; i++)
+			{
 				var li = document.createElement ('li');
 				var a = document.createElement('a');
 				a.setAttribute('href', '');
 				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
-//				a.onclick = storedData("'" + data[i] + "'");
+				//a.onclick = storedData("'" + data[i] + "'");
 				a.innerHTML = data[i];	
 				li.appendChild(a);
 				$('#storedList').append(li);
 			}
 		});
 	}
+
 	$(document).ready( function() {
 		populateFileList();
 	});
@@ -148,7 +152,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		if (currentTab == 1)
 		{
 			$('#xAxisBar').val('');
-			$('#yAxisBar').val('');
+			$('#yAxisBar').val(''	);
 			$('#barGraph').empty();
 		}
 		else if (currentTab == 2)
@@ -510,7 +514,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});				
 	}
 
-
 	//-------------------------- PIE ------------------------------------------
 	function addToArray (array, element)
 	{		
@@ -577,7 +580,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});		
 	}
 
-	//
 	//-------------------------- MAP GRAPHING ----------------------------------
 	var map = L.mapbox.map('map', 'examples.map-i86nkdio')
     .setView([37.8, -96], 4);

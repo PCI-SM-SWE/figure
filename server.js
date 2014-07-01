@@ -152,22 +152,28 @@ io.on('connection', function(socket)
 
 	
 // Sending list of previously uploaded files to client
-	fs.readdir('./uploaded_files', function(err, files) {
-		if(err) {
+	fs.readdir('./uploaded_files', function(err, files)
+	{
+		if(err)
+		{
 			console.log(err);
 		}
-		else {
+		else
+		{
 			socket.emit('uploaded files', files);
 		}
 	});
 	
 // Sending data previously uploaded
-	socket.on('stored data requested', function(name) {
+	socket.on('stored data requested', function(name)
+	{
 		console.log(name + " requested");
-		getFile('./uploaded_files/' + name, function(data) {
+		getFile('./uploaded_files/' + name, function(data)
+		{
 			socket.emit(name + ' data', data);
 		});
-		socket.on(name + ' received', function(response) {
+		socket.on(name + ' received', function(response)
+		{
 			console.log(name + " sent succesfully");
 		})
 	});;
@@ -187,7 +193,8 @@ io.sockets.on('connection', function(socket)
 
 	delivery.on('receive.success',function(file)
 	{
-		fs.writeFile('./uploaded_files/'+file.name,file.buffer, function(err){
+		fs.writeFile('./uploaded_files/'+file.name,file.buffer, function(err)
+		{
 			if(err)
 			{
 				console.log('File could not be saved.');
