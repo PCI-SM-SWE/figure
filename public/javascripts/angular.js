@@ -10,9 +10,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	function generateFields ()
 	{
 		$('#fields').empty();
-		var i;
 
-		for (i = 0; i < $scope.fields.length; i++)
+		for (var i = 0; i < $scope.fields.length; i++)
 		{
 			var tr = document.createElement ('tr');
 			tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
@@ -40,20 +39,20 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$("#area").bind ('paste', function(e)
 		{
-		    var elem = $(this);
+			var elem = $(this);
 
-		    setTimeout (function()
-		    {		       
-		    	var data = $('#area').val();
+			setTimeout (function()
+			{		       
+				var data = $('#area').val();
 				var results = $.parse(data);
 				console.log(results.results.rows);
 				dataObjectArray = results.results.rows;
 				$scope.fields = results.results.fields;
 
-		    	generateFields ();
+				generateFields ();
 
-		    	console.log(JSON.stringify(dataObjectArray));
-		    }, 1000);
+				console.log(JSON.stringify(dataObjectArray));
+			}, 1000);
 		});
 	});
 
@@ -102,7 +101,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var choroplethValueField;	
 	var currentTab = 1;
 
-	$scope.selectVisualizationType = function ()
+	$scope.clearAll = function ()
 	{
 		if (currentTab == 1)
 		{
@@ -116,8 +115,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#yAxisLine').val('');
 			$('#groupingLine').val('');
 			$('#lineGraph').empty();
-
-			//clear optional grouping field
+			$('#groupingLine').val('');
 		}
 		else if (currentTab == 3)
 		{
@@ -139,6 +137,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		countField = '';
 		locationField = '';
 		choroplethValueField = '';
+	}
+
+	$scope.selectVisualizationType = function ()
+	{
+		$scope.clearAll();
 
 		currentTab = $scope.graphTab;
 	};
@@ -219,10 +222,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#barGraph').empty ();
 		console.log (JSON.stringify(dataObjectArray));
 
-		var i;
 		var values = new Array ();
 
-		for (i = 0; i < dataObjectArray.length; i++)
+		for (var i = 0; i < dataObjectArray.length; i++)
 		{
 			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseFloat(dataObjectArray[i][yAxis])});
 		}
@@ -235,21 +237,21 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		nv.addGraph(function()
 		{
 			var chart = nv.models.discreteBarChart()
-      				.x(function(d) { return d.label })    //Specify the data accessors.
-      				.y(function(d) { return d.value })
-      				.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
-      				.tooltips(false)        //Don't show tooltips
-      				.showValues(true)       //...instead, show the bar value right on top of each bar.
-      				.transitionDuration(350);
+					.x(function(d) { return d.label })    //Specify the data accessors.
+					.y(function(d) { return d.value })
+					.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+					.tooltips(false)        //Don't show tooltips
+					.showValues(true)       //...instead, show the bar value right on top of each bar.
+					.transitionDuration(350);
 
-     		d3.select('#barGraph')
-      		.datum(chartData)
-      		.call(chart);
+			d3.select('#barGraph')
+			.datum(chartData)
+			.call(chart);
 
-    	  	nv.utils.windowResize(chart.update);
+			nv.utils.windowResize(chart.update);
 
-      		return chart;
-  		});
+			return chart;
+		});
 	}
 
 
@@ -498,7 +500,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				var value = dataObjectArray[i][valueLabel];
+				var value = dataObjectArray[i][valueLabel];	
 				
 				if (value != '')
 					chartData = addToArray (chartData, value);
@@ -533,29 +535,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});		
 	}
 
-
+	//
 	//-------------------------- MAP GRAPHING ----------------------------------
-	var map;
-	var popup;
-	var statesLayer;
-	var closeTooltip;	
-	
-	function getStyle(feature) 
-	{
-		console.log (feature.properties.density + '-' + getColor(feature.properties.density));
-		
-		return {
-			weight: 2,
-			opacity: 0.1,
-			color: 'black',
-			fillOpacity: 0.7,
-			fillColor: getColor(feature.properties.density)
-		};
-	}
+	var map = L.mapbox.map('map', 'examples.map-i86nkdio')
+    .setView([37.8, -96], 4);
 
-	// get color depending on population density value
-	function getColor(d)
-	{	
+    function getColor(d)
+    {
 		return d > 1000 ? '#8c2d04' :
 			d > 500  ? '#cc4c02' :
 			d > 200  ? '#ec7014' :
@@ -564,10 +550,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			d > 20   ? '#fee391' :
 			d > 10   ? '#fff7bc' :
 			'#ffffe5';
-	}
-		
+  	}
 
-  
 	function onEachFeature(feature, layer)
 	{
 		console.log('onEachFeature');
@@ -647,12 +631,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		console.log (statesData);
 		statesLayer = L.geoJson(statesData,  {
-		style: getStyle,
-		onEachFeature: onEachFeature
+			style: getStyle,
+			onEachFeature: onEachFeature
 		}).addTo(map);	  
-
-
-		map.legendControl.addLegend(getLegendHTML());
 
 		$('.leaflet-zoom-animated').attr('width', '2000');
 		$('.leaflet-zoom-animated').attr('height', '629');
