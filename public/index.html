@@ -271,8 +271,20 @@
 						</table>
 					</div>
 				</div>
+				<!-- Tab for visualization / statistics -->
+				<div class="col-xs-7 col-sm-7 col-md-7" ng-init="statsTab = 1">
+						<ul class="nav nav-tabs">
+							<li ng-class="{active:statsTab == 1}"
+								ng-click="statsTab = 1; selectVisualizationType()"><a
+								href="">Visualization</a></li>
+							<li ng-class="{active:statsTab == 2}"
+								ng-click="statsTab = 2; selectVisualizationType()"><a
+								href="">Statistics</a></li>
+						</ul>
+					</div>
 				
-				<br> 
+				<br>
+				<br>
 				<br>
 				
 				<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show = "graphTab == 1">
@@ -376,7 +388,6 @@
 				<div class="welcome-text">
 					<h1>Data Analysis</h1>
 				</div>
-				<br> <br>
 				<!-- Left section, data fields -->
 				<div class="col-xs-2 col-sm-2 col-md-2">
 					<h3 class="text-center">Data Fields</h3>
