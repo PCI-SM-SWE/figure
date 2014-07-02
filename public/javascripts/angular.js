@@ -60,6 +60,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready (function ()
 	{
+		populateFileList();
+
 		jQuery.event.props.push('dataTransfer');
 
 		$("#area").bind ('paste', function(e)
@@ -158,12 +160,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 		});
 	}
-
-	$(document).ready( function() {
-		populateFileList();
-	});
-	
-	
 
 	var xAxis;
 	var yAxis;
