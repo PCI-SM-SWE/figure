@@ -279,6 +279,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotChoroplethMap();
 			}
 		}		
+		
+		else if ($scope.graphTab == 5)
+		{
+			valueField = $('#valueField').val();
+			countField = $('#countField').val();
+
+			if (valueField != '')
+			{
+				console.log ('stats()'); //No stats function exsists yet
+				stats();
+			}
+		}
 
 		console.log ('xAxis: ' + xAxis);
 		console.log ('yAxis: ' + yAxis);
