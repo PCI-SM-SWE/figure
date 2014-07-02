@@ -228,6 +228,99 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		readyToGraph ();
 	};
 
+	$scope.droppedMetric = function (dragEl, dropEl)
+	{
+		console.log (dragEl);
+		console.log (dropEl);
+
+		var drag = angular.element (dragEl);
+		var drop = angular.element (dropEl);
+		var operator;
+
+		console.log($('#metricFields').children().length);
+		if($('#metricFields').children().length == 2)
+			return;
+
+		drop.val(drop.val() + drag.attr('id'));
+
+		if (drag.attr('id').indexOf('()') != -1)
+		{
+			operator = drag.attr('id').substring(0, drag.attr('id').indexOf('()'));
+			console.log(operator);
+
+			var label = document.createElement('label')
+			label.setAttribute('class', 'inputMetricField');
+			label.innerHTML = '<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;	' + operator + ':&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+			var input = document.createElement('input');
+			input.setAttribute('id', operator);
+			input.setAttribute('type', 'email');
+			input.setAttribute('class', 'inputMetricField');
+			input.setAttribute('placeholder', 'Drop field here');
+			input.setAttribute('x-lvl-drop-target', 'true');
+			input.setAttribute('x-on-drop', 'droppedMetricField(dragEl, dropEl)');
+			
+			angular.element(document).injector().invoke(function($compile) {
+				$compile(input)($scope);
+			});	
+
+			$('#metricFields').append(label);
+			$('#metricFields').append(input);
+		}
+	}
+
+	$scope.droppedMetricField = function (dragEl, dropEl)
+	{
+		console.log (dragEl);
+		console.log (dropEl);
+
+		var drag = angular.element (dragEl);
+		var drop = angular.element (dropEl);
+
+		var operator = drop.attr('id');
+		var field = drag.attr('id');
+
+		if (operator == 'sum')
+		{
+			var sum = 0;
+
+			for (var i = 0; i < dataObjectArray.length; i++)
+			{
+				sum += dataObjectArray[i][field];
+			}
+
+			console.log(sum);
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum))
+		}
+		else if (operator == 'count')
+		{
+			var count = 0;
+
+			for (var i = 0; i < dataObjectArray.length; i++)
+			{
+				if (dataObjectArray[i][field] != '')
+					count++;
+			}
+
+			console.log(count);
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count))
+		}
+		else if (operator == 'avg')
+		{
+			var sum = 0;
+
+			for (var i = 0; i < dataObjectArray.length; i++)
+			{
+				sum += dataObjectArray[i][field];
+			}
+
+			console.log (sum/dataObjectArray.length);
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length))
+		}
+
+		$('.inputMetricField').remove();
+	}
+
 	function readyToGraph ()
 	{
 		if ($scope.graphTab == 1)
@@ -616,8 +709,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	//-------------------------- MAP GRAPHING ----------------------------------
-	var map = L.mapbox.map('map', 'examples.map-i86nkdio')
-    .setView([37.8, -96], 4);
+	var map;
+	var popup;
+	var closeTooltip;
 
     function getColor(d)
     {
@@ -631,15 +725,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'#ffffe5';
   	}
 
-	function onEachFeature(feature, layer)
-	{
-		console.log('onEachFeature');
-		layer.on({
-			mousemove: mousemove,
-			mouseout: mouseout,
-			click: zoomToFeature
-		});
-	}
+  	function getStyle(feature)
+  	{
+     	return {
+        	weight: 2,
+        	opacity: 0.1,
+        	color: 'black',
+        	fillOpacity: 0.7,
+        	fillColor: getColor(feature.properties.density)
+    	};
+ 	}
   
 	function mousemove(e)
 	{
@@ -675,6 +770,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	function zoomToFeature(e)
 	{
 		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer)
+	{
+		console.log('onEachFeature');
+		layer.on({
+			mousemove: mousemove,
+			mouseout: mouseout,
+			click: zoomToFeature
+		});
 	}
 
 	function getLegendHTML()
@@ -714,9 +819,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			onEachFeature: onEachFeature
 		}).addTo(map);	  
 
+		map.legendControl.addLegend(getLegendHTML());
+
 		$('.leaflet-zoom-animated').attr('width', '2000');
 		$('.leaflet-zoom-animated').attr('height', '629');
+		
 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
+		alert ($('.leaflet-zoom-animated').attr('style'));
+
 
 		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
 		e.setAttribute ('viewBox', '0 0 2000 629')
@@ -738,11 +848,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var z = attr.substr(0, attr.indexOf('px'));
 
+			console.log('x = ' + x);
+			console.log('y = ' + y);
+			console.log('z = ' + z);
 
 			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
 			document.getElementById('temp').removeAttribute('viewBox');
-		}, 0);
+		}, 1000);
 	}
 }]);//end controller
 

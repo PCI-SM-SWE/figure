@@ -19,6 +19,8 @@
 
 <style>
 
+#map {top:0; bottom:0; width:100%; }
+
 .map-legend .swatch
 {
 	width:20px;
@@ -261,7 +263,6 @@
 				 -->
 				 <br>
 				 <br>
-
 				<div class="welcome-text">
 					<h1>Please Finalize Visualization</h1>
 				</div>
@@ -287,13 +288,6 @@
 
 								</tbody>
 							</table>
-						</div>
-					</div>
-
-					<!-- Statistics Tab View -->
-					<div ng-show="graphTab == 5">
-						<div class="col-xs-7 col-sm-7 col-md-7 well">
-							<textarea></textarea>
 						</div>
 					</div>
 				</div>
@@ -394,12 +388,23 @@
 						<div id = "map" style = "height: 600px;" class = "col-xs-12 col-sm-12 col-md-12"></div>
 					</form>	
 				</div>
+
+				<!-- Statistics Tab View -->
+				<div ng-show="graphTab == 5">
+					<h3>Metric Equation</h3>
+					<div class="col-xs-7 col-sm-7 col-md-7 well">
+						<textarea id = "metricEquation" rows = "8" cols = "120" style = "resize: none;" x-lvl-drop-target = "true" x-on-drop = "droppedMetric(dragEl, dropEl)"></textarea>
+						
+						<form class = "form-horizontal" role = "form">
+							<div class = "form-group" id = "metricFields">
+
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
-	
-	<br>
-
 
 
 	<!-- Bootstrap core JavaScript
