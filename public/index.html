@@ -285,6 +285,7 @@
 							</tbody>
 						</table>
 					</div>
+					
 					<!-- Operators area if statistics tab is active -->
 					<div ng-show="graphTab == 5">
 						<h3>Operators</h3>
@@ -309,8 +310,6 @@
 						<label>X-Axis</label>
 						<input id = "xAxisBar" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
 					</div>
-					<!-- TEST CODE HERE on div: id=div 
-						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
 					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 						<label>Y-Axis</label>
 						<input id = "yAxisBar" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
@@ -321,7 +320,6 @@
 					</div>
 
 					<div id = "chart1" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 20%;">
-						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
 						<svg id = "barGraph" style = "width: 100%; height: 60%;"></svg>
 					</div>
 				</form>
@@ -347,7 +345,6 @@
 					</div>
 
 					<div id = "chart2" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 100%;">
-						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
 						<svg id = "lineGraph" style = "width: 100%; height: 100%;"></svg>
 					</div>
 				</form>
@@ -357,8 +354,6 @@
 						<label>Value Field</label>
 						<input id = "valueField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
 					</div>
-					<!-- TEST CODE HERE on div: id=div 
-						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
 					<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 						<label>Count(Optional)</label>
 						<input id = "countField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
