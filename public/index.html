@@ -146,7 +146,7 @@
         </div>
 		<!-- Text area for manual data input -->
 		<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
-			ng-model="textArea" ng-show="true" style = "resize: none;"></textarea>
+			ng-model="textAreaTop" ng-show="true" style = "resize: none;"></textarea>
 		<br>
 		<!-- Submit button -->
 		<!-- 
@@ -245,7 +245,15 @@
 						choropleth map is a map that uses differences in shading, coloring, 
 						or the placing of symbols within predefined areas to indicate the 
 						average values of a property or quantity in those areas.</div>
-					<div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 5">This tab will show the statistical data analysis of for the selected data. This tab utilizes data from some population in order to describe it meaningfully, to draw conclusions from it, and help you make informed decisions. [needs more...later]</div>
+					<div class="col-xs-3 col-sm-3 col-md-3 well"
+						ng-show="graphTab == 5">This tab will show the statistical
+						data analysis for the selected data. Utilizing data from some
+						population, the stats tab will give you a deeper numerical and
+						statistical understanding of the underlying data, allowing you to
+						describe it meaningfully, to draw conclusions from it, and help
+						you make informed decisions. The stats tab provides general
+						statistical data, as well as giving you the option to make custom
+						calculations, all from within the application.</div>
 				</div>
 			</div>
 	</section>
@@ -400,6 +408,11 @@
 
 							</div>
 						</form>
+
+						<!-- <textarea ng-model="eqnTextArea" rows="8" cols="117.5"></textarea> -->
+						<div class="submit-button">
+							<a href="" class="btn btn-primary btn-success" role="button" ng-click="calculate()">Calculate</a>
+						</div>
 					</div>
 				</div>
 			</div>

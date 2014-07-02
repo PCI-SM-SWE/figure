@@ -82,6 +82,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				console.log(JSON.stringify(dataObjectArray));
 			}, 1000);
 		});
+
+		//alert ($scope.eqnTextArea.length);
 	});
 
 	$scope.sampleData = function(num)
@@ -319,6 +321,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 
 		$('.inputMetricField').remove();
+	}
+
+	$scope.calculate = function()
+	{
+		$('#metricEquation').val(eval($('#metricEquation').val()));
 	}
 
 	function readyToGraph ()
@@ -854,7 +861,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-			document.getElementById('temp').removeAttribute('viewBox');
+			document.getElementById('temp').removeAttribute('viewBox');	
 		}, 1000);
 	}
 }]);//end controller
