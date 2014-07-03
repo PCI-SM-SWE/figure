@@ -325,7 +325,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$scope.calculate = function()
 	{
-		$('#metricEquation').val(eval($('#metricEquation').val()));
+		if ($('#metricEquation').val() != '')
+		{
+			try	
+			{
+				$('#metricEquation').val(eval($('#metricEquation').val()));
+			}
+			catch(err)
+			{
+				return;
+			}
+		}			
 	}
 
 	function readyToGraph ()
