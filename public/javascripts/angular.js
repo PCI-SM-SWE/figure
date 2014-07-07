@@ -293,7 +293,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				sum += dataObjectArray[i][field];
+				if (dataObjectArray[i][field] != '')
+					sum += dataObjectArray[i][field];
 			}
 
 			console.log(sum);
@@ -318,10 +319,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				sum += dataObjectArray[i][field];
+				if (dataObjectArray[i][field] != '')
+					sum += dataObjectArray[i][field];
 			}
 
-			console.log (sum/dataObjectArray.length);
+			console.log (sum);
+			console.log (dataObjectArray.length);
 			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length));
 		}
 
