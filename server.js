@@ -91,6 +91,22 @@ var dl  = require('delivery');
 
 io.on('connection', function(socket)
 {
+	console.log('connected');
+	// Sending list of previously uploaded files to client
+	fs.readdir('./uploaded_files', function(err, files)
+	{
+		if(err)
+		{
+			console.log(err);
+		}
+		else
+		{
+			console.log(files);
+			socket.emit('uploaded files', files);
+		}
+	});
+
+
 	socket.on('sample1 requested', function(response)
 	{
 		console.log("Sample 1 requested");
@@ -149,22 +165,8 @@ io.on('connection', function(socket)
 	{
 		console.log("Sample 4 sent succesfully");
 	});
-
 	
-// Sending list of previously uploaded files to client
-	fs.readdir('./uploaded_files', function(err, files)
-	{
-		if(err)
-		{
-			console.log(err);
-		}
-		else
-		{
-			socket.emit('uploaded files', files);
-		}
-	});
-	
-// Sending data previously uploaded
+	// Sending data previously uploaded
 	socket.on('stored data requested', function(name)
 	{
 		console.log(name + " requested");
@@ -172,6 +174,7 @@ io.on('connection', function(socket)
 		{
 			socket.emit(name + ' data', data);
 		});
+
 		socket.on(name + ' received', function(response)
 		{
 			console.log(name + " sent succesfully");

@@ -1,4 +1,5 @@
 var socket = io('datapuking.com');
+//var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -36,6 +37,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function generateOperators()
 	{
+		$('.operators').empty();
+
 		for (var i = 0; i < operators.length; i++)
 		{
 			var tr = document.createElement ('tr');
@@ -123,10 +126,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 	
-	function storedData(name) {
-		alert("1");
-		client.storedDataRequest(name, function(data) {
-			
+	function storedData(name)
+	{		
+		client.storedDataRequest(name, function(data)
+		{			
 			console.log(data);
 
 			$('#area').val(data);
@@ -159,6 +162,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				a.innerHTML = data[i];	
 				li.appendChild(a);
 				$('#storedList').append(li);
+
+				//clicking functionality
 			}
 		});
 	}
@@ -288,11 +293,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				sum += dataObjectArray[i][field];
+				if (dataObjectArray[i][field] != '')
+					sum += dataObjectArray[i][field];
 			}
 
 			console.log(sum);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum))
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum));
 		}
 		else if (operator == 'count')
 		{
@@ -305,7 +311,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 
 			console.log(count);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count))
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count));
 		}
 		else if (operator == 'avg')
 		{
@@ -313,19 +319,37 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				sum += dataObjectArray[i][field];
+				if (dataObjectArray[i][field] != '')
+					sum += dataObjectArray[i][field];
 			}
 
-			console.log (sum/dataObjectArray.length);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length))
+			console.log (sum);
+			console.log (dataObjectArray.length);
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length));
 		}
 
 		$('.inputMetricField').remove();
 	}
 
-	$scope.calculate = function()
+	$scope.clearMetric = function()
 	{
-		$('#metricEquation').val(eval($('#metricEquation').val()));
+		$('.inputMetricField').remove();
+		$('#metricEquation').val('');
+	}
+
+	$scope.calculateMetric = function()
+	{
+		if ($('#metricEquation').val() != '')
+		{
+			try	
+			{
+				$('#metricEquation').val(eval($('#metricEquation').val()));
+			}
+			catch(err)
+			{
+				return;
+			}
+		}			
 	}
 
 	function readyToGraph ()
@@ -832,12 +856,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.leaflet-zoom-animated').attr('height', '629');
 		
 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
-		alert ($('.leaflet-zoom-animated').attr('style'));
-
 
 		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		e.setAttribute ('viewBox', '0 0 2000 629')
-		e.setAttribute ('id', 'temp');
+		e.setAttribute('width', '2000px');
+		e.setAttribute('height', '629px;')
+		e.setAttribute('viewBox', '0 0 2000 629')
+		e.setAttribute('id', 'temp');
 		var x;
 		var y;
 		var z;
@@ -855,11 +879,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var z = attr.substr(0, attr.indexOf('px'));
 
-			console.log('x = ' + x);
-			console.log('y = ' + y);
-			console.log('z = ' + z);
+			// console.log('x = ' + x);
+			// console.log('y = ' + y);
+			// console.log('z = ' + z);
 
-			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
+			$('#temp').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
 			document.getElementById('temp').removeAttribute('viewBox');	
 		}, 1000);
