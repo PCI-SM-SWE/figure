@@ -292,7 +292,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 
 			console.log(sum);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum))
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum));
 		}
 		else if (operator == 'count')
 		{
@@ -305,7 +305,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 
 			console.log(count);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count))
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count));
 		}
 		else if (operator == 'avg')
 		{
@@ -317,7 +317,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 
 			console.log (sum/dataObjectArray.length);
-			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length))
+			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length));
 		}
 
 		$('.inputMetricField').remove();
@@ -331,7 +331,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				$('#metricEquation').val(eval($('#metricEquation').val()));
 			}
-			catch(err)
+			catch(err);
 			{
 				return;
 			}
