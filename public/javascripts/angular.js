@@ -1,4 +1,5 @@
 var socket = io('datapuking.com');
+//var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -36,6 +37,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function generateOperators()
 	{
+		$('.operators').empty();
+
 		for (var i = 0; i < operators.length; i++)
 		{
 			var tr = document.createElement ('tr');
@@ -123,10 +126,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 	
-	function storedData(name) {
-		alert("1");
-		client.storedDataRequest(name, function(data) {
-			
+	function storedData(name)
+	{		
+		client.storedDataRequest(name, function(data)
+		{			
 			console.log(data);
 
 			$('#area').val(data);
@@ -159,6 +162,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				a.innerHTML = data[i];	
 				li.appendChild(a);
 				$('#storedList').append(li);
+
+				//clicking functionality
 			}
 		});
 	}
@@ -865,9 +870,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var z = attr.substr(0, attr.indexOf('px'));
 
-			console.log('x = ' + x);
-			console.log('y = ' + y);
-			console.log('z = ' + z);
+			// console.log('x = ' + x);
+			// console.log('y = ' + y);
+			// console.log('z = ' + z);
 
 			$('#temp').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
