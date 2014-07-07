@@ -899,6 +899,18 @@ $(document).ready(function() {
 	});
 });
 
+$( "#metricEquation" ).keyup(function() {
+	var empty = true;
+	if ($("#metricEquation").val() != '') {
+        empty = false;
+    }
+	if (empty) {
+        $('#statSubmit').attr('disabled', 'disabled');
+    } else {
+        $('#statSubmit').removeAttr('disabled');
+    }
+});
+
 $(function()
 {
 	var socket = io.connect('datapuking.com');
