@@ -926,16 +926,12 @@ $(document).ready(function() {
 	});
 });
 
-$( "#metricEquation" ).keyup(function() {
-	var empty = true;
-	if ($("#metricEquation").val() != '') {
-        empty = false;
-    }
-	if (empty) {
+$( "#metricEquation" ).keyup(function()
+{	
+	if ($("#metricEquation").val() == '') 
         $('#statSubmit').attr('disabled', 'disabled');
-    } else {
+    else 
         $('#statSubmit').removeAttr('disabled');
-    }
 });
 
 $(function()
