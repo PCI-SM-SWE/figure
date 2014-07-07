@@ -343,7 +343,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			try	
 			{
-				$('#metricEquation').val(eval($('#metricEquation').val()));
+				var result = eval($('#metricEquation').val());
+
+				if ((typeof result) === 'number')
+					$('#metricEquation').val(result);
 			}
 			catch(err)
 			{
