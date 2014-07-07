@@ -331,7 +331,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.inputMetricField').remove();
 	}
 
-	$scope.calculate = function()
+	$scope.clearMetric = function()
+	{
+		$('.inputMetricField').remove();
+		$('#metricEquation').val('');
+	}
+
+	$scope.calculateMetric = function()
 	{
 		if ($('#metricEquation').val() != '')
 		{
