@@ -331,7 +331,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				$('#metricEquation').val(eval($('#metricEquation').val()));
 			}
-			catch(err);
+			catch(err)
 			{
 				return;
 			}
@@ -842,12 +842,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.leaflet-zoom-animated').attr('height', '629');
 		
 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
-		alert ($('.leaflet-zoom-animated').attr('style'));
-
 
 		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		e.setAttribute ('viewBox', '0 0 2000 629')
-		e.setAttribute ('id', 'temp');
+		e.setAttribute('width', '2000px');
+		e.setAttribute('height', '629px;')
+		e.setAttribute('viewBox', '0 0 2000 629')
+		e.setAttribute('id', 'temp');
 		var x;
 		var y;
 		var z;
@@ -869,7 +869,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log('y = ' + y);
 			console.log('z = ' + z);
 
-			$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
+			$('#temp').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
 			document.getElementById('temp').removeAttribute('viewBox');	
 		}, 1000);
