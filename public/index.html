@@ -287,6 +287,7 @@
 							</tbody>
 						</table>
 					</div>
+					
 					<!-- Operators area if statistics tab is active -->
 					<div ng-show="graphTab == 5">
 						<h3>Operators</h3>
@@ -306,95 +307,102 @@
 				
 				<!-- Visualization Tab View -->
 				<div ng-show="graphTab != 5">
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show = "graphTab == 1">
+					<form class="col-xs-7 col-sm-7 col-md-7 well"
+						ng-show="graphTab == 1">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>X-Axis</label>
-							<input id = "xAxisBar" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>X-Axis</label> <input id="xAxisBar" type="email"
+								class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<!-- TEST CODE HERE on div: id=div 
-							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<label>Y-Axis</label>
-							<input id = "yAxisBar" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+						<div
+							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<label>Y-Axis</label> <input id="yAxisBar" type="email"
+								class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type = "button" class = "btn btn-danger" ng-click = "clearAll()">Clear Fields</button>
+							<button type="button" class="btn btn-danger"
+								ng-click="clearAll()">Clear Fields</button>
 						</div>
-
-						<div id = "chart1" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 20%;">
-							<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-							<svg id = "barGraph" style = "width: 100%; height: 60%;"></svg>
+						<div id="chart1" class="pics col-xs-11 col-sm-11 col-md-11"
+							style="height: 20%;">
+							<svg id="barGraph" style="width: 100%; height: 60%;"></svg>
 						</div>
 					</form>
-
-					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show = "graphTab == 2">
+					<form class="col-xs-9 col-sm-9 col-md-9 well"
+						ng-show="graphTab == 2">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>X-Axis</label>
-							<input id = "xAxisLine" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>X-Axis</label> <input id="xAxisLine" type="email"
+								class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<!-- TEST CODE HERE on div: id=div 
-							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
+						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Y-Axis</label>
-							<input id = "yAxisLine" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>Y-Axis</label> <input id="yAxisLine" type="email"
+								class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Optional Grouping</label>
-							<input id = "groupingLine" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>Optional Grouping</label> <input id="groupingLine"
+								type="email" class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type = "button" class = "btn btn-danger" ng-click = "clearAll()">Clear Fields</button>
+							<button type="button" class="btn btn-danger"
+								ng-click="clearAll()">Clear Fields</button>
 						</div>
-
-						<div id = "chart2" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 100%;">
-							<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-							<svg id = "lineGraph" style = "width: 100%; height: 100%;"></svg>
+						<div id="chart2" class="pics col-xs-11 col-sm-11 col-md-11"
+							style="height: 100%;">
+							<svg id="lineGraph" style="width: 100%; height: 100%;"></svg>
 						</div>
 					</form>
-
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show = "graphTab == 3">
+					<form class="col-xs-7 col-sm-7 col-md-7 well"
+						ng-show="graphTab == 3">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Value Field</label>
-							<input id = "valueField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>Value Field</label> <input id="valueField" type="email"
+								class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<!-- TEST CODE HERE on div: id=div 
-							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<label>Count(Optional)</label>
-							<input id = "countField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
-						</div>		
-
+						<div
+							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<label>Count(Optional)</label> <input id="countField"
+								type="email" class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
+						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type = "button" class = "btn btn-danger" ng-click = "clearAll()">Clear Fields</button>
+							<button type="button" class="btn btn-danger"
+								ng-click="clearAll()">Clear Fields</button>
 						</div>
-
-						<div id = "chart3" class="pics col-xs-11 col-sm-11 col-md-11" style = "height: 20%;">
+						<div id="chart3" class="pics col-xs-11 col-sm-11 col-md-11"
+							style="height: 20%;">
 							<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-							<svg id = "pieChart" style = "width: 100%; height: 60%;"></svg>
+							<svg id="pieChart" style="width: 100%; height: 60%;"></svg>
 						</div>
 					</form>
-
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show = "graphTab == 4">
+					<form class="col-xs-7 col-sm-7 col-md-7 well"
+						ng-show="graphTab == 4">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Location Field</label>
-							<input id = "locationField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
+							<label>Location Field</label> <input id="locationField"
+								type="email" class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<!-- TEST CODE HERE on div: id=div 
-							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<label>Value Field</label>
-							<input id = "choroplethValueField" type="email" class = "form-control" placeholder="Drop field here" x-lvl-drop-target = "true" x-on-drop = "dropped(dragEl, dropEl)">
-						</div>		
-
+						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
+						<div
+							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<label>Value Field</label> <input id="choroplethValueField"
+								type="email" class="form-control" placeholder="Drop field here"
+								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
+						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type = "button" class = "btn btn-danger" ng-click = "clearAll()">Clear Fields</button>
-						</div>	
-						
+							<button type="button" class="btn btn-danger"
+								ng-click="clearAll()">Clear Fields</button>
+						</div>
 						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-						<div id = "map" style = "height: 600px;" class = "col-xs-12 col-sm-12 col-md-12"></div>
-					</form>	
+						<div id="map" style="height: 600px;"
+							class="col-xs-12 col-sm-12 col-md-12"></div>
+					</form>
 				</div>
 
 				<!-- Statistics Tab View -->
