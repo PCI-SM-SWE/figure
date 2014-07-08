@@ -6,9 +6,117 @@ var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 app.controller('MainCtrl', ['$scope', function($scope) 
 {
 	var client = new Handler(socket);
-	var dataObjectArray;
+	var dataObjectArray;				// JSON format for the data
 	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
 
+	$(document).ready (function ()
+	{
+		populateFileList();
+
+		jQuery.event.props.push('dataTransfer');
+
+		// copy and paste option for data input
+		$("#area").bind ('paste', function(e)
+		{
+			var elem = $(this);
+
+			setTimeout (function()
+			{		       
+				var data = $('#area').val();
+				var results = $.parse(data);
+				console.log(results.results.rows);
+				dataObjectArray = results.results.rows;
+				$scope.fields = results.results.fields;
+
+				generateFields ();
+				generateOperators();
+
+				console.log(JSON.stringify(dataObjectArray));
+			}, 1000);
+		});
+
+		$(document).on('change', '.btn-file :file', function() 
+		{
+			//alert ("1");
+			var input = $(this);
+			var numFiles = input.get(0).files ? input.get(0).files.length : 1
+			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+
+			console.log(numFiles);
+			console.log(label);
+
+			input.trigger('fileselect', [numFiles, label]);		// calls the function below
+		});
+
+		$('.btn-file :file').on('fileselect', function(event, numFiles, label)
+		{
+			var input = $(this).parents('.input-group').find(':text')
+			var log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+			if(input.length) 
+				input.val(log);
+			else if( log ) 
+				alert(log);
+	
+			// $(document).on('change', '.btn-file :file', function()
+			// {
+			// 	var input = $(this);
+			// 	var numFiles = input.get(0).files ? input.get(0).files.length : 1;
+			// 	var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			// 	console.log(input);
+			// 	input.trigger('fileselect', [numFiles, label]);
+			// });
+		});
+
+		// uploading files
+		socket.on('connect', function()
+		{
+			var delivery = new Delivery(socket);
+			
+			delivery.on('delivery.connect',function(delivery)
+			{
+				$("button[type=submit]").click(function(evt)
+				{
+					var file = $("input[type=file]")[0].files[0];
+					delivery.send(file);
+					evt.preventDefault();
+				});
+			});
+
+			delivery.on('send.success',function(fileUID)
+			{
+				console.log("file was successfully sent.");
+			});
+		});
+	
+	});
+
+	// populates dropdown list with already uploaded files
+	function populateFileList()
+	{
+		client.filesList(function(data)
+		{
+			console.log(data);
+			
+			$('#storedList').empty();
+			
+			for(var i = 0; i < data.length; i++)
+			{
+				var li = document.createElement ('li');
+				var a = document.createElement('a');
+				a.setAttribute('href', '');
+				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
+				//a.onclick = storedData("'" + data[i] + "'");
+				a.innerHTML = data[i];	
+				li.appendChild(a);
+				$('#storedList').append(li);
+
+				//clicking functionality
+			}
+		});
+	}
+
+	// generates the draggable fields 
 	function generateFields ()
 	{
 		$('.fields').empty();
@@ -35,6 +143,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
+	// generates the draggable operators for stats option
 	function generateOperators()
 	{
 		$('.operators').empty();
@@ -61,34 +170,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
-	$(document).ready (function ()
-	{
-		populateFileList();
-
-		jQuery.event.props.push('dataTransfer');
-
-		$("#area").bind ('paste', function(e)
-		{
-			var elem = $(this);
-
-			setTimeout (function()
-			{		       
-				var data = $('#area').val();
-				var results = $.parse(data);
-				console.log(results.results.rows);
-				dataObjectArray = results.results.rows;
-				$scope.fields = results.results.fields;
-
-				generateFields ();
-				generateOperators();
-
-				console.log(JSON.stringify(dataObjectArray));
-			}, 1000);
-		});
-
-		//alert ($scope.eqnTextArea.length);
-	});
-
+	// select sample data 
 	$scope.sampleData = function(num)
 	{
 		client.sampleDataRequest(num, function(data)
@@ -143,40 +225,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(JSON.stringify(dataObjectArray));
 		});
 	};
-	
-	function populateFileList()
-	{
-		client.filesList(function(data)
-		{
-			console.log(data);
-			
-			$('#storedList').empty();
-			
-			for(var i = 0; i < data.length; i++)
-			{
-				var li = document.createElement ('li');
-				var a = document.createElement('a');
-				a.setAttribute('href', '');
-				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
-				//a.onclick = storedData("'" + data[i] + "'");
-				a.innerHTML = data[i];	
-				li.appendChild(a);
-				$('#storedList').append(li);
 
-				//clicking functionality
-			}
-		});
-	}
+	var xAxis;					// bar/line
+	var yAxis;					// bar/line
+	var grouping;				// grouping field for data
+	var valueField;				// pie
+	var countField;				// pie
+	var locationField;			// choropleth map
+	var choroplethValueField;	// choropleth map
+	var currentTab = 1;			// 1 = bar, 2 = line, 3 = pie, 4 = choropleth map
 
-	var xAxis;
-	var yAxis;
-	var grouping;
-	var valueField;
-	var countField;
-	var locationField;
-	var choroplethValueField;	
-	var currentTab = 1;
-
+	// clears/resets all fields, labels, and charts,
 	$scope.clearAll = function ()
 	{
 		if (currentTab == 1)
@@ -215,6 +274,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		choroplethValueField = '';
 	}
 
+	// when user clicks a visualization type tab
 	$scope.selectVisualizationType = function ()
 	{
 		$scope.clearAll();
@@ -222,6 +282,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		currentTab = $scope.graphTab;
 	};
 
+	// drag and drop functionality for the fields of the visualization
 	$scope.dropped = function (dragEl, dropEl)
 	{
 		console.log (dragEl);
@@ -235,6 +296,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		readyToGraph ();
 	};
 
+	// drag and drop functionality for metric options
 	$scope.droppedMetric = function (dragEl, dropEl)
 	{
 		console.log (dragEl);
@@ -245,6 +307,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var operator;
 
 		console.log($('#metricFields').children().length);
+		
 		if($('#metricFields').children().length == 2)
 			return;
 
@@ -276,6 +339,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
+	// drag and drop functionality for certain operators for the metric equation
 	$scope.droppedMetricField = function (dragEl, dropEl)
 	{
 		console.log (dragEl);
@@ -331,6 +395,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.inputMetricField').remove();
 	}
 
+	// clears the metric equation
 	$scope.clearMetric = function()
 	{
 		$('.inputMetricField').remove();
@@ -338,13 +403,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$("#statSubmit").attr("disabled", "disabled");
 	}
 
+	// calcaultes the metric equation
 	$scope.calculateMetric = function()
 	{
 		if ($('#metricEquation').val() != '')
 		{
 			try	
 			{
-				$('#metricEquation').val(eval($('#metricEquation').val()));
+				var result = eval($('#metricEquation').val());
+
+				if ((typeof result) === 'number')
+					$('#metricEquation').val(result);
 			}
 			catch(err)
 			{
@@ -353,6 +422,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}			
 	}
 
+	// graphs the specified visualization type if all necessary input is there
 	function readyToGraph ()
 	{
 		if ($scope.graphTab == 1)
@@ -988,3 +1058,4 @@ $(function()
 		});
 	});
 });
+
