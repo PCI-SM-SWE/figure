@@ -88,6 +88,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				console.log("file was successfully sent.");
 			});
 		});
+
+		var submitCheck = function() 
+		{
+			if ($('#metricEquation').val() != '')
+				$('#statSubmit').removeAttr('disabled');
+			else
+				$('#statSubmit').attr('disabled', 'disabled');
+		}
+
+		$('#metricEquation').keyup(submitCheck);
+		$('#metricEquation').mouseenter(submitCheck);
 	
 	});
 
@@ -400,6 +411,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('.inputMetricField').remove();
 		$('#metricEquation').val('');
+		$('#statSubmit').attr('disabled', 'disabled');
 	}
 
 	// calcaultes the metric equation
@@ -528,7 +540,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			return chart;
 		});
 	}
-
 
 	//----------------------------------------------Line------------------------------------------
 	function parseDateTime(value)
