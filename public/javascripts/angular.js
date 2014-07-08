@@ -335,6 +335,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('.inputMetricField').remove();
 		$('#metricEquation').val('');
+		$("#statSubmit").attr("disabled", "disabled");
 	}
 
 	$scope.calculateMetric = function()
@@ -923,17 +924,45 @@ $(document).ready(function() {
 	});
 });
 
-$( "#metricEquation" ).keyup(function() {
-	var empty = true;
-	if ($("#metricEquation").val() != '') {
-        empty = false;
-    }
-	if (empty) {
-        $('#statSubmit').attr('disabled', 'disabled');
-    } else {
-        $('#statSubmit').removeAttr('disabled');
-    }
+//$("#metricEquation").on('click',function() {
+//	console.log("I changed");
+//	if ($("#metricEquation").length == 0) {
+//	    $("#statSubmit").attr("disabled", "disabled");
+//	} else {
+//	    $("#statSubmit").attr("enabled", "enabled");
+//	}
+//});
+
+
+$("#metricEquation").on({
+	mouseenter: function() {
+		if ($("#metricEquation").val() == '') {
+			$("#statSubmit").attr("disabled", "disabled");
+		} else {
+			$("#statSubmit").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#metricEquation").val() == '') {
+			$("#statSubmit").attr("disabled", "disabled");
+		} else {
+			$("#statSubmit").removeAttr("disabled");
+		}
+	}
 });
+
+
+//$( "#metricEquation" ).keyup(function() {
+//	var empty = true;
+//	if ($("#metricEquation").val() != '') {
+//        empty = false;
+//    }
+//	if (empty) {
+//        $('#statSubmit').attr('disabled', 'disabled');
+//    } else {
+//        $('#statSubmit').removeAttr('disabled');
+//    }
+//});
 
 $(function()
 {
