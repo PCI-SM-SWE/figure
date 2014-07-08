@@ -6,7 +6,7 @@ var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 app.controller('MainCtrl', ['$scope', function($scope) 
 {
 	var client = new Handler(socket);
-	var dataObjectArray;
+	var dataObjectArray;				// JSON format for the data
 	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
 
 	$(document).ready (function ()
@@ -37,10 +37,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$(document).on('change', '.btn-file :file', function() 
 		{
+			//alert ("1");
 			var input = $(this);
 			var numFiles = input.get(0).files ? input.get(0).files.length : 1
 			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			input.trigger('fileselect', [numFiles, label]);
+
+			console.log(numFiles);
+			console.log(label);
+
+			input.trigger('fileselect', [numFiles, label]);		// calls the function below
 		});
 
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label)
@@ -53,14 +58,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			else if( log ) 
 				alert(log);
 	
-			$(document).on('change', '.btn-file :file', function()
-			{
-				var input = $(this);
-				var numFiles = input.get(0).files ? input.get(0).files.length : 1;
-				var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-				console.log(input);
-				input.trigger('fileselect', [numFiles, label]);
-			});
+			// $(document).on('change', '.btn-file :file', function()
+			// {
+			// 	var input = $(this);
+			// 	var numFiles = input.get(0).files ? input.get(0).files.length : 1;
+			// 	var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+			// 	console.log(input);
+			// 	input.trigger('fileselect', [numFiles, label]);
+			// });
 		});
 
 		// uploading files
@@ -221,16 +226,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 
-	var xAxis;
-	var yAxis;
-	var grouping;
-	var valueField;
-	var countField;
-	var locationField;
-	var choroplethValueField;	
-	var currentTab = 1;
+	var xAxis;					// bar/line
+	var yAxis;					// bar/line
+	var grouping;				// grouping field for data
+	var valueField;				// pie
+	var countField;				// pie
+	var locationField;			// choropleth map
+	var choroplethValueField;	// choropleth map
+	var currentTab = 1;			// 1 = bar, 2 = line, 3 = pie, 4 = choropleth map
 
-	// clears all fields, labels, and charts,
+	// clears/resets all fields, labels, and charts,
 	$scope.clearAll = function ()
 	{
 		if (currentTab == 1)
@@ -269,7 +274,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		choroplethValueField = '';
 	}
 
-	// 
+	// when user clicks a visualization type tab
 	$scope.selectVisualizationType = function ()
 	{
 		$scope.clearAll();
