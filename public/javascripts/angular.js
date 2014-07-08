@@ -994,16 +994,6 @@ $(document).ready(function() {
 	});
 });
 
-//$("#metricEquation").on('click',function() {
-//	console.log("I changed");
-//	if ($("#metricEquation").length == 0) {
-//	    $("#statSubmit").attr("disabled", "disabled");
-//	} else {
-//	    $("#statSubmit").attr("enabled", "enabled");
-//	}
-//});
-
-
 $("#metricEquation").on({
 	mouseenter: function() {
 		if ($("#metricEquation").val() == '') {
@@ -1020,19 +1010,6 @@ $("#metricEquation").on({
 		}
 	}
 });
-
-
-//$( "#metricEquation" ).keyup(function() {
-//	var empty = true;
-//	if ($("#metricEquation").val() != '') {
-//        empty = false;
-//    }
-//	if (empty) {
-//        $('#statSubmit').attr('disabled', 'disabled');
-//    } else {
-//        $('#statSubmit').removeAttr('disabled');
-//    }
-//});
 
 $(function()
 {
