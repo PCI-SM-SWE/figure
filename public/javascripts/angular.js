@@ -98,9 +98,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 
 		$('#metricEquation').keyup(submitCheck);
-		$('#metricEquation').mouseenter(submitCheck);
-	
-	});
+		$('#metricEquation').mouseenter(submitCheck);	
+	});	// end $(document).ready
 
 	// populates dropdown list with already uploaded files
 	function populateFileList()
@@ -943,6 +942,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		e.setAttribute('height', '629px;')
 		e.setAttribute('viewBox', '0 0 2000 629')
 		e.setAttribute('id', 'temp');
+		
 		var x;
 		var y;
 		var z;
@@ -969,4 +969,4 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			document.getElementById('temp').removeAttribute('viewBox');	
 		}, 1000);
 	}
-}]);//end controller
+}]);	// end controller
