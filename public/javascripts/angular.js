@@ -977,47 +977,54 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$scope.saveFigure = function()
 	{
-		var tmp = document.createElement("div");
 		var canvas;
 		var image;
 		var ctx;
+		var graph;
 
 		if ($scope.graphTab == 1)
 		{
-			var style = $('#chart1').attr('style');
-			$('#chart1').attr('style', 'display: none;' + style);
-			tmp.appendChild(document.getElementById('barGraph'));
+			graph = document.getElementById('barGraph');
 			canvas = document.getElementById('barCanvas');
 			image = document.getElementById('barImage');
 			ctx = canvas.getContext('2d');
-			ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 500);
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 500);
 			image.src = canvas.toDataURL();
-			image.setAttribute('style', 'border: 1px solid;')
+			console.log(image.src);
+
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
 		}
 		else if ($scope.graphTab == 2)
-		{
-			var style = $('#chart2').attr('style');
-			$('#chart1').attr('style', 'display: none;' + style);
-			tmp.appendChild(document.getElementById('lineGraph'));	
+		{			
+			graph = document.getElementById('lineGraph');	
 			canvas = document.getElementById('lineCanvas');
 			image = document.getElementById('lineImage');
 			ctx = canvas.getContext('2d');
-			ctx.drawSvg(tmp.innerHTML, 0, 0, 1050, 850);
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 1050, 850);
 			image.src = canvas.toDataURL();
-			image.setAttribute('style', 'border: 1px solid;')
+
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
 		}
 
 		else if ($scope.graphTab == 3)
 		{
-			var style = $('#chart3').attr('style');
-			$('#chart1').attr('style', 'display: none;' + style);
-			tmp.appendChild(document.getElementById('pieChart'));
+			graph = document.getElementById('pieChart');
 			canvas = document.getElementById('pieCanvas');
 			image = document.getElementById('pieImage');
 			ctx = canvas.getContext('2d');
-			ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 470);
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
 			image.src = canvas.toDataURL();
-			image.setAttribute('style', 'border: 1px solid;')
+
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
 		}		
 		else if ($scope.graphTab == 4)
 		{
