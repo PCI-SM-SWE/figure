@@ -312,6 +312,8 @@
 				
 				<!-- Visualization Tab View -->
 				<div ng-show="graphTab != 5">
+				
+					<!-- Bar -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well"
 						ng-show="graphTab == 1">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
@@ -326,16 +328,18 @@
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type="button" class="btn btn-danger"
+							<button id="clearBtn" type="button" class="btn btn-danger"
 								ng-click="clearAll()">Clear Fields</button>
-							<button type="button" class="btn btn-success"
-								ng-click="">Save</button>
+							<button type="button" class="btn btn-success saveBtn"
+								ng-click="" disabled="disabled">Save</button>
 						</div>
 						<div id="chart1" class="pics col-xs-11 col-sm-11 col-md-11"
 							style="height: 20%;">
 							<svg id="barGraph" style="width: 100%; height: 60%;"></svg>
 						</div>
 					</form>
+					
+					<!-- Line -->
 					<form class="col-xs-9 col-sm-9 col-md-9 well"
 						ng-show="graphTab == 2">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
@@ -356,16 +360,18 @@
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type="button" class="btn btn-danger"
+							<button id="clearBtn" type="button" class="btn btn-danger"
 								ng-click="clearAll()">Clear Fields</button>
-							<button type="button" class="btn btn-success"
-								ng-click="">Save</button>
+							<button type="button" class="btn btn-success saveBtn"
+								ng-click="" disabled="disabled">Save</button>
 						</div>
 						<div id="chart2" class="pics col-xs-11 col-sm-11 col-md-11"
 							style="height: 100%;">
 							<svg id="lineGraph" style="width: 100%; height: 100%;"></svg>
 						</div>
 					</form>
+					
+					<!-- Pie -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well"
 						ng-show="graphTab == 3">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
@@ -380,10 +386,10 @@
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type="button" class="btn btn-danger"
+							<button id="clearBtn" type="button" class="btn btn-danger"
 								ng-click="clearAll()">Clear Fields</button>
-							<button type="button" class="btn btn-success"
-								ng-click="">Save</button>
+							<button type="button" class="btn btn-success saveBtn"
+								ng-click="" disabled="disabled">Save</button>
 						</div>
 						<div id="chart3" class="pics col-xs-11 col-sm-11 col-md-11"
 							style="height: 20%;">
@@ -391,6 +397,8 @@
 							<svg id="pieChart" style="width: 100%; height: 60%;"></svg>
 						</div>
 					</form>
+					
+					<!-- Map -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well"
 						ng-show="graphTab == 4">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
@@ -403,14 +411,14 @@
 						<div
 							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 							<label>Value Field</label> <input id="choroplethValueField"
-								type="email" class="form-control" placeholder="Drop field here"
+								type="email" class="form-control dataField" placeholder="Drop field here"
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<button type="button" class="btn btn-danger"
+							<button id="clearBtn" type="button" class="btn btn-danger"
 								ng-click="clearAll()">Clear Fields</button>
-							<button type="button" class="btn btn-success"
-								ng-click="">Save</button>
+							<button type="button" class="btn btn-success saveBtn"
+								ng-click="" disabled="disabled">Save</button>
 						</div>
 						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
 						<div id="map" style="height: 600px;"
@@ -418,7 +426,7 @@
 					</form>
 				</div>
 
-				<!-- Statistics Tab View -->
+				<!-- Stats -->
 				<div ng-show="graphTab == 5">
 					<h3>Metric Equation</h3>
 					<div class="col-xs-7 col-sm-7 col-md-7 well">

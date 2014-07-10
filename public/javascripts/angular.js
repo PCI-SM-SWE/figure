@@ -238,6 +238,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// clears/resets all fields, labels, and charts,
 	$scope.clearAll = function ()
 	{
+		$(".saveBtn").attr("disabled", "disabled"); // to make save button unclickable
 		if (currentTab == 1)
 		{
 			$('#xAxisBar').val('');
@@ -1010,6 +1011,136 @@ $("#metricEquation").on({
 		}
 	}
 });
+
+/*
+ * makes save button unclickable if nothing is in field
+ * Lot of repeating code, see if I can condense it somehow
+ */
+
+// for bar graph save button
+$("#xAxisBar").on({
+	mouseenter: function() {
+		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+$("#yAxisBar").on({
+	mouseenter: function() {
+		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+// for line graph save button
+$("#xAxisLine").on({
+	mouseenter: function() {
+		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			alert("I'm alive!!");
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+$("#yAxisLine").on({
+	mouseenter: function() {
+		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+// for pie chart save button
+$("#valueField").on({
+	mouseenter: function() {
+		if ($("#valueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#valueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+// for map save button
+$("#locationField").on({
+	mouseenter: function() {
+		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
+$("#choroplethValueField").on({
+	mouseenter: function() {
+		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	},
+	keyup: function() {
+		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+			$(".saveBtn").attr("disabled", "disabled");
+		} else {
+			$(".saveBtn").removeAttr("disabled");
+		}
+	}
+});
+
 
 $(function()
 {
