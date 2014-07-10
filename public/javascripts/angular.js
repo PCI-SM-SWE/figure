@@ -1,5 +1,5 @@
-var socket = io('datapuking.com');
-//var socket = io('localhost');
+//var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -11,9 +11,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready (function ()
 	{
+		$('#barCanvas').attr('style', "display: none;")		
+
 		populateFileList();
 
 		jQuery.event.props.push('dataTransfer');
+		$('input[type=file]').bootstrapFileInput();
 
 		// copy and paste option for data input
 		$("#area").bind ('paste', function(e)
@@ -45,7 +48,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(numFiles);
 			console.log(label);
 
-			input.trigger('fileselect', [numFiles, label]);		// calls the function below
+			input.trigger('fileselect', [numFiles, label]);		// calls the event below
 		});
 
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label)
@@ -89,6 +92,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 		});
 
+		// calcaulte metric equation button enabled/disabled functionality
 		var submitCheck = function() 
 		{
 			if ($('#metricEquation').val() != '')
@@ -121,7 +125,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				li.appendChild(a);
 				$('#storedList').append(li);
 
-				//clicking functionality
+				//clicking functionality (not yet implemented)
 			}
 		});
 	}
@@ -480,17 +484,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotChoroplethMap();
 			}
 		}		
-		
 		else if ($scope.graphTab == 5)
 		{
-			valueField = $('#valueField').val();
-			countField = $('#countField').val();
-
-			if (valueField != '')
-			{
-				console.log ('stats()'); //No stats function exsists yet
-				stats();
-			}
+			// if stats tab is selected
 		}
 
 		console.log ('xAxis: ' + xAxis);
@@ -505,6 +501,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	//---------------------------------BAR-----------------------------------------
 	function plotBar ()
 	{
+		// var svg = document.createElement("svg");
+		// svg.setAttribute("id", "barGraph");
+		// svg.setAttribute('width', '500');
+		// svg.setAttribute('height', '500');
+		
+		// $('#chart1').append(svg);
+
 		$('#barGraph').empty ();
 		console.log (JSON.stringify(dataObjectArray));
 
@@ -728,7 +731,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			.showYAxis (true)
 			.showXAxis (true);
 			
-			chart.xAxis.rotateLabels(-45);
+			chart.xAxis.rotateLabels(-65);
 
 			chart.xAxis.showMaxMin (true);
 			chart.xAxis.axisLabel (xAxis);
@@ -938,10 +941,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
 
 		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		e.setAttribute('width', '2000px');
-		e.setAttribute('height', '629px;')
+		e.setAttribute('width', '2000');
+		e.setAttribute('height', '629')
 		e.setAttribute('viewBox', '0 0 2000 629')
-		e.setAttribute('id', 'temp');
+		e.setAttribute('id', 'choroplethMap');
 		
 		var x;
 		var y;
@@ -964,9 +967,74 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// console.log('y = ' + y);
 			// console.log('z = ' + z);
 
-			$('#temp').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
+			$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-			document.getElementById('temp').removeAttribute('viewBox');	
+			if (document.getElementById('choroplethMap') != undefined)
+				document.getElementById('choroplethMap').removeAttribute('viewBox');	
 		}, 1000);
 	}
-}]);	// end controller
+
+	$scope.saveFigure = function()
+	{
+		var tmp = document.createElement("div");
+		var canvas;
+		var image;
+		var ctx;
+
+		if ($scope.graphTab == 1)
+		{
+			var style = $('#chart1').attr('style');
+			$('#chart1').attr('style', 'display: none;' + style);
+			tmp.appendChild(document.getElementById('barGraph'));
+			canvas = document.getElementById('barCanvas');
+			image = document.getElementById('barImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 500);
+			image.src = canvas.toDataURL();
+			image.setAttribute('style', 'border: 1px solid;')
+		}
+		else if ($scope.graphTab == 2)
+		{
+			var style = $('#chart2').attr('style');
+			$('#chart1').attr('style', 'display: none;' + style);
+			tmp.appendChild(document.getElementById('lineGraph'));	
+			canvas = document.getElementById('lineCanvas');
+			image = document.getElementById('lineImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg(tmp.innerHTML, 0, 0, 1050, 850);
+			image.src = canvas.toDataURL();
+			image.setAttribute('style', 'border: 1px solid;')
+		}
+		else if ($scope.graphTab == 3)
+		{
+			var style = $('#chart3').attr('style');
+			$('#chart1').attr('style', 'display: none;' + style);
+			tmp.appendChild(document.getElementById('pieChart'));
+			canvas = document.getElementById('pieCanvas');
+			image = document.getElementById('pieImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 470);
+			image.src = canvas.toDataURL();
+			image.setAttribute('style', 'border: 1px solid;')
+		}		
+		else if ($scope.graphTab == 4)
+		{
+			// var style = $('#map').attr('style');
+			// $('#map').attr('style', 'display: none;' + style);
+			// tmp.appendChild(document.getElementById('choroplethMap'));
+			// canvas = document.getElementById('choroplethMapCanvas');
+			// image = document.getElementById('choroplethMapImage');
+			// ctx = canvas.getContext('2d');
+			// ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 470);
+			// image.src = canvas.toDataURL();
+			// image.setAttribute('style', 'border: 1px solid;')
+		}		
+
+
+		// console.log($('svg')[$scope.graphTab - 1]);
+		// client.saveAsImage($('svg')[$scope.graphTab - 1], function()
+		// {
+		// 	return;
+		// });
+	}
+}]);	// end controller 

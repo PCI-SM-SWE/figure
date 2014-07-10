@@ -4,6 +4,8 @@ var path = require('path');
 var mime = require('mime');
 var cache = {};
 
+
+
 function send404(response) {
 	response.writeHead(404, {'Content-Type': 'text/plain'});
 	response.write('Error 404: resource not found.');
@@ -180,6 +182,12 @@ io.on('connection', function(socket)
 			console.log(name + " sent succesfully");
 		})
 	});;
+
+	socket.on('saveAsImage', function(parameter)
+	{
+		return;
+		console.log(svgElement);
+	});
 //	socket.emit('news', {hello: 'world'});
 //	socket.on('my other event', function(data) {
 //	console.log(data);

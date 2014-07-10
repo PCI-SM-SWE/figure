@@ -35,6 +35,20 @@ Handler.prototype.filesList = function(callback) {
 	});
 }
 
+// Handler.prototype.saveAsImage = function (svgElement, callback)
+// {
+// 	var oSerializer = new XMLSerializer();
+// 	var sXML = oSerializer.serializeToString(svgElement);
+// 	console.log(sXML);
+
+// 	var oParser = new DOMParser();
+// 	var oDOM = oParser.parseFromString(sXML, "text/xml");
+// 	console.log(oDOM);
+// 	socket.emit('saveAsImage', );
+// 	return;
+// 	callback();
+// }
+
 
 //		socket.on('news', function(data) {
 //			console.log(data);
