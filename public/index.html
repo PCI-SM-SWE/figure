@@ -82,7 +82,7 @@
 						My Uploads <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" id="storedList">
-					<!--<li><a id="storedList" href="" ng-repeat="item in list" ng-click="storedData(item)">{{item}}</a></li>-->
+					
 					</ul>
 				</div>
 					<!-- Sample dropdown button -->
@@ -91,11 +91,11 @@
 						data-toggle="dropdown">
 						Sample Data <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu">
-						<li><a href="" ng-click="sampleData(1)">Charm City Circulator</a></li>
+					<ul class="dropdown-menu" id = "sampleData">
+						<!-- <li><a href="" ng-click="sampleData(1)">Charm City Circulator</a></li>
 						<li><a href="" ng-click="sampleData(2)">Sample Pie Chart Data</a></li>
 						<li><a href="" ng-click="sampleData(3)">Sample Choropleth Map Data</a></li>
-						<li><a href="" ng-click="sampleData(4)">Upload Testing</a></li>
+						<li><a href="" ng-click="sampleData(4)">Upload Testing</a></li> -->
 					</ul>
 				</div>
 			</div>
@@ -309,7 +309,9 @@
 						</div>
 
 						<canvas id = "barCanvas" width = "800" height = "500" style = "display: none;"></canvas>
-						<img id = "barImage" width = "800", height = "500" style = "display: none;"></img>
+						<a id = "aBarImage">
+							<img id = "barImage" width = "800", height = "500" style = "display: none;"></img>
+						</a>
 					</form>
 
 					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 2">
@@ -443,9 +445,9 @@
 	<script type = "text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
 	<link  rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'>
 
-	<script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
-	<script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/StackBlur.js"></script>
-	<script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+	<script type="text/javascript" src="javascripts/rgbcolor.js"></script> 
+	<script type="text/javascript" src="javascripts/StackBlur.js"></script>
+	<script type="text/javascript" src="javascripts/canvg.js"></script>
 
 	<script src="javascripts/angular.js"></script>
 </body>

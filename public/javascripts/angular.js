@@ -11,8 +11,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready (function ()
 	{
-		$('#barCanvas').attr('style', "display: none;")		
-
 		populateFileList();
 
 		jQuery.event.props.push('dataTransfer');
@@ -40,7 +38,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$(document).on('change', '.btn-file :file', function() 
 		{
-			//alert ("1");
 			var input = $(this);
 			var numFiles = input.get(0).files ? input.get(0).files.length : 1
 			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -60,15 +57,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				input.val(log);
 			else if( log ) 
 				alert(log);
-	
-			// $(document).on('change', '.btn-file :file', function()
-			// {
-			// 	var input = $(this);
-			// 	var numFiles = input.get(0).files ? input.get(0).files.length : 1;
-			// 	var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			// 	console.log(input);
-			// 	input.trigger('fileselect', [numFiles, label]);
-			// });
 		});
 
 		// uploading files
@@ -108,27 +96,76 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// populates dropdown list with already uploaded files
 	function populateFileList()
 	{
-		client.filesList(function(data)
+		client.filesList(function(filesObject)
 		{
-			console.log(data);
-			
 			$('#storedList').empty();
+
+			var uploaded_files = filesObject.uploaded_files;
 			
-			for(var i = 0; i < data.length; i++)
+			for(var i = 0; i < uploaded_files.length; i++)
 			{
+				var file = uploaded_files[i];
+
 				var li = document.createElement ('li');
 				var a = document.createElement('a');
-				a.setAttribute('href', '');
-				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
+				a.setAttribute('id', file);
+				//a.setAttribute('href', '');
+				//a.setAttribute('onclick', 'storedData(' + "'" + files[i] + "'" + ')');
 				//a.onclick = storedData("'" + data[i] + "'");
-				a.innerHTML = data[i];	
+
+				a.onclick = function()
+				{
+					storedData(this.getAttribute('id'));
+				};
+
+				a.innerHTML = file.substr(file.indexOf('uploaded_files') + 'uploaded_files'.length + 1);	
 				li.appendChild(a);
 				$('#storedList').append(li);
+			}
 
-				//clicking functionality (not yet implemented)
+			$('#sampleData').empty();
+
+			var sample_data = filesObject.sample_data;
+
+			for(var i = 0; i < sample_data.length; i++)
+			{
+				var file = sample_data[i];
+
+				var li = document.createElement('li');
+				var a = document.createElement('a');
+				a.setAttribute('id', file);
+				//a.setAttribute('href', '');
+				//a.setAttribute('onclick', 'storedData(' + "'" + file + "'" + ')');
+				//a.onclick = storedData("'" + data[i] + "'");
+				//a.setAttribute('ng-click', 'storedData(' + "'" + file + "'" + ')');
+				a.onclick = function()
+				{
+					storedData(this.getAttribute('id'));
+				};
+
+				a.innerHTML = file.substr(file.indexOf('sample_data') + 'sample_data'.length + 1);	
+				li.appendChild(a);
+				$('#sampleData').append(li);
 			}
 		});
 	}
+
+	function storedData(name)
+	{	
+		client.storedDataRequest(name, function(data)
+		{	
+			$('#area').val(data);
+			var results = $.parse(data);	
+			console.log(results.results.rows[0]);
+			dataObjectArray = results.results.rows;
+			$scope.fields = results.results.fields;
+			
+			generateFields ();
+			generateOperators();
+
+			console.log(JSON.stringify(dataObjectArray));
+		});
+	};
 
 	// generates the draggable fields 
 	function generateFields ()
@@ -185,24 +222,24 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	// select sample data 
-	$scope.sampleData = function(num)
-	{
-		client.sampleDataRequest(num, function(data)
-		{
-			console.log(data);
+	// $scope.sampleData = function(num)
+	// {
+	// 	client.sampleDataRequest(num, function(data)
+	// 	{
+	// 		console.log(data);
 
-			$('#area').val(data);
-			var results = $.parse(data);	
-			console.log(results.results.rows[0]);
-			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
+	// 		$('#area').val(data);
+	// 		var results = $.parse(data);	
+	// 		console.log(results.results.rows[0]);
+	// 		dataObjectArray = results.results.rows;
+	// 		$scope.fields = results.results.fields;
 			
-			generateFields ();
-			generateOperators();
+	// 		generateFields ();
+	// 		generateOperators();
 
-			console.log(JSON.stringify(dataObjectArray));
-		});
-	};
+	// 		console.log(JSON.stringify(dataObjectArray));
+	// 	});
+	// };
 	
 	$scope.fileUpload = function()
 	{
@@ -222,23 +259,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 	
-	function storedData(name)
-	{		
-		client.storedDataRequest(name, function(data)
-		{			
-			console.log(data);
-
-			$('#area').val(data);
-			var results = $.parse(data);	
-			console.log(results.results.rows[0]);
-			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
-			
-			generateFields ();
-
-			console.log(JSON.stringify(dataObjectArray));
-		});
-	};
+	
 
 	var xAxis;					// bar/line
 	var yAxis;					// bar/line
