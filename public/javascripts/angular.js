@@ -109,9 +109,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var li = document.createElement ('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', file);
-				//a.setAttribute('href', '');
-				//a.setAttribute('onclick', 'storedData(' + "'" + files[i] + "'" + ')');
-				//a.onclick = storedData("'" + data[i] + "'");
 
 				a.onclick = function()
 				{
@@ -134,10 +131,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', file);
-				//a.setAttribute('href', '');
-				//a.setAttribute('onclick', 'storedData(' + "'" + file + "'" + ')');
-				//a.onclick = storedData("'" + data[i] + "'");
-				//a.setAttribute('ng-click', 'storedData(' + "'" + file + "'" + ')');
+		
 				a.onclick = function()
 				{
 					storedData(this.getAttribute('id'));
@@ -165,7 +159,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			console.log(JSON.stringify(dataObjectArray));
 		});
-	};
+	}
 
 	// generates the draggable fields 
 	function generateFields ()
@@ -258,8 +252,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(JSON.stringify(dataObjectArray));
 		});
 	};
-	
-	
 
 	var xAxis;					// bar/line
 	var yAxis;					// bar/line
