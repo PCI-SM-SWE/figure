@@ -1,5 +1,5 @@
-var socket = io('datapuking.com');
-//var socket = io('localhost');
+//var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -14,6 +14,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		populateFileList();
 
 		jQuery.event.props.push('dataTransfer');
+		$('input[type=file]').bootstrapFileInput();
 
 		// copy and paste option for data input
 		$("#area").bind ('paste', function(e)
@@ -37,7 +38,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$(document).on('change', '.btn-file :file', function() 
 		{
-			//alert ("1");
 			var input = $(this);
 			var numFiles = input.get(0).files ? input.get(0).files.length : 1
 			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -45,7 +45,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(numFiles);
 			console.log(label);
 
-			input.trigger('fileselect', [numFiles, label]);		// calls the function below
+			input.trigger('fileselect', [numFiles, label]);		// calls the event below
 		});
 
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label)
@@ -57,15 +57,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				input.val(log);
 			else if( log ) 
 				alert(log);
-	
-			// $(document).on('change', '.btn-file :file', function()
-			// {
-			// 	var input = $(this);
-			// 	var numFiles = input.get(0).files ? input.get(0).files.length : 1;
-			// 	var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			// 	console.log(input);
-			// 	input.trigger('fileselect', [numFiles, label]);
-			// });
 		});
 
 		// uploading files
@@ -88,31 +79,85 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				console.log("file was successfully sent.");
 			});
 		});
-	
-	});
+
+		// calcaulte metric equation button enabled/disabled functionality
+		var submitCheck = function() 
+		{
+			if ($('#metricEquation').val() != '')
+				$('#statSubmit').removeAttr('disabled');
+			else
+				$('#statSubmit').attr('disabled', 'disabled');
+		}
+
+		$('#metricEquation').keyup(submitCheck);
+		$('#metricEquation').mouseenter(submitCheck);	
+	});	// end $(document).ready
 
 	// populates dropdown list with already uploaded files
 	function populateFileList()
 	{
-		client.filesList(function(data)
+		client.filesList(function(filesObject)
 		{
-			console.log(data);
-			
 			$('#storedList').empty();
+
+			var uploaded_files = filesObject.uploaded_files;
 			
-			for(var i = 0; i < data.length; i++)
+			for(var i = 0; i < uploaded_files.length; i++)
 			{
+				var file = uploaded_files[i];
+
 				var li = document.createElement ('li');
 				var a = document.createElement('a');
-				a.setAttribute('href', '');
-				a.setAttribute('onclick', 'storedData(' + "'" + data[i] + "'" + ')');
-				//a.onclick = storedData("'" + data[i] + "'");
-				a.innerHTML = data[i];	
+				a.setAttribute('id', file);
+
+				a.onclick = function()
+				{
+					storedData(this.getAttribute('id'));
+				};
+
+				a.innerHTML = file.substr(file.indexOf('uploaded_files') + 'uploaded_files'.length + 1);	
 				li.appendChild(a);
 				$('#storedList').append(li);
-
-				//clicking functionality
 			}
+
+			$('#sampleData').empty();
+
+			var sample_data = filesObject.sample_data;
+
+			for(var i = 0; i < sample_data.length; i++)
+			{
+				var file = sample_data[i];
+
+				var li = document.createElement('li');
+				var a = document.createElement('a');
+				a.setAttribute('id', file);
+		
+				a.onclick = function()
+				{
+					storedData(this.getAttribute('id'));
+				};
+
+				a.innerHTML = file.substr(file.indexOf('sample_data') + 'sample_data'.length + 1);	
+				li.appendChild(a);
+				$('#sampleData').append(li);
+			}
+		});
+	}
+
+	function storedData(name)
+	{	
+		client.storedDataRequest(name, function(data)
+		{	
+			$('#area').val(data);
+			var results = $.parse(data);	
+			console.log(results.results.rows[0]);
+			dataObjectArray = results.results.rows;
+			$scope.fields = results.results.fields;
+			
+			generateFields ();
+			generateOperators();
+
+			console.log(JSON.stringify(dataObjectArray));
 		});
 	}
 
@@ -171,46 +216,28 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	// select sample data 
-	$scope.sampleData = function(num)
-	{
-		client.sampleDataRequest(num, function(data)
-		{
-			console.log(data);
+	// $scope.sampleData = function(num)
+	// {
+	// 	client.sampleDataRequest(num, function(data)
+	// 	{
+	// 		console.log(data);
 
-			$('#area').val(data);
-			var results = $.parse(data);	
-			console.log(results.results.rows[0]);
-			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
+	// 		$('#area').val(data);
+	// 		var results = $.parse(data);	
+	// 		console.log(results.results.rows[0]);
+	// 		dataObjectArray = results.results.rows;
+	// 		$scope.fields = results.results.fields;
 			
-			generateFields ();
-			generateOperators();
+	// 		generateFields ();
+	// 		generateOperators();
 
-			console.log(JSON.stringify(dataObjectArray));
-		});
-	};
+	// 		console.log(JSON.stringify(dataObjectArray));
+	// 	});
+	// };
 	
 	$scope.fileUpload = function()
 	{
 		client.fileUploadRequest(function(data)
-		{			
-			console.log(data);
-
-			$('#area').val(data);
-			var results = $.parse(data);	
-			console.log(results.results.rows[0]);
-			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
-			
-			generateFields ();
-
-			console.log(JSON.stringify(dataObjectArray));
-		});
-	};
-	
-	function storedData(name)
-	{		
-		client.storedDataRequest(name, function(data)
 		{			
 			console.log(data);
 
@@ -401,7 +428,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('.inputMetricField').remove();
 		$('#metricEquation').val('');
-		$("#statSubmit").attr("disabled", "disabled");
+		$('#statSubmit').attr('disabled', 'disabled');
 	}
 
 	// calcaultes the metric equation
@@ -471,17 +498,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotChoroplethMap();
 			}
 		}		
-		
 		else if ($scope.graphTab == 5)
 		{
-			valueField = $('#valueField').val();
-			countField = $('#countField').val();
-
-			if (valueField != '')
-			{
-				console.log ('stats()'); //No stats function exsists yet
-				stats();
-			}
+			// if stats tab is selected
 		}
 
 		console.log ('xAxis: ' + xAxis);
@@ -496,6 +515,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	//---------------------------------BAR-----------------------------------------
 	function plotBar ()
 	{
+		// var svg = document.createElement("svg");
+		// svg.setAttribute("id", "barGraph");
+		// svg.setAttribute('width', '500');
+		// svg.setAttribute('height', '500');
+		
+		// $('#chart1').append(svg);
+
 		$('#barGraph').empty ();
 		console.log (JSON.stringify(dataObjectArray));
 
@@ -530,7 +556,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			return chart;
 		});
 	}
-
 
 	//----------------------------------------------Line------------------------------------------
 	function parseDateTime(value)
@@ -720,7 +745,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			.showYAxis (true)
 			.showXAxis (true);
 			
-			chart.xAxis.rotateLabels(-45);
+			chart.xAxis.rotateLabels(-65);
 
 			chart.xAxis.showMaxMin (true);
 			chart.xAxis.axisLabel (xAxis);
@@ -930,10 +955,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
 
 		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		e.setAttribute('width', '2000px');
-		e.setAttribute('height', '629px;')
+		e.setAttribute('width', '2000');
+		e.setAttribute('height', '629')
 		e.setAttribute('viewBox', '0 0 2000 629')
-		e.setAttribute('id', 'temp');
+		e.setAttribute('id', 'choroplethMap');
+		
 		var x;
 		var y;
 		var z;
@@ -955,62 +981,78 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// console.log('y = ' + y);
 			// console.log('z = ' + z);
 
-			$('#temp').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
+			$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-			document.getElementById('temp').removeAttribute('viewBox');	
+			if (document.getElementById('choroplethMap') != undefined)
+				document.getElementById('choroplethMap').removeAttribute('viewBox');	
 		}, 1000);
 	}
-}]);//end controller
 
+	$scope.saveFigure = function()
+	{
+		var canvas;
+		var image;
+		var ctx;
+		var graph;
 
-$(document).on('change', '.btn-file :file', function() 
-{
-	var input = $(this),
-	numFiles = input.get(0).files ? input.get(0).files.length : 1,
-	label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-	input.trigger('fileselect', [numFiles, label]);
-});
+		if ($scope.graphTab == 1)
+		{
+			graph = document.getElementById('barGraph');
+			canvas = document.getElementById('barCanvas');
+			image = document.getElementById('barImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 500);
+			image.src = canvas.toDataURL();
+			console.log(image.src);
 
-$(document).ready(function() {
-	$('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
+		}
+		else if ($scope.graphTab == 2)
+		{			
+			graph = document.getElementById('lineGraph');	
+			canvas = document.getElementById('lineCanvas');
+			image = document.getElementById('lineImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 1050, 850);
+			image.src = canvas.toDataURL();
 
-		var input = $(this).parents('.input-group').find(':text'),
-		log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-		if( input.length ) {
-			input.val(log);
-		} 
-		else {
-			if( log ) 
-				alert(log);
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
 		}
 
-		$(document).on('change', '.btn-file :file', function() {
-			var input = $(this),
-			numFiles = input.get(0).files ? input.get(0).files.length : 1,
-					label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-			console.log(input);
-			input.trigger('fileselect', [numFiles, label]);
-		});
-	});
-});
+		else if ($scope.graphTab == 3)
+		{
+			graph = document.getElementById('pieChart');
+			canvas = document.getElementById('pieCanvas');
+			image = document.getElementById('pieImage');
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
+			image.src = canvas.toDataURL();
 
-$("#metricEquation").on({
-	mouseenter: function() {
-		if ($("#metricEquation").val() == '') {
-			$("#statSubmit").attr("disabled", "disabled");
-		} else {
-			$("#statSubmit").removeAttr("disabled");
-		}
-	},
-	keyup: function() {
-		if ($("#metricEquation").val() == '') {
-			$("#statSubmit").attr("disabled", "disabled");
-		} else {
-			$("#statSubmit").removeAttr("disabled");
-		}
+			var download = document.createElement('a');
+			download.href = canvas.toDataURL();
+			download.download = 'asdf';
+			download.click();			
+		}		
+		else if ($scope.graphTab == 4)
+		{
+			// var style = $('#map').attr('style');
+			// $('#map').attr('style', 'display: none;' + style);
+			// tmp.appendChild(document.getElementById('choroplethMap'));
+			// canvas = document.getElementById('choroplethMapCanvas');
+			// image = document.getElementById('choroplethMapImage');
+			// ctx = canvas.getContext('2d');
+			// ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 470);
+			// image.src = canvas.toDataURL();
+			// image.setAttribute('style', 'border: 1px solid;')
+		}		
 	}
-});
+}]);
 
 /*
  * makes save button unclickable if nothing is in field
@@ -1018,24 +1060,7 @@ $("#metricEquation").on({
  */
 
 // for bar graph save button
-$("#xAxisBar").on({
-	mouseenter: function() {
-		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			$(".saveBtn").removeAttr("disabled");
-		}
-	},
-	keyup: function() {
-		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			$(".saveBtn").removeAttr("disabled");
-		}
-	}
-});
-
-$("#yAxisBar").on({
+$("#xAxisBar, #yAxisBar").on({
 	mouseenter: function() {
 		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
@@ -1053,25 +1078,7 @@ $("#yAxisBar").on({
 });
 
 // for line graph save button
-$("#xAxisLine").on({
-	mouseenter: function() {
-		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			alert("I'm alive!!");
-			$(".saveBtn").removeAttr("disabled");
-		}
-	},
-	keyup: function() {
-		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			$(".saveBtn").removeAttr("disabled");
-		}
-	}
-});
-
-$("#yAxisLine").on({
+$("#xAxisLine, #yAxisLine").on({
 	mouseenter: function() {
 		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
@@ -1107,24 +1114,7 @@ $("#valueField").on({
 });
 
 // for map save button
-$("#locationField").on({
-	mouseenter: function() {
-		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			$(".saveBtn").removeAttr("disabled");
-		}
-	},
-	keyup: function() {
-		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
-			$(".saveBtn").attr("disabled", "disabled");
-		} else {
-			$(".saveBtn").removeAttr("disabled");
-		}
-	}
-});
-
-$("#choroplethValueField").on({
+$("#locationField, #choroplethValueField").on({
 	mouseenter: function() {
 		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
@@ -1142,28 +1132,4 @@ $("#choroplethValueField").on({
 });
 
 
-$(function()
-{
-	var socket = io.connect('datapuking.com');
 	
-	socket.on('connect', function()
-	{
-		var delivery = new Delivery(socket);
-		
-		delivery.on('delivery.connect',function(delivery)
-		{
-			$("button[type=submit]").click(function(evt)
-			{
-				var file = $("input[type=file]")[0].files[0];
-				delivery.send(file);
-				evt.preventDefault();
-			});
-		});
-
-		delivery.on('send.success',function(fileUID)
-		{
-			console.log("file was successfully sent.");
-		});
-	});
-});
-
