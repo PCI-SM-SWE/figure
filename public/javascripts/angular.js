@@ -212,7 +212,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});	
 
 			$('.operators').append (tr);	
-		}
+		}//
 	}
 
 	// select sample data 
@@ -300,7 +300,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		countField = '';
 		locationField = '';
 		choroplethValueField = '';
-	}
+	};
 
 	// when user clicks a visualization type tab
 	$scope.selectVisualizationType = function ()
@@ -365,7 +365,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#metricFields').append(label);
 			$('#metricFields').append(input);
 		}
-	}
+	};
 
 	// drag and drop functionality for certain operators for the metric equation
 	$scope.droppedMetricField = function (dragEl, dropEl)
@@ -421,7 +421,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 
 		$('.inputMetricField').remove();
-	}
+	};
 
 	// clears the metric equation
 	$scope.clearMetric = function()
@@ -429,7 +429,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.inputMetricField').remove();
 		$('#metricEquation').val('');
 		$('#statSubmit').attr('disabled', 'disabled');
-	}
+	};
 
 	// calcaultes the metric equation
 	$scope.calculateMetric = function()
@@ -448,7 +448,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				return;
 			}
 		}			
-	}
+	};
 
 	// graphs the specified visualization type if all necessary input is there
 	function readyToGraph ()
@@ -988,6 +988,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}, 1000);
 	}
 
+	// saving chart to local drive
 	$scope.saveFigure = function()
 	{
 		var canvas;
@@ -1051,7 +1052,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// image.src = canvas.toDataURL();
 			// image.setAttribute('style', 'border: 1px solid;')
 		}		
-	}
+	};
 }]);
 
 /*
