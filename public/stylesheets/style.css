@@ -149,6 +149,8 @@ nav {
   list-style-type: none;
   overflow: hidden;
   padding: 0px;
+  margin-top:-5%;
+  margin-bottom:-5%;
 }
  
 .menu-item ul a {
