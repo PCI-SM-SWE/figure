@@ -1055,17 +1055,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		client.saveGraph({'html': '<svg>' + graph.innerHTML + '/<svg>', 'type': graphTypes[$scope.graphTab - 1]});
 	};
-
-	function getSavedGraphs()
-	{
-		alert("hi");
-		return;
-
-		client.getSavedGraphs(function(graphObjects)
-		{
-			
-		});
-	}
 }]);
 
 

@@ -9,8 +9,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	
 	$(document).ready (function ()
 	{
-		
+
 	});
+
+	function getSavedGraphs()
+	{
+		alert("hi");
+		return;
+
+		client.getSavedGraphs(function(graphObjects)
+		{
+			
+		});
+	}
 
 
 }]);
