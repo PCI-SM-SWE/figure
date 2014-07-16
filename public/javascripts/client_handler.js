@@ -54,7 +54,6 @@ Handler.prototype.getSavedGraphs = function(callback)
 
 	socket.on('send saved graphs', function(graphObjects)
 	{
-		console.log(graphObjects);
 		callback(graphObjects);
 	});
 }

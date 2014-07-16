@@ -222,7 +222,7 @@ io.on('connection', function(socket)
 	{
 		console.log(JSON.stringify(graphObject));
 	
-		client.hset('graphs', 'graph:' + graphCounter, graphObject);
+		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
 	});
 
@@ -231,16 +231,21 @@ io.on('connection', function(socket)
 		console.log(graphCounter);
 		var graphObjects = new Array();
 
-		for (var i = 0; i < graphCounter; i++)
+		client.hget('graphs', 'graph:0', function (err, reply)
 		{
-			client.hget('graphs', 'graph:' + i, function (err, reply)
-			{
-				console.log(reply);
-				graphObjects.push(reply);
-			});
-		}
+			graphObjects.push(JSON.parse(reply));
 
-		socket.emit('send saved graphs', graphObjects);
+			for(var i = 1; i < graphCounter; i++)
+			{
+				client.hget('graphs', 'graph:' + i, function (err, reply)
+				{
+					graphObjects.push(JSON.parse(reply));
+
+					if (graphObjects.length == graphCounter)
+						socket.emit('send saved graphs', graphObjects);
+				});
+			}			
+		});
 	});
 });
 

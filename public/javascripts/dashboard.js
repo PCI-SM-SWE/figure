@@ -9,17 +9,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	
 	$(document).ready (function ()
 	{
-
+		getSavedGraphs();
 	});
 
 	function getSavedGraphs()
 	{
-		alert("hi");
-		return;
-
 		client.getSavedGraphs(function(graphObjects)
 		{
-			
+			console.log(graphObjects.length);
 		});
 	}
 
