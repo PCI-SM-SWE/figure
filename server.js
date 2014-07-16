@@ -240,32 +240,56 @@ io.on('connection', function(socket)
 
 			var graphObjects = new Array();
 
-			client.hget('graphs', 'graph:0', function (err, reply)
+			var multi = client.multi();
+
+			for (var i = 0; i < graphCounter; i++)
 			{
-				graphObject = JSON.parse(reply);
-				graphObject.file_name = uploaded_files[0];
-				
-				graphObjects.push(graphObject);
-
-				for(var i = 1; i < graphCounter; i++)
+				multi.hget('graphs', 'graph:' + i, function(err, reply)
 				{
-					var id = 'graph:' + i;
+					graphObject = JSON.parse(reply);
+			 		//graphObject.file_name = uploaded_files[i];
+					graphObjects.push(graphObject);
+				});
+			}
 
-					client.hget('graphs', id, function (err, reply)
-					{
-						graphObject = JSON.parse(reply);
-						graphObject.file_name = uploaded_files[id.charAt(id.length - 1)];
-				
-						graphObjects.push(graphObject);
+			multi.exec(function(err, reply)
+			{	
+				for (var i = 0; i < graphCounter; i++)
+					graphObjects[i].file_name = uploaded_files[i];
 
-						if (graphObjects.length == graphCounter)
-						{
-							socket.emit('send saved graphs', graphObjects);
-							console.log(graphObjects);
-						}
-					});
-				}			
+				socket.emit('send saved graphs', graphObjects);
 			});
+
+
+
+			// client.hget('graphs', 'graph:0', function (err, reply)
+			// {
+			// 	graphObject = JSON.parse(reply);
+			// 	graphObject.file_name = uploaded_files[0];
+				
+			// 	graphObjects.push(graphObject);
+
+			// 	for(var i = 1; i < graphCounter;)
+			// 	{
+			// 		client.hget('graphs', 'graph:' + i, function (err, reply)
+			// 		{
+			// 			graphObject = JSON.parse(reply);
+			// 			graphObject.file_name = uploaded_files[i];
+				
+			// 			graphObjects.push(graphObject);
+
+			// 			if (graphObjects.length == graphCounter)
+			// 			{
+			// 				socket.emit('send saved graphs', graphObjects);
+			// 				console.log(graphObjects);
+			// 			}
+
+			// 			i++;
+			// 		});
+
+			// 		var j = i + 1;
+			// 	}			
+			// });
 		});	
 	});
 });
