@@ -220,32 +220,53 @@ io.on('connection', function(socket)
 
 	socket.on('save graph', function(graphObject)
 	{
-		console.log(JSON.stringify(graphObject));
-	
+
 		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
 	});
 
 	socket.on('get saved graphs', function()
 	{
-		console.log(graphCounter);
-		var graphObjects = new Array();
+		fs.readdir('./public/saved_images', function(err, uploaded_files)
+		{	
+			console.log(uploaded_files);
 
-		client.hget('graphs', 'graph:0', function (err, reply)
-		{
-			graphObjects.push(JSON.parse(reply));
-
-			for(var i = 1; i < graphCounter; i++)
+			uploaded_files.sort(function(a, b)
 			{
-				client.hget('graphs', 'graph:' + i, function (err, reply)
-				{
-					graphObjects.push(JSON.parse(reply));
+				return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
+			});
 
-					if (graphObjects.length == graphCounter)
-						socket.emit('send saved graphs', graphObjects);
-				});
-			}			
-		});
+			console.log(uploaded_files);
+
+			var graphObjects = new Array();
+
+			client.hget('graphs', 'graph:0', function (err, reply)
+			{
+				graphObject = JSON.parse(reply);
+				graphObject.file_name = uploaded_files[0];
+				
+				graphObjects.push(graphObject);
+
+				for(var i = 1; i < graphCounter; i++)
+				{
+					var id = 'graph:' + i;
+
+					client.hget('graphs', id, function (err, reply)
+					{
+						graphObject = JSON.parse(reply);
+						graphObject.file_name = uploaded_files[id.charAt(id.length - 1)];
+				
+						graphObjects.push(graphObject);
+
+						if (graphObjects.length == graphCounter)
+						{
+							socket.emit('send saved graphs', graphObjects);
+							console.log(graphObjects);
+						}
+					});
+				}			
+			});
+		});	
 	});
 });
 

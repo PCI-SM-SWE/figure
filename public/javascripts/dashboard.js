@@ -16,9 +16,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		client.getSavedGraphs(function(graphObjects)
 		{
-			console.log(graphObjects.length);
+			for (var i = 0; i < graphObjects.length; i++)
+			{
+				graphObject = graphObjects[i];				
+				console.log(graphObject.type);
+
+				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
+			}
 		});
 	}
-
-
 }]);
