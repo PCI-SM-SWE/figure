@@ -188,6 +188,6 @@ nav {
 }
 
 .menu-item:hover ul {
-  height: 93px;
+  height: auto;
 }
 
