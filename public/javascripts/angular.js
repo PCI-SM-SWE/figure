@@ -8,6 +8,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var client = new Handler(socket);
 	var dataObjectArray;				// JSON format for the data
 	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
+	var graphTypes = ['bar', 'line', 'pie', 'choropleth'];
 
 	$(document).ready (function ()
 	{
@@ -306,7 +307,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	$scope.selectVisualizationType = function ()
 	{
 		$scope.clearAll();
-
 		currentTab = $scope.graphTab;
 	};
 
@@ -1052,8 +1052,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// image.src = canvas.toDataURL();
 			// image.setAttribute('style', 'border: 1px solid;')
 		}		
+
+		client.saveGraph({'html': '<svg>' + graph.innerHTML + '/<svg>', 'type': graphTypes[$scope.graphTab - 1]});
 	};
+
+	function getSavedGraphs()
+	{
+		alert("hi");
+		return;
+
+		client.getSavedGraphs(function(graphObjects)
+		{
+			
+		});
+	}
 }]);
+
 
 /*
  * makes save button unclickable if nothing is in field

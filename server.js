@@ -3,6 +3,19 @@ var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
 var cache = {};
+var redis = require("redis");
+var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
+var graphCounter = 0;
+
+client.on("error", function (err) {
+	console.log(err);
+});
+
+client.hkeys("graphs", function (err, replies)
+{
+	console.log(replies.length);
+	graphCounter = replies.length;
+});
 
 function send404(response)
 {
@@ -80,7 +93,7 @@ server.listen(80, function()
 
 // Socket IO begins
 var io = require('socket.io')(server);
-var dl  = require('delivery');
+var dl = require('delivery');
 
 //function handler(req, res) {
 //	fs.readFile(__dirname + '/index.html', function(err, data) {
@@ -203,6 +216,31 @@ io.on('connection', function(socket)
 		{
 			console.log(name + " sent succesfully");
 		})
+	});
+
+	socket.on('save graph', function(graphObject)
+	{
+		console.log(JSON.stringify(graphObject));
+	
+		client.hset('graphs', 'graph:' + graphCounter, graphObject);
+		graphCounter++;
+	});
+
+	socket.on('get saved graphs', function()
+	{
+		console.log(graphCounter);
+		var graphObjects = new Array();
+
+		for (var i = 0; i < graphCounter; i++)
+		{
+			client.hget('graphs', 'graph:' + i, function (err, reply)
+			{
+				console.log(reply);
+				graphObjects.push(reply);
+			});
+		}
+
+		socket.emit('send saved graphs', graphObjects);
 	});
 });
 

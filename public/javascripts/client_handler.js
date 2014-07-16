@@ -42,3 +42,19 @@ Handler.prototype.filesList = function(callback)
 		callback(filesObject);
 	});
 }
+
+Handler.prototype.saveGraph = function(graphObject)
+{
+	socket.emit('save graph', graphObject);
+}
+
+Handler.prototype.getSavedGraphs = function(callback)
+{
+	socket.emit('get saved graphs');
+
+	socket.on('send saved graphs', function(graphObjects)
+	{
+		console.log(graphObjects);
+		callback(graphObjects);
+	});
+}
