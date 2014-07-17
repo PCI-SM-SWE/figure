@@ -26,24 +26,24 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				graphObject = graphObjects[i];				
 				console.log(graphObject.type);
 				switch(graphObject.type) {
-			    case "bar":
-			        barCnt += 31;
-			        break;
-			    case "line":
-			        lineCnt += 31;
-			        break;
-			    case "pie":
-			        pieCnt += 31;
-			        break;
-			    case "map":
-			        mapCnt += 31;
-			        break;
-			    case "stats":
-			        statsCnt += 31;
-			        break;
-			    default:
-			        break;
-			}
+				    case "bar":
+				        barCnt += 31;
+				        break;
+				    case "line":
+				        lineCnt += 31;
+				        break;
+				    case "pie":
+				        pieCnt += 31;
+				        break;
+				    case "map":
+				        mapCnt += 31;
+				        break;
+				    case "stats":
+				        statsCnt += 31;
+				        break;
+				    default:
+				        break;
+				}
 
 				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
 
