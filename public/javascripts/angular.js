@@ -1,5 +1,5 @@
-//var socket = io('datapuking.com');
-var socket = io('localhost');
+var socket = io('datapuking.com');
+//var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -594,6 +594,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	function plotLine ()
 	{	
 		$('#lineGraph').empty ();
+		$('#chart2').append(lineGraph);
+
 		//$('#title').remove ();
 		//chartTitle = $('#chartTitle').val ();
 		
@@ -1006,6 +1008,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			image.src = canvas.toDataURL();
 			console.log(image.src);
 
+		
 			var download = document.createElement('a');
 			download.href = canvas.toDataURL();
 			download.download = 'asdf';
