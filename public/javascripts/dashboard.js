@@ -46,6 +46,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 
 				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
+
+				$('#thumbnails').append('<img class = "thumbnail" src="saved_images/' + graphObject.file_name + '" style = "width: 85px; height: 70px; margin-bottom: 0px; display: inline; margin: 4px;">');
 			}
 			$("#menu-bar").on({
 				mouseenter: function () {
