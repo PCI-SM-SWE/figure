@@ -188,6 +188,8 @@ nav {
 }
 
 .menu-item:hover ul {
-  height: auto;
+/*
+* Each item is 31px tall
+*/
 }
 

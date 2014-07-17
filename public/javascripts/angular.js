@@ -1135,5 +1135,3 @@ $("#locationField, #choroplethValueField").on({
 	}
 });
 
-
-	

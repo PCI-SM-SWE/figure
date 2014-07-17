@@ -26,3 +26,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 }]);
+
+//$('.menu-item ul').css({"height":"124px"});
+$(".menu-item").hover(
+		function () {
+			$(".menu-item ul").css("height", "124px");
+		}
+);
