@@ -1009,10 +1009,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			console.log(image.src);
 
 		
-			var download = document.createElement('a');
-			download.href = canvas.toDataURL();
-			download.download = 'asdf';
-			download.click();			
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
 		}
 		else if ($scope.graphTab == 2)
 		{			
@@ -1023,10 +1023,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 1050, 850);
 			image.src = canvas.toDataURL();
 
-			var download = document.createElement('a');
-			download.href = canvas.toDataURL();
-			download.download = 'asdf';
-			download.click();			
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
 		}
 
 		else if ($scope.graphTab == 3)
@@ -1038,10 +1038,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
 			image.src = canvas.toDataURL();
 
-			var download = document.createElement('a');
-			download.href = canvas.toDataURL();
-			download.download = 'asdf';
-			download.click();			
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
 		}		
 		else if ($scope.graphTab == 4)
 		{
@@ -1056,7 +1056,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// image.setAttribute('style', 'border: 1px solid;')
 		}		
 
-		client.saveGraph({'html': '<svg>' + graph.innerHTML + '/<svg>', 'type': graphTypes[$scope.graphTab - 1]});
+		console.log(canvas.toDataURL());
+		client.saveGraph({'html': '<svg>' + graph.innerHTML + '/<svg>', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+		alert("Graph saved.");
 	};
 }]);
 

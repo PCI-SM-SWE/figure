@@ -11,12 +11,6 @@ client.on("error", function (err) {
 	console.log(err);
 });
 
-client.hkeys("graphs", function (err, replies)
-{
-	console.log(replies.length);
-	graphCounter = replies.length;
-});
-
 function send404(response)
 {
 	response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -208,7 +202,7 @@ io.on('connection', function(socket)
 	{
 		console.log(name + " requested");
 		getFile(name, function(data)
-		{
+		{	
 			socket.emit(name + ' data', data);
 		});
 
@@ -220,77 +214,64 @@ io.on('connection', function(socket)
 
 	socket.on('save graph', function(graphObject)
 	{
-
+		var base64Data = graphObject.png.replace(/^data:image\/png;base64,/, "");
+		
+		fs.writeFile("./public/saved_images/graph" + graphCounter + ".png", base64Data, "base64", function(err)
+		{
+			console.log(err);
+		});
+		
 		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
 	});
 
 	socket.on('get saved graphs', function()
 	{
-		fs.readdir('./public/saved_images', function(err, uploaded_files)
-		{	
-			console.log(uploaded_files);
+		client.hkeys("graphs", function (err, replies)
+		{
+			console.log(replies.length);
+			graphCounter = replies.length;
 
-			uploaded_files.sort(function(a, b)
-			{
-				return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
-			});
-
-			console.log(uploaded_files);
-
-			var graphObjects = new Array();
-
-			var multi = client.multi();
-
-			for (var i = 0; i < graphCounter; i++)
-			{
-				multi.hget('graphs', 'graph:' + i, function(err, reply)
-				{
-					graphObject = JSON.parse(reply);
-			 		//graphObject.file_name = uploaded_files[i];
-					graphObjects.push(graphObject);
-				});
-			}
-
-			multi.exec(function(err, reply)
+			fs.readdir('./public/saved_images', function(err, uploaded_files)
 			{	
+				if (uploaded_files.length != graphCounter)
+				{
+					console.log("Redis and ./public/saved_images folder are out of sync");
+					return;
+				}
+
+				console.log(uploaded_files);
+
+				uploaded_files.sort(function(a, b)
+				{	
+					return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
+				});
+
+				console.log(uploaded_files);
+
+				var graphObjects = new Array();
+
+				var multi = client.multi();
+
 				for (var i = 0; i < graphCounter; i++)
-					graphObjects[i].file_name = uploaded_files[i];
+				{
+					multi.hget('graphs', 'graph:' + i, function(err, reply)
+					{
+						graphObject = JSON.parse(reply);
+				 		//graphObject.file_name = uploaded_files[i];
+						graphObjects.push(graphObject);
+					});
+				}
 
-				socket.emit('send saved graphs', graphObjects);
-			});
+				multi.exec(function(err, reply)
+				{	
+					for (var i = 0; i < graphCounter; i++)
+						graphObjects[i].file_name = uploaded_files[i];
 
-
-
-			// client.hget('graphs', 'graph:0', function (err, reply)
-			// {
-			// 	graphObject = JSON.parse(reply);
-			// 	graphObject.file_name = uploaded_files[0];
-				
-			// 	graphObjects.push(graphObject);
-
-			// 	for(var i = 1; i < graphCounter;)
-			// 	{
-			// 		client.hget('graphs', 'graph:' + i, function (err, reply)
-			// 		{
-			// 			graphObject = JSON.parse(reply);
-			// 			graphObject.file_name = uploaded_files[i];
-				
-			// 			graphObjects.push(graphObject);
-
-			// 			if (graphObjects.length == graphCounter)
-			// 			{
-			// 				socket.emit('send saved graphs', graphObjects);
-			// 				console.log(graphObjects);
-			// 			}
-
-			// 			i++;
-			// 		});
-
-			// 		var j = i + 1;
-			// 	}			
-			// });
-		});	
+					socket.emit('send saved graphs', graphObjects);
+				});
+			});	
+		});		
 	});
 });
 
