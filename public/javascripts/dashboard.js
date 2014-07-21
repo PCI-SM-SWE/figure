@@ -9,6 +9,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	
 	$(document).ready (function ()
 	{
+		jQuery.event.props.push("dataTransfer");
 		getSavedGraphs();
 
 		$("#sortable").sortable(
@@ -99,7 +100,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	$scope.dropped = function (dragEl, dropEl)
+	$scope.dropped = function(dragEl, dropEl)
 	{
 		alert("dropped");
 	};
