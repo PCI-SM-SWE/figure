@@ -100,20 +100,12 @@
 				<div class="well" id = "thumbnails">
 					
 				</div>
-				<div class="well" style = "height: 800px;">
-					<ul id="sortable">
-						<li class="ui-state-default">1</li>
-						<li class="ui-state-default">2</li>
-						<li class="ui-state-default">3</li>
-						<li class="ui-state-default">4</li>
-						<li class="ui-state-default">5</li>
-						<li class="ui-state-default">6</li>
-						<li class="ui-state-default">7</li>
-						<li class="ui-state-default">8</li>
-						<li class="ui-state-default">9</li>
-						<li class="ui-state-default">10</li>
-						<li class="ui-state-default">11</li>
-						<li class="ui-state-default">12</li>
+				<div class="well" style = "height: 1100px;">
+					<ul style = "list-style-type: none; margin: 0; padding: 0; width: 1100px; height: 1100px">
+						<li style = "border-style: dashed; margin: 3px 3px 3px 0; padding: 2px; float: left; width: 540px; height: 500px;" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)"></li>
+						<li style = "border-style: dashed; margin: 3px 3px 3px 0; padding: 2px; float: left; width: 540px; height: 500px;" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)"></li>
+						<li style = "border-style: dashed; margin: 3px 3px 3px 0; padding: 2px; float: left; width: 540px; height: 500px;" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)"></li>
+						<li style = "border-style: solid; margin: 3px 3px 3px 0; padding: 2px; float: left; width: 540px; height: 500px;"></li>
 					</ul>
 				</div>
 			</div>
@@ -154,18 +146,6 @@
 	<link  rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'>
 
 	<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-
-	<style>
-	#sortable { list-style-type: none; margin: 0; padding: 0; width: 1100px; }
-	#sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 240px; height: 240px; font-size: 4em; text-align: center; }
-	</style>
-	<script>
-	$(function() {
-		$( "#sortable" ).sortable();
-		$( "#sortable" ).disableSelection();
-	});
-	</script>
 
 	<!-- <script src="javascripts/angular.js"></script> -->
 	<script type = "text/javascript" src = "javascripts/dashboard.js"></script>
