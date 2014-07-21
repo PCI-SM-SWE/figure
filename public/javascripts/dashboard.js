@@ -1,5 +1,5 @@
-//var socket = io('datapuking.com');
-var socket = io('localhost');
+var socket = io('datapuking.com');
+//var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -10,6 +10,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	$(document).ready (function ()
 	{
 		getSavedGraphs();
+
+		$("#sortable").sortable(
+		{
+			placeholder: "ui-state-highlight"
+		});
+
+		$("#sortable").disableSelection();
 	});
 
 	function getSavedGraphs()
