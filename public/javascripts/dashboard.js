@@ -6,7 +6,8 @@ var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 app.controller('MainCtrl', ['$scope', function($scope) 
 {
 	var client = new Handler(socket);
-	
+	var graphs;
+
 	$(document).ready (function ()
 	{
 		jQuery.event.props.push("dataTransfer");
@@ -29,6 +30,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				pieCnt = 0,
 				mapCnt = 0,
 				statsCnt = 0;
+			
 			for (var i = 0; i < graphObjects.length; i++)
 			{
 				graphObject = graphObjects[i];				
@@ -55,7 +57,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
 
-				$('#thumbnails').append('<img class = "thumbnail" src="saved_images/' + graphObject.file_name + '" style = "width: 85px; height: 70px; margin-bottom: 0px; display: inline; margin: 4px;">');
+				var img = document.createElement('img');
+				img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
+				img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 85px; height: 70px; margin-bottom: 0px; display: inline; margin: 4px;');
+				img.setAttribute('x-lvl-draggable', 'true');
+				img.setAttribute('draggable', 'true');
+				img.setAttribute('id', graphObject.file_name);
+				img.setAttribute('class', 'thumbnail ui-draggable');
+
+				angular.element(document).injector().invoke(function($compile) {
+					$compile(img)($scope);
+				});	
+
+				$('#thumbnails').append(img);
 			}
 			$("#menu-bar").on({
 				mouseenter: function () {
@@ -97,12 +111,56 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					$("#menu-stats ul").css("height", "0px");
 				}
 			});
+
+			graphs = graphObjects;
 		});
 	}
 
 	$scope.dropped = function(dragEl, dropEl)
 	{
-		alert("dropped");
+		console.log(dragEl);
+		console.log(dropEl);
+
+		var drag = angular.element (dragEl);
+		var drop = angular.element (dropEl);
+
+		var drag = angular.element (dragEl);
+		var drop = angular.element (dropEl);;
+
+		var graphType;
+		var chartData;
+
+		for(var i = 0; i < graphs.length; i++)
+		{
+			if(graphs[i].file_name == drag.attr('id'))
+			{
+				graphType = graphs[i].type;
+				chartData = graphs[i].chart_data;
+				break;
+			}
+		}
+
+		if (graphType == "bar")
+		{			
+			nv.addGraph(function()
+			{
+				var chart = nv.models.discreteBarChart()
+						.x(function(d) { return d.label })    //Specify the data accessors.
+						.y(function(d) { return d.value })
+						.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+						.tooltips(false)        //Don't show tooltips
+						.showValues(true)       //...instead, show the bar value right on top of each bar.
+						.transitionDuration(350);
+
+				d3.select('#barGraph')
+				.datum(chartData)
+				.call(chart);
+
+				nv.utils.windowResize(chart.update);
+
+				return chart;
+			});
+		}
 	};
 }]);
 

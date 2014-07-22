@@ -511,6 +511,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log ('choroplethValueField: ' + choroplethValueField);
 	}
 
+	var chartData;
+
 
 	//---------------------------------BAR-----------------------------------------
 	function plotBar ()
@@ -532,7 +534,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseFloat(dataObjectArray[i][yAxis])});
 		}
 
-		var chartData = new Array ();
+		chartData = new Array ();
 		chartData[0] = {key: yAxis, values: values};
 
 		console.log(JSON.stringify(chartData));
@@ -600,7 +602,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		//chartTitle = $('#chartTitle').val ();
 		
 		var values = new Array();			
-		var chartData = new Array();			
+		chartData = new Array();			
 		var isDateTime = false;
 		var colors = ['#FF0000', '#0000FF', '#00FF00', '#6600FF', '#FF00FF', '#663300', '#666699'];
 		var colorsIndex = 0;
@@ -797,7 +799,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var cumulativeArray = new Array ();
 		var valueLabel = $('#valueField').val();
 		var countField = $('#countField').val();		
-		var chartData = new Array ();
+		chartData = new Array ();
 		
 		if (countField == '')
 		{
@@ -1057,7 +1059,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}		
 
 		console.log(canvas.toDataURL());
-		client.saveGraph({'html': '<svg>' + graph.innerHTML + '/<svg>', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+		client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
 		alert("Graph saved.");
 	};
 }]);
