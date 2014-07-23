@@ -30,6 +30,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				pieCnt = 0,
 				mapCnt = 0,
 				statsCnt = 0;
+			var graphObject;
 			
 			for (var i = 0; i < graphObjects.length; i++)
 			{
@@ -58,7 +59,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
 
 				var img = document.createElement('img');
-				img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
+				//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
+				img.setAttribute('src', graphObject.png); 
 				img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 85px; height: 70px; margin-bottom: 0px; display: inline; margin: 4px;');
 				img.setAttribute('x-lvl-draggable', 'true');
 				img.setAttribute('draggable', 'true');
@@ -124,23 +126,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var drag = angular.element (dragEl);
 		var drop = angular.element (dropEl);
 
-		var drag = angular.element (dragEl);
-		var drop = angular.element (dropEl);;
-
-		var graphType;
-		var chartData;
+		var graphObject;
 
 		for(var i = 0; i < graphs.length; i++)
 		{
-			if(graphs[i].file_name == drag.attr('id'))
-			{
-				graphType = graphs[i].type;
-				chartData = graphs[i].chart_data;
+			graphObject = graphs[i]
+
+			if(graphObject.file_name == drag.attr('id'))
 				break;
-			}
 		}
 
-		if (graphType == "bar")
+		console.log(JSON.stringify(graphObject));
+
+		if (graphObject.type == "bar")
 		{			
 			nv.addGraph(function()
 			{
@@ -153,13 +151,70 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						.transitionDuration(350);
 
 				d3.select('#barGraph')
-				.datum(chartData)
+				.datum(graphObject.chart_data)
 				.call(chart);
 
 				nv.utils.windowResize(chart.update);
 
-				return chart;
+				return(chart);
 			});
+		}
+		else if(graphObject.type == "line")
+		{
+			nv.addGraph (function ()
+			{
+				var chart = nv.models.lineChart()
+				.useInteractiveGuideline (true)
+				.transitionDuration (350)
+				.showYAxis (true)
+				.showXAxis (true);
+				
+				chart.xAxis.rotateLabels(-65);
+
+				chart.xAxis.showMaxMin (true);
+				chart.xAxis.axisLabel (graphObject.xAxis);
+				
+				if (graphObject.is_date_time == true)
+				{
+					chart.xAxis.tickFormat (function (d)
+					{
+						return d3.time.format ('%c')(new Date (d));
+					});
+					chart.margin ({left: 100, right: 30, bottom: 180});
+				}
+				else
+				{
+					chart.xAxis.tickFormat (d3.format (',g'));
+					chart.margin ({left: 100, right: 30, bottom: 80});
+				}
+				
+				chart.yAxis.axisLabel (graphObject.yAxis);
+				chart.yAxis.tickFormat (d3.format (',g'));
+				
+				d3.select ('#barGraph').datum (graphObject.chart_data).call (chart);
+				nv.utils.windowResize(chart.update);		
+				
+				return(chart);		
+			});				
+		}
+		else if(graphObject.type == "pie")
+		{
+			nv.addGraph(function() 
+			{
+				var chart = nv.models.pieChart()
+				.x(function(d) { return d.label; })
+				.y(function(d) { return d.value; })
+				.showLabels(true);
+
+				d3.select('#barGraph')
+				.datum(graphObject.chart_data)
+				.transition().duration(350)
+				.call(chart);
+				
+				nv.utils.windowResize(chart.update);	
+				
+				return(chart);
+			});		
 		}
 	};
 }]);
