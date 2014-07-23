@@ -272,6 +272,7 @@ io.on('connection', function(socket)
 			var multi = client.multi();
 			var indices = new Array();
 
+
 			for (var i = 0; i < graphCounter; i++)
 			{
 				indices.push(i);
@@ -303,7 +304,6 @@ io.on('connection', function(socket)
 			{	
 				// for (var i = 0; i < graphCounter; i++)
 				// 	graphObjects[i].file_name = uploaded_files[i];
-
 				socket.emit('send saved graphs', graphObjects);
 			});
 		});		
