@@ -178,6 +178,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 
 		console.log(JSON.stringify(graphObject));
+		console.log(drop.find('svg').attr('id'));
 
 		if (graphObject.type == "bar")
 		{			
@@ -191,7 +192,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						.showValues(true)       //...instead, show the bar value right on top of each bar.
 						.transitionDuration(350);
 
-				d3.select('#barGraph')
+				d3.select('#' + drop.find('svg').attr('id'))
 				.datum(graphObject.chart_data)
 				.call(chart);
 
@@ -232,7 +233,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				chart.yAxis.axisLabel (graphObject.yAxis);
 				chart.yAxis.tickFormat (d3.format (',g'));
 				
-				d3.select ('#barGraph').datum (graphObject.chart_data).call (chart);
+				d3.select ('#' + drop.find('svg').attr('id'))
+					.datum (graphObject.chart_data)
+					.call (chart);
 				nv.utils.windowResize(chart.update);		
 				
 				return(chart);		
@@ -247,7 +250,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				.y(function(d) { return d.value; })
 				.showLabels(true);
 
-				d3.select('#barGraph')
+				d3.select('#' + drop.find('svg').attr('id'))
 				.datum(graphObject.chart_data)
 				.transition().duration(350)
 				.call(chart);
