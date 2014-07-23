@@ -1,5 +1,5 @@
-var socket = io('datapuking.com');
-//var socket = io('localhost');
+//var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -13,7 +13,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	$(document).ready (function ()
 	{
 		populateFileList();
-
+		
 		jQuery.event.props.push('dataTransfer');
 		$('input[type=file]').bootstrapFileInput();
 

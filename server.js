@@ -3,9 +3,14 @@ var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
 var cache = {};
+var express = require('express');
+var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
 var graphCounter = 0;
+
+app.set('port', process.env.PORT || 80);
+app.use(express.static(path.join(__dirname, 'public')));
 
 client.on("error", function (err) {
 	console.log(err);
@@ -61,18 +66,27 @@ function serveStatic(response, cache, absPath)
 	}
 }
 
-var server = http.createServer(function(request, response)
+app.get('/', function (req, res)
 {
-	var filePath = false;
-	
-	if (request.url == '/')
-		filePath = 'public/index.html';
-	else 
-		filePath = 'public' + request.url;
-
-	var absPath = './' + filePath;
-	serveStatic(response, cache, absPath);
+	res.render('./public/index.html');	
 });
+
+var server = http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
+
+// var server = http.createServer(function(request, response)
+// {
+// 	var filePath = false;
+	
+// 	if (request.url == '/')
+// 		filePath = 'public/index.html';
+// 	else 
+// 		filePath = 'public' + request.url;
+
+// 	var absPath = './' + filePath;
+// 	serveStatic(response, cache, absPath);
+// });
 
 function getFile(path, callback)
 {
@@ -85,10 +99,10 @@ function getFile(path, callback)
 	});
 }
 
-server.listen(80, function()
-{
-	console.log("Server listening on port 80.");
-});
+// server.listen(80, function()
+// {
+// 	console.log("Server listening on port 80.");
+// });
 
 // Socket IO begins
 var io = require('socket.io')(server);
