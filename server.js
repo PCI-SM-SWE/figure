@@ -116,7 +116,7 @@ var dl = require('delivery');
 //		}
 //		res.writeHead(200);
 //		res.end(data);
-//	});
+//	});fff
 //}
 
 io.on('connection', function(socket)
@@ -240,15 +240,17 @@ io.on('connection', function(socket)
 		// 	console.log(err);
 		// });
 		
+		graphObject.file_name = 'graph' + graphCounter;
 		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
+		console.log('finished saving');
 	});
 
 	socket.on('get saved graphs', function()
 	{
 		client.hkeys("graphs", function (err, replies)
 		{
-			console.log(replies.length);
+			console.log('in get saved graphs');
 			graphCounter = replies.length;
 
 			// fs.readdir('./public/saved_images', function(err, uploaded_files)
@@ -268,17 +270,34 @@ io.on('connection', function(socket)
 
 			var graphObjects = new Array();
 			var multi = client.multi();
+			var indices = new Array();
 
 			for (var i = 0; i < graphCounter; i++)
 			{
-				multi.hget('graphs', 'graph:' + i, function(err, reply)
-				{
-					graphObject = JSON.parse(reply);
-			 		//graphObject.file_name = uploaded_files[i];
-			 		graphObject.file_name = 'graph' + i;
-					graphObjects.push(graphObject);
-				});
+				indices.push(i);
 			}
+
+			indices.forEach(function(index)
+			{
+				multi.hget('graphs', 'graph:' + index, function(err, reply)
+				{
+					var graphObject = JSON.parse(reply);
+			 		//graphObject.file_name = uploaded_files[i];
+			 		// graphObject.file_name = 'graph' + i;
+					graphObjects.push(graphObject);				
+				});
+			});
+
+			// for (var i = 0; i < graphCounter; i++)
+			// {
+			// 	multi.hget('graphs', 'graph:' + i, function(err, reply)
+			// 	{
+			// 		var graphObject = JSON.parse(reply);
+			//  		//graphObject.file_name = uploaded_files[i];
+			//  		// graphObject.file_name = 'graph' + i;
+			// 		graphObjects.push(graphObject);				
+			// 	});
+			// }
 
 			multi.exec(function(err, reply)
 			{	
