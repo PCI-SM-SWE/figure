@@ -3,12 +3,22 @@ var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
 var cache = {};
+var express = require('express');
+var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
 var graphCounter = 0;
 
+app.set('port', process.env.PORT || 80);
+app.use(express.static(path.join(__dirname, 'public')));
+
 client.on("error", function (err) {
 	console.log(err);
+});
+
+client.hkeys("graphs", function (err, replies)
+{
+	graphCounter = replies.length;
 });
 
 function send404(response)
@@ -56,18 +66,27 @@ function serveStatic(response, cache, absPath)
 	}
 }
 
-var server = http.createServer(function(request, response)
+app.get('/', function (req, res)
 {
-	var filePath = false;
-	
-	if (request.url == '/')
-		filePath = 'public/index.html';
-	else 
-		filePath = 'public' + request.url;
-
-	var absPath = './' + filePath;
-	serveStatic(response, cache, absPath);
+	res.render('./public/index.html');	
 });
+
+var server = http.createServer(app).listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + app.get('port'));
+});
+
+// var server = http.createServer(function(request, response)
+// {
+// 	var filePath = false;
+	
+// 	if (request.url == '/')
+// 		filePath = 'public/index.html';
+// 	else 
+// 		filePath = 'public' + request.url;
+
+// 	var absPath = './' + filePath;
+// 	serveStatic(response, cache, absPath);
+// });
 
 function getFile(path, callback)
 {
@@ -80,10 +99,10 @@ function getFile(path, callback)
 	});
 }
 
-server.listen(80, function()
-{
-	console.log("Server listening on port 80.");
-});
+// server.listen(80, function()
+// {
+// 	console.log("Server listening on port 80.");
+// });
 
 // Socket IO begins
 var io = require('socket.io')(server);
@@ -214,12 +233,12 @@ io.on('connection', function(socket)
 
 	socket.on('save graph', function(graphObject)
 	{
-		var base64Data = graphObject.png.replace(/^data:image\/png;base64,/, "");
+		// var base64Data = graphObject.png.replace(/^data:image\/png;base64,/, "");
 		
-		fs.writeFile("./public/saved_images/graph" + graphCounter + ".png", base64Data, "base64", function(err)
-		{
-			console.log(err);
-		});
+		// fs.writeFile("./public/saved_images/graph" + graphCounter + ".png", base64Data, "base64", function(err)
+		// {
+		// 	console.log(err);
+		// });
 		
 		client.hset('graphs1', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
@@ -232,45 +251,41 @@ io.on('connection', function(socket)
 			console.log(replies.length);
 			graphCounter = replies.length;
 
-			fs.readdir('./public/saved_images', function(err, uploaded_files)
+			// fs.readdir('./public/saved_images', function(err, uploaded_files)
+			// {	
+			// 	if (uploaded_files.length != graphCounter)
+			// 	{
+			// 		console.log("Redis and ./public/saved_images folder are out of sync");
+			// 		return;
+			// 	}
+
+			// 	uploaded_files.sort(function(a, b)
+			// 	{	
+			// 		return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
+			// 	});
+			// });	
+
+
+			var graphObjects = new Array();
+			var multi = client.multi();
+
+			for (var i = 0; i < graphCounter; i++)
+			{
+				multi.hget('graphs', 'graph:' + i, function(err, reply)
+				{
+					graphObject = JSON.parse(reply);
+			 		//graphObject.file_name = uploaded_files[i];
+			 		graphObject.file_name = 'graph' + i;
+					graphObjects.push(graphObject);
+				});
+			}
+
+			multi.exec(function(err, reply)
 			{	
-				if (uploaded_files.length != graphCounter)
-				{
-					console.log("Redis and ./public/saved_images folder are out of sync");
-					return;
-				}
-
-				console.log(uploaded_files);
-
-				uploaded_files.sort(function(a, b)
-				{	
-					return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
-				});
-
-				console.log(uploaded_files);
-
-				var graphObjects = new Array();
-
-				var multi = client.multi();
-
-				for (var i = 0; i < graphCounter; i++)
-				{
-					multi.hget('graphs1', 'graph:' + i, function(err, reply)
-					{
-						graphObject = JSON.parse(reply);
-				 		//graphObject.file_name = uploaded_files[i];
-						graphObjects.push(graphObject);
-					});
-				}
-
-				multi.exec(function(err, reply)
-				{	
-					for (var i = 0; i < graphCounter; i++)
-						graphObjects[i].file_name = uploaded_files[i];
-
-					socket.emit('send saved graphs', graphObjects);
-				});
-			});	
+				// for (var i = 0; i < graphCounter; i++)
+				// 	graphObjects[i].file_name = uploaded_files[i];
+				socket.emit('send saved graphs', graphObjects);
+			});
 		});		
 	});
 });

@@ -13,7 +13,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	$(document).ready (function ()
 	{
 		populateFileList();
-
+		
 		jQuery.event.props.push('dataTransfer');
 		$('input[type=file]').bootstrapFileInput();
 
@@ -513,7 +513,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	var chartData;
 
-
 	//---------------------------------BAR-----------------------------------------
 	function plotBar ()
 	{
@@ -555,7 +554,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			nv.utils.windowResize(chart.update);
 
-			return chart;
+			return(chart);
 		});
 	}
 
@@ -593,6 +592,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return (new Date (dateArray[2], dateArray[0] - 1, dateArray[1], timeArray[0], timeArray[1], timeArray[2], 0));
 	}	
 
+	var isDateTime;
+
 	function plotLine ()
 	{	
 		$('#lineGraph').empty ();
@@ -603,7 +604,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 		var values = new Array();			
 		chartData = new Array();			
-		var isDateTime = false;
+		isDateTime = false;
 		var colors = ['#FF0000', '#0000FF', '#00FF00', '#6600FF', '#FF00FF', '#663300', '#666699'];
 		var colorsIndex = 0;
 		var individualData;
@@ -743,12 +744,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		nv.addGraph (function ()
 		{
 			var chart = nv.models.lineChart()
-			.margin ({left: 100, right: 30, bottom: 150})
 			.useInteractiveGuideline (true)
 			.transitionDuration (350)
 			.showYAxis (true)
 			.showXAxis (true);
 			
+
 			chart.xAxis.rotateLabels(-65);
 
 			chart.xAxis.showMaxMin (true);
@@ -760,17 +761,21 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				{
 					return d3.time.format ('%c')(new Date (d));
 				});
+				chart.margin ({left: 100, right: 30, bottom: 180});
 			}
 			else
+			{
 				chart.xAxis.tickFormat (d3.format (',g'));
-			
+				chart.margin ({left: 100, right: 30, bottom: 80});
+			}
+
 			chart.yAxis.axisLabel (yAxis);
 			chart.yAxis.tickFormat (d3.format (',g'));
 			
 			d3.select ('#lineGraph').datum (chartData).call (chart);
 			nv.utils.windowResize(chart.update);		
 			
-			return chart;		
+			return(chart);		
 		});				
 	}
 
@@ -836,7 +841,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			
 			nv.utils.windowResize(chart.update);	
 			
-			return chart;
+			return(chart);
 		});		
 	}
 
@@ -1059,7 +1064,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}		
 
 		console.log(canvas.toDataURL());
-		client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+
+		if (graphTypes[$scope.graphTab - 1] != "line")
+			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+		else
+			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
+		
 		alert("Graph saved.");
 	};
 }]);
