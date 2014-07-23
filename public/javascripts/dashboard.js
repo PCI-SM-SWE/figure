@@ -38,23 +38,29 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				console.log(graphObject.type);
 				switch(graphObject.type) {
 				    case "bar":
-				        barCnt += 31;
+				        barCnt += 1;
 				        break;
 				    case "line":
-				        lineCnt += 31;
+				        lineCnt += 1;
 				        break;
 				    case "pie":
-				        pieCnt += 31;
+				        pieCnt += 1;
 				        break;
 				    case "map":
-				        mapCnt += 31;
+				        mapCnt += 1;
 				        break;
 				    case "stats":
-				        statsCnt += 31;
+				        statsCnt += 1;
 				        break;
 				    default:
 				        break;
 				}
+				
+				$("#bar-badge").html(barCnt);
+				$("#line-badge").html(lineCnt);
+				$("#pie-badge").html(pieCnt);
+				$("#map-badge").html(mapCnt);
+				$("#stats-badge").html(statsCnt);
 
 				$('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
 
@@ -75,7 +81,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 			$("#menu-bar").on({
 				mouseenter: function () {
-					$("#menu-bar ul").css("height", barCnt + "px");
+					$("#menu-bar ul").css("height", barCnt*31 + "px");
 				},
 				mouseleave: function() {
 					$("#menu-bar ul").css("height", "0px");
@@ -83,7 +89,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 			$("#menu-line").on({
 				mouseenter: function () {
-					$("#menu-line ul").css("height", lineCnt + "px");
+					$("#menu-line ul").css("height", lineCnt*31 + "px");
 				},
 				mouseleave: function() {
 					$("#menu-line ul").css("height", "0px");
@@ -91,7 +97,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 			$("#menu-pie").on({
 				mouseenter: function () {
-					$("#menu-pie ul").css("height", pieCnt + "px");
+					$("#menu-pie ul").css("height", pieCnt*31 + "px");
 				},
 				mouseleave: function() {
 					$("#menu-pie ul").css("height", "0px");
@@ -99,7 +105,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 			$("#menu-map").on({
 				mouseenter: function () {
-					$("#menu-map ul").css("height", mapCnt + "px");
+					$("#menu-map ul").css("height", mapCnt*31 + "px");
 				},
 				mouseleave: function() {
 					$("#menu-map ul").css("height", "0px");
@@ -107,7 +113,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 			$("#menu-stats").on({
 				mouseenter: function () {
-					$("#menu-stats ul").css("height", statsCnt + "px");
+					$("#menu-stats ul").css("height", statsCnt*31 + "px");
 				},
 				mouseleave: function() {
 					$("#menu-stats ul").css("height", "0px");
