@@ -221,13 +221,13 @@ io.on('connection', function(socket)
 			console.log(err);
 		});
 		
-		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
+		client.hset('graphs1', 'graph:' + graphCounter, JSON.stringify(graphObject));
 		graphCounter++;
 	});
 
 	socket.on('get saved graphs', function()
 	{
-		client.hkeys("graphs", function (err, replies)
+		client.hkeys("graphs1", function (err, replies)
 		{
 			console.log(replies.length);
 			graphCounter = replies.length;
@@ -255,7 +255,7 @@ io.on('connection', function(socket)
 
 				for (var i = 0; i < graphCounter; i++)
 				{
-					multi.hget('graphs', 'graph:' + i, function(err, reply)
+					multi.hget('graphs1', 'graph:' + i, function(err, reply)
 					{
 						graphObject = JSON.parse(reply);
 				 		//graphObject.file_name = uploaded_files[i];
