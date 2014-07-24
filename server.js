@@ -12,13 +12,18 @@ var graphCounter = 0;
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
 
-client.on("error", function (err) {
+client.on("error", function (err)
+{
 	console.log(err);
 });
 
-client.hkeys("graphs", function (err, replies)
+client.on("connect", function()
 {
-	graphCounter = replies.length;
+	console.log("Redis connected");
+	client.hkeys("graphs", function (err, replies)
+	{
+		graphCounter = replies.length;
+	});
 });
 
 function send404(response)
@@ -121,7 +126,7 @@ var dl = require('delivery');
 
 io.on('connection', function(socket)
 {
-	console.log('connected');
+	console.log('Client connected');
 	
 	// Sending list of previously uploaded files to client
 	fs.readdir('./uploaded_files', function(err, uploaded_files)
@@ -267,7 +272,7 @@ io.on('connection', function(socket)
 			// 	});
 			// });	
 
-
+	
 			var graphObjects = new Array();
 			var multi = client.multi();
 			var indices = new Array();

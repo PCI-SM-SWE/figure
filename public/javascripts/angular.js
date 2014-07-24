@@ -10,19 +10,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
 	var graphTypes = ['bar', 'line', 'pie', 'choropleth'];
 
-	$(document).ready (function ()
+	$(document).ready(function()
 	{
 		populateFileList();
-		
+
 		jQuery.event.props.push('dataTransfer');
 		$('input[type=file]').bootstrapFileInput();
 
 		// copy and paste option for data input
-		$("#area").bind ('paste', function(e)
+		$("#area").bind('paste', function(e)
 		{
 			var elem = $(this);
 
-			setTimeout (function()
+			setTimeout(function()
 			{		       
 				var data = $('#area').val();
 				var results = $.parse(data);
@@ -30,7 +30,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				dataObjectArray = results.results.rows;
 				$scope.fields = results.results.fields;
 
-				generateFields ();
+				generateFields();
 				generateOperators();
 
 				console.log(JSON.stringify(dataObjectArray));
@@ -84,7 +84,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// calcaulte metric equation button enabled/disabled functionality
 		var submitCheck = function() 
 		{
-			if ($('#metricEquation').val() != '')
+			if($('#metricEquation').val() != '')
 				$('#statSubmit').removeAttr('disabled');
 			else
 				$('#statSubmit').attr('disabled', 'disabled');
@@ -107,7 +107,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				var file = uploaded_files[i];
 
-				var li = document.createElement ('li');
+				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', file);
 
@@ -155,7 +155,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			dataObjectArray = results.results.rows;
 			$scope.fields = results.results.fields;
 			
-			generateFields ();
+			generateFields();
 			generateOperators();
 
 			console.log(JSON.stringify(dataObjectArray));
@@ -163,29 +163,29 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	// generates the draggable fields 
-	function generateFields ()
+	function generateFields()
 	{
 		$('.fields').empty();
 
-		for (var i = 0; i < $scope.fields.length; i++)
+		for(var i = 0; i < $scope.fields.length; i++)
 		{
-			var tr = document.createElement ('tr');
-			tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
-			tr.setAttribute ('x-lvl-draggable', 'true');
-			tr.setAttribute ('draggable', 'true');
-			tr.setAttribute ('id', $scope.fields[i]);
-			tr.setAttribute ('class', 'ui-draggable');
+			var tr = document.createElement('tr');
+			tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
+			tr.setAttribute('x-lvl-draggable', 'true');
+			tr.setAttribute('draggable', 'true');
+			tr.setAttribute('id', $scope.fields[i]);
+			tr.setAttribute('class', 'ui-draggable');
 
-			var td = document.createElement ('td');
+			var td = document.createElement('td');
 			td.innerHTML = $scope.fields[i];
 			
-			tr.appendChild (td);
+			tr.appendChild(td);
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile(tr)($scope);
 			});	
 
-			$('.fields').append (tr);	
+			$('.fields').append(tr);	
 		}
 	}
 
@@ -194,25 +194,25 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('.operators').empty();
 
-		for (var i = 0; i < operators.length; i++)
+		for(var i = 0; i < operators.length; i++)
 		{
-			var tr = document.createElement ('tr');
-			tr.setAttribute ('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
-			tr.setAttribute ('x-lvl-draggable', 'true');
-			tr.setAttribute ('draggable', 'true');
-			tr.setAttribute ('id', operators[i]);
-			tr.setAttribute ('class', 'ui-draggable');
+			var tr = document.createElement('tr');
+			tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
+			tr.setAttribute('x-lvl-draggable', 'true');
+			tr.setAttribute('draggable', 'true');
+			tr.setAttribute('id', operators[i]);
+			tr.setAttribute('class', 'ui-draggable');
 
-			var td = document.createElement ('td');
+			var td = document.createElement('td');
 			td.innerHTML = operators[i];
 			
-			tr.appendChild (td);
+			tr.appendChild(td);
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile(tr)($scope);
 			});	
 
-			$('.operators').append (tr);	
+			$('.operators').append(tr);	
 		}//
 	}
 
@@ -229,7 +229,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// 		dataObjectArray = results.results.rows;
 	// 		$scope.fields = results.results.fields;
 			
-	// 		generateFields ();
+	// 		generateFields();
 	// 		generateOperators();
 
 	// 		console.log(JSON.stringify(dataObjectArray));
@@ -248,7 +248,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			dataObjectArray = results.results.rows;
 			$scope.fields = results.results.fields;
 			
-			generateFields ();
+			generateFields();
 
 			console.log(JSON.stringify(dataObjectArray));
 		});
@@ -264,16 +264,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var currentTab = 1;			// 1 = bar, 2 = line, 3 = pie, 4 = choropleth map
 
 	// clears/resets all fields, labels, and charts,
-	$scope.clearAll = function ()
+	$scope.clearAll = function()
 	{
 		$(".saveBtn").attr("disabled", "disabled"); // to make save button unclickable
-		if (currentTab == 1)
+		if(currentTab == 1)
 		{
 			$('#xAxisBar').val('');
 			$('#yAxisBar').val(''	);
 			$('#barGraph').empty();
 		}
-		else if (currentTab == 2)
+		else if(currentTab == 2)
 		{
 			$('#xAxisLine').val('');
 			$('#yAxisLine').val('');
@@ -281,13 +281,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#lineGraph').empty();
 			$('#groupingLine').val('');
 		}
-		else if (currentTab == 3)
+		else if(currentTab == 3)
 		{
 			$('#valueField').val('');
 			$('#countField').val('');
 			$('#pieChart').empty();
 		}
-		else if (currentTab == 4)
+		else if(currentTab == 4)
 		{
 			$('#locationField').val('');
 			$('#choroplethValueField').val('');
@@ -304,34 +304,34 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	};
 
 	// when user clicks a visualization type tab
-	$scope.selectVisualizationType = function ()
+	$scope.selectVisualizationType = function()
 	{
 		$scope.clearAll();
 		currentTab = $scope.graphTab;
 	};
 
 	// drag and drop functionality for the fields of the visualization
-	$scope.dropped = function (dragEl, dropEl)
+	$scope.dropped = function(dragEl, dropEl)
 	{
-		console.log (dragEl);
-		console.log (dropEl);
+		console.log(dragEl);
+		console.log(dropEl);
 
-		var drag = angular.element (dragEl);
-		var drop = angular.element (dropEl);
+		var drag = angular.element(dragEl);
+		var drop = angular.element(dropEl);
 
 		drop.val(drag.attr('id'));
 		
-		readyToGraph ();
+		readyToGraph();
 	};
 
 	// drag and drop functionality for metric options
-	$scope.droppedMetric = function (dragEl, dropEl)
+	$scope.droppedMetric = function(dragEl, dropEl)
 	{
-		console.log (dragEl);
-		console.log (dropEl);
+		console.log(dragEl);
+		console.log(dropEl);
 
-		var drag = angular.element (dragEl);
-		var drop = angular.element (dropEl);
+		var drag = angular.element(dragEl);
+		var drop = angular.element(dropEl);
 		var operator;
 
 		console.log($('#metricFields').children().length);
@@ -341,7 +341,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		drop.val(drop.val() + drag.attr('id'));
 
-		if (drag.attr('id').indexOf('()') != -1)
+		if(drag.attr('id').indexOf('()') != -1)
 		{
 			operator = drag.attr('id').substring(0, drag.attr('id').indexOf('()'));
 			console.log(operator);
@@ -368,55 +368,55 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	};
 
 	// drag and drop functionality for certain operators for the metric equation
-	$scope.droppedMetricField = function (dragEl, dropEl)
+	$scope.droppedMetricField = function(dragEl, dropEl)
 	{
-		console.log (dragEl);
-		console.log (dropEl);
+		console.log(dragEl);
+		console.log(dropEl);
 
-		var drag = angular.element (dragEl);
-		var drop = angular.element (dropEl);
+		var drag = angular.element(dragEl);
+		var drop = angular.element(dropEl);
 
 		var operator = drop.attr('id');
 		var field = drag.attr('id');
 
-		if (operator == 'sum')
+		if(operator == 'sum')
 		{
 			var sum = 0;
 
-			for (var i = 0; i < dataObjectArray.length; i++)
+			for(var i = 0; i < dataObjectArray.length; i++)
 			{
-				if (dataObjectArray[i][field] != '')
+				if(dataObjectArray[i][field] != '')
 					sum += dataObjectArray[i][field];
 			}
 
 			console.log(sum);
 			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum));
 		}
-		else if (operator == 'count')
+		else if(operator == 'count')
 		{
 			var count = 0;
 
-			for (var i = 0; i < dataObjectArray.length; i++)
+			for(var i = 0; i < dataObjectArray.length; i++)
 			{
-				if (dataObjectArray[i][field] != '')
+				if(dataObjectArray[i][field] != '')
 					count++;
 			}
 
 			console.log(count);
 			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', count));
 		}
-		else if (operator == 'avg')
+		else if(operator == 'avg')
 		{
 			var sum = 0;
 
-			for (var i = 0; i < dataObjectArray.length; i++)
+			for(var i = 0; i < dataObjectArray.length; i++)
 			{
-				if (dataObjectArray[i][field] != '')
+				if(dataObjectArray[i][field] != '')
 					sum += dataObjectArray[i][field];
 			}
 
-			console.log (sum);
-			console.log (dataObjectArray.length);
+			console.log(sum);
+			console.log(dataObjectArray.length);
 			$('#metricEquation').val($('#metricEquation').val().replace(operator + '()', sum / dataObjectArray.length));
 		}
 
@@ -434,13 +434,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// calcaultes the metric equation
 	$scope.calculateMetric = function()
 	{
-		if ($('#metricEquation').val() != '')
+		if($('#metricEquation').val() != '')
 		{
 			try	
 			{
 				var result = eval($('#metricEquation').val());
 
-				if ((typeof result) === 'number')
+				if((typeof result) === 'number')
 					$('#metricEquation').val(result);
 			}
 			catch(err)
@@ -451,70 +451,70 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	};
 
 	// graphs the specified visualization type if all necessary input is there
-	function readyToGraph ()
+	function readyToGraph()
 	{
-		if ($scope.graphTab == 1)
+		if($scope.graphTab == 1)
 		{
 			xAxis = $('#xAxisBar').val();
 			yAxis = $('#yAxisBar').val();
 
-			if (xAxis != '' && yAxis != '')
+			if(xAxis != '' && yAxis != '')
 			{
-				console.log ('plotBar()');
+				console.log('plotBar()');
 				plotBar();
 			}
 		}
-		else if ($scope.graphTab == 2)
+		else if($scope.graphTab == 2)
 		{
 			xAxis = $('#xAxisLine').val();
 			yAxis = $('#yAxisLine').val();
 			grouping = $('#groupingLine').val();
 
-			if (xAxis != '' && yAxis != '')
+			if(xAxis != '' && yAxis != '')
 			{
-				console.log ('plotLine()');
+				console.log('plotLine()');
 				plotLine();
 			}
 		}
-		else if ($scope.graphTab == 3)
+		else if($scope.graphTab == 3)
 		{
 			valueField = $('#valueField').val();
 			countField = $('#countField').val();
 
-			if (valueField != '')
+			if(valueField != '')
 			{
-				console.log ('plotPie()');
+				console.log('plotPie()');
 				plotPie();
 			}
 		}
-		else if ($scope.graphTab == 4)
+		else if($scope.graphTab == 4)
 		{
 			locationField = $('#locationField').val();
 			choroplethValueField = $('#choroplethValueField').val();
 
-			if (locationField != '' && choroplethValueField != '')
+			if(locationField != '' && choroplethValueField != '')
 			{
-				console.log ('plotChoroplethMap ()');
+				console.log('plotChoroplethMap()');
 				plotChoroplethMap();
 			}
 		}		
-		else if ($scope.graphTab == 5)
+		else if($scope.graphTab == 5)
 		{
 			// if stats tab is selected
 		}
 
-		console.log ('xAxis: ' + xAxis);
-		console.log ('yAxis: ' + yAxis);
-		console.log ('valueField: ' + valueField);
-		console.log ('countField: ' + countField);
-		console.log ('locationField: ' + locationField);
-		console.log ('choroplethValueField: ' + choroplethValueField);
+		console.log('xAxis: ' + xAxis);
+		console.log('yAxis: ' + yAxis);
+		console.log('valueField: ' + valueField);
+		console.log('countField: ' + countField);
+		console.log('locationField: ' + locationField);
+		console.log('choroplethValueField: ' + choroplethValueField);
 	}
 
 	var chartData;
 
 	//---------------------------------BAR-----------------------------------------
-	function plotBar ()
+	function plotBar()
 	{
 		// var svg = document.createElement("svg");
 		// svg.setAttribute("id", "barGraph");
@@ -523,17 +523,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 		// $('#chart1').append(svg);
 
-		$('#barGraph').empty ();
-		console.log (JSON.stringify(dataObjectArray));
+		$('#barGraph').empty();
+		console.log(JSON.stringify(dataObjectArray));
 
-		var values = new Array ();
+		var values = new Array();
 
-		for (var i = 0; i < dataObjectArray.length; i++)
+		for(var i = 0; i < dataObjectArray.length; i++)
 		{
-			values.push ({'label': dataObjectArray[i][xAxis].toString(), 'value': parseFloat(dataObjectArray[i][yAxis])});
+			values.push({'label': dataObjectArray[i][xAxis].toString(), 'value': parseFloat(dataObjectArray[i][yAxis])});
 		}
 
-		chartData = new Array ();
+		chartData = new Array();
 		chartData[0] = {key: yAxis, values: values};
 
 		console.log(JSON.stringify(chartData));
@@ -544,7 +544,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					.x(function(d) { return d.label })    //Specify the data accessors.
 					.y(function(d) { return d.value })
 					.staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
-					.tooltips(false)        //Don't show tooltips
+					.tooltips(false	)        //Don't show tooltips
 					.showValues(true)       //...instead, show the bar value right on top of each bar.
 					.transitionDuration(350);
 
@@ -569,38 +569,38 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var date;
 		var time;
 	
-		if (split.length == 1)
+		if(split.length == 1)
 			date = split[0];
-		else if (split.length == 2)
+		else if(split.length == 2)
 		{
 			date = split[0];
 			time = split[1];
 		}
 
-		if (date.indexOf ('/') != -1)
-			dateArray = date.split ('/');
-		else if (date.indexOf ('-') != -1)
-			dateArray = date.split ('-');
+		if(date.indexOf('/') != -1)
+			dateArray = date.split('/');
+		else if(date.indexOf('-') != -1)
+			dateArray = date.split('-');
 		else
-			return (parseFloat(value));
+			return(parseFloat(value));
 		
 		if(time != undefined && time.indexOf(':') != -1)
 			timeArray = time.split(':');
 		else
-			return (new Date(dateArray[2], dateArray[0] - 1, dateArray[1]));
+			return(new Date(dateArray[2], dateArray[0] - 1, dateArray[1]));
 
-		return (new Date (dateArray[2], dateArray[0] - 1, dateArray[1], timeArray[0], timeArray[1], timeArray[2], 0));
+		return(new Date(dateArray[2], dateArray[0] - 1, dateArray[1], timeArray[0], timeArray[1], timeArray[2], 0));
 	}	
 
 	var isDateTime;
 
-	function plotLine ()
+	function plotLine()
 	{	
-		$('#lineGraph').empty ();
+		$('#lineGraph').empty();
 		$('#chart2').append(lineGraph);
 
-		//$('#title').remove ();
-		//chartTitle = $('#chartTitle').val ();
+		//$('#title').remove();
+		//chartTitle = $('#chartTitle').val();
 		
 		var values = new Array();			
 		chartData = new Array();			
@@ -614,12 +614,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var yValue;
 		var limit = 65;
 
-		if (grouping != '')
+		if(grouping != '')
 			group = dataObjectArray[0][grouping];			
 		else
 			group = false;	
 
-		if (xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time')
+		if(xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time')
 		{
 			console.log(dataObjectArray[0]);
 			console.log(xAxis);
@@ -627,36 +627,36 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			isDateTime = true;
 			xValue = parseDateTime(dataObjectArray[0][xAxis].toString());
 
-			if (xValue instanceof Date == true)
-				values.push ({x: xValue.getTime(), y: parseFloat(dataObjectArray[0][yAxis])});
+			if(xValue instanceof Date == true)
+				values.push({x: xValue.getTime(), y: parseFloat(dataObjectArray[0][yAxis])});
 			else
 			{
-				values.push ({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
+				values.push({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
 				isDateTime = false;
 			}
 		}
 		else
 		{
-			values.push ({x: dataObjectArray[0][xAxis], y: parseFloat(dataObjectArray[0][yAxis])});	
+			values.push({x: dataObjectArray[0][xAxis], y: parseFloat(dataObjectArray[0][yAxis])});	
 		}
 	
 		console.log('isDateTime: ' + isDateTime);		
 		
-		for (var i = 1; i < dataObjectArray.length; i++)
+		for(var i = 1; i < dataObjectArray.length; i++)
 		{					
-			if (group != false && group != dataObjectArray[i][grouping])
+			if(group != false && group != dataObjectArray[i][grouping])
 			{
 				console.log('group: ' + group);
 
 				groupExists = false;
 
-				for (var j = 0; j < chartData.length; j++)
+				for(var j = 0; j < chartData.length; j++)
 				{
-					if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
+					if(chartData[j].key.substr(0, limit) == group.substr(0, limit))
 					{
 						var newValues = chartData[j].values;
 
-						for (var k = 0; k < values.length; k++)
+						for(var k = 0; k < values.length; k++)
 							newValues.push(values[k]);
 
 						chartData[j].values = newValues;
@@ -665,43 +665,43 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					}
 				}
 
-				if (groupExists == false)
+				if(groupExists == false)
 				{
 					individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
 					chartData.push(individualData);
-					colorsIndex = (colorsIndex + 1) % colors.length;
+					colorsIndex =(colorsIndex + 1) % colors.length;
 
-					console.log (JSON.stringify(individualData));
+					console.log(JSON.stringify(individualData));
 				}
 			
 				group = dataObjectArray[i][grouping];
 				values = new Array();
 
-				// console.log ('chartData: ' + JSON.stringify (chartData));
+				// console.log('chartData: ' + JSON.stringify(chartData));
 				// return;
 			}
 
 			xValue = dataObjectArray[i][xAxis];
 			yValue = dataObjectArray[i][yAxis];
 
-			if (yValue == '')
+			if(yValue == '')
 				yValue = '0';
 			
-			if (isDateTime == true)
+			if(isDateTime == true)
 			{				
 				xValue = parseDateTime(xValue.toString());
 
-				if (xValue instanceof Date == true)
-					values.push ({x: xValue.getTime(), y: parseFloat(yValue)});
+				if(xValue instanceof Date == true)
+					values.push({x: xValue.getTime(), y: parseFloat(yValue)});
 				else
-					values.push ({x: xValue, y: parseFloat(yValue)});				
+					values.push({x: xValue, y: parseFloat(yValue)});				
 			}
 			else
-				values.push ({x: xValue, y: parseFloat(yValue)});						
+				values.push({x: xValue, y: parseFloat(yValue)});						
 		}//end for
 
 		//adding last element
-		if (group == false)
+		if(group == false)
 		{
 			individualData = {values: values, key: yAxis, color: colors[colorsIndex]};
 			chartData.push(individualData);
@@ -710,13 +710,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			groupExists = false;
 
-			for (var j = 0; j < chartData.length; j++)
+			for(var j = 0; j < chartData.length; j++)
 			{
-				if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
+				if(chartData[j].key.substr(0, limit) == group.substr(0, limit))
 				{
 					var newValues = chartData[j].values;
 
-					for (var k = 0; k < values.length; k++)
+					for(var k = 0; k < values.length; k++)
 						newValues.push(values[k]);
 
 					chartData[j].values = newValues;
@@ -725,54 +725,54 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
-			if (groupExists == false)
+			if(groupExists == false)
 			{
 				individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
 				chartData.push(individualData);
 
-				console.log (JSON.stringify(individualData));
+				console.log(JSON.stringify(individualData));
 			}
 		}
 
-		console.log (JSON.stringify (chartData));
+		console.log(JSON.stringify(chartData));
 		console.log(chartData.length);
 		//return;
 		
 	
-		//$('#chart').prepend ('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
+		//$('#chart').prepend('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
 		
-		nv.addGraph (function ()
+		nv.addGraph(function()
 		{
 			var chart = nv.models.lineChart()
-			.useInteractiveGuideline (true)
-			.transitionDuration (350)
-			.showYAxis (true)
-			.showXAxis (true);
+			.useInteractiveGuideline(true)
+			.transitionDuration(350)
+			.showYAxis(true)
+			.showXAxis(true);
 			
 
 			chart.xAxis.rotateLabels(-65);
 
-			chart.xAxis.showMaxMin (true);
-			chart.xAxis.axisLabel (xAxis);
+			chart.xAxis.showMaxMin(true);
+			chart.xAxis.axisLabel(xAxis);
 			
-			if (isDateTime == true)
+			if(isDateTime == true)
 			{
-				chart.xAxis.tickFormat (function (d)
+				chart.xAxis.tickFormat(function(d)
 				{
-					return d3.time.format ('%c')(new Date (d));
+					return d3.time.format('%c')(new Date(d));
 				});
-				chart.margin ({left: 100, right: 30, bottom: 180});
+				chart.margin({left: 100, right: 30, bottom: 180});
 			}
 			else
 			{
-				chart.xAxis.tickFormat (d3.format (',g'));
-				chart.margin ({left: 100, right: 30, bottom: 80});
+				chart.xAxis.tickFormat(d3.format(',g'));
+				chart.margin({left: 100, right: 30, bottom: 80});
 			}
 
-			chart.yAxis.axisLabel (yAxis);
-			chart.yAxis.tickFormat (d3.format (',g'));
+			chart.yAxis.axisLabel(yAxis);
+			chart.yAxis.tickFormat(d3.format(',g'));
 			
-			d3.select ('#lineGraph').datum (chartData).call (chart);
+			d3.select('#lineGraph').datum(chartData).call(chart);
 			nv.utils.windowResize(chart.update);		
 			
 			return(chart);		
@@ -780,52 +780,52 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	//-------------------------- PIE ------------------------------------------
-	function addToArray (array, element)
+	function addToArray(array, element)
 	{		
-		for (var i = 0; i < array.length; i++)
+		for(var i = 0; i < array.length; i++)
 		{
-			if (array[i]['label'] == element)
+			if(array[i]['label'] == element)
 			{
 				array[i]['value']++;
-				return (array);
+				return(array);
 			}
 		}		
 		
-		array.push ({'label': element, 'value': 1});
-		return (array);		
+		array.push({'label': element, 'value': 1});
+		return(array);		
 	}
 	
-	function plotPie ()
+	function plotPie()
 	{
-		$('#pieChart').empty ();
-		//$('#title').remove ();
-		//chartTitle = $('#chartTitle').val ();
+		$('#pieChart').empty();
+		//$('#title').remove();
+		//chartTitle = $('#chartTitle').val();
 		
-		var cumulativeArray = new Array ();
+		var cumulativeArray = new Array();
 		var valueLabel = $('#valueField').val();
 		var countField = $('#countField').val();		
-		chartData = new Array ();
+		chartData = new Array();
 		
-		if (countField == '')
+		if(countField == '')
 		{
-			for (var i = 0; i < dataObjectArray.length; i++)
+			for(var i = 0; i < dataObjectArray.length; i++)
 			{
 				var value = dataObjectArray[i][valueLabel];	
 				
-				if (value != '')
-					chartData = addToArray (chartData, value);
+				if(value != '')
+					chartData = addToArray(chartData, value);
 			}
 		}
 		else
 		{
-			for (var i = 0; i < dataObjectArray.length; i++)
+			for(var i = 0; i < dataObjectArray.length; i++)
 			{				
-				chartData.push ({'label': dataObjectArray[i][valueLabel], 'value': dataObjectArray[i][countField]});
+				chartData.push({'label': dataObjectArray[i][valueLabel], 'value': dataObjectArray[i][countField]});
 			}			
 		}
-		console.log (JSON.stringify (chartData));		
+		console.log(JSON.stringify(chartData));		
 		
-		//$('#chart').prepend ('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
+		//$('#chart').prepend('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
 		
 		nv.addGraph(function() 
 		{
@@ -881,7 +881,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
 		layer.feature.properties.density + ' people per square mile');
 
-		if (!popup._map) 
+		if(!popup._map) 
 			popup.openOn(map);
 		window.clearTimeout(closeTooltip);
 
@@ -892,7 +892,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			fillOpacity: 0.9
 		});
 
-		if (!L.Browser.ie && !L.Browser.opera)
+		if(!L.Browser.ie && !L.Browser.opera)
 			layer.bringToFront();
 	}
 
@@ -925,32 +925,32 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		labels = [],
 		from, to;
 
-		for (var i = 0; i < grades.length; i++)
+		for(var i = 0; i < grades.length; i++)
 		{
 			from = grades[i];
 			to = grades[i + 1];
 
 			labels.push(
 			'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
-			from + (to ? '&ndash;' + to : '+')) + '</li>';
+			from +(to ? '&ndash;' + to : '+')) + '</li>';
 		}
 
 		return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
 	}
 
-	function plotChoroplethMap ()
+	function plotChoroplethMap()
 	{
 
 		var i;
-		var locationField = $('#locationField').val ();
-		var valueField = $('#valueField'). val ();
+		var locationField = $('#locationField').val();
+		var valueField = $('#valueField'). val();
 
 		map = L.mapbox.map('map', 'examples.map-i86nkdio')
 		.setView([37.8, -96], 4);
 
 		popup = new L.Popup({ autoPan: false });	  
 
-		console.log (statesData);
+		console.log(statesData);
 		statesLayer = L.geoJson(statesData,  {
 			style: getStyle,
 			onEachFeature: onEachFeature
@@ -976,7 +976,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		setInterval(function()
 		{
 			var attr = $('.leaflet-map-pane').attr('style');
-			attr = attr.substring (attr.indexOf ('(') + 1);
+			attr = attr.substring(attr.indexOf('(') + 1);
 
 			var x = attr.substr(0, attr.indexOf('px'));			
 			attr = attr.substring(attr.indexOf('px') + 4);
@@ -992,7 +992,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-			if (document.getElementById('choroplethMap') != undefined)
+			if(document.getElementById('choroplethMap') != undefined)
 				document.getElementById('choroplethMap').removeAttribute('viewBox');	
 		}, 1000);
 	}
@@ -1005,7 +1005,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var ctx;
 		var graph;
 
-		if ($scope.graphTab == 1)
+		if($scope.graphTab == 1)
 		{
 			graph = document.getElementById('barGraph');
 			canvas = document.getElementById('barCanvas');
@@ -1021,7 +1021,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// download.download = 'asdf';
 			// download.click();			
 		}
-		else if ($scope.graphTab == 2)
+		else if($scope.graphTab == 2)
 		{			
 			graph = document.getElementById('lineGraph');	
 			canvas = document.getElementById('lineCanvas');
@@ -1036,7 +1036,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// download.click();			
 		}
 
-		else if ($scope.graphTab == 3)
+		else if($scope.graphTab == 3)
 		{
 			graph = document.getElementById('pieChart');
 			canvas = document.getElementById('pieCanvas');
@@ -1050,7 +1050,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// download.download = 'asdf';
 			// download.click();			
 		}		
-		else if ($scope.graphTab == 4)
+		else if($scope.graphTab == 4)
 		{
 			// var style = $('#map').attr('style');
 			// $('#map').attr('style', 'display: none;' + style);
@@ -1065,7 +1065,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		console.log(canvas.toDataURL());
 
-		if (graphTypes[$scope.graphTab - 1] != "line")
+		if(graphTypes[$scope.graphTab - 1] != "line")
 			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
 		else
 			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
@@ -1083,14 +1083,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 // for bar graph save button
 $("#xAxisBar, #yAxisBar").on({
 	mouseenter: function() {
-		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if ($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1101,14 +1101,14 @@ $("#xAxisBar, #yAxisBar").on({
 // for line graph save button
 $("#xAxisLine, #yAxisLine").on({
 	mouseenter: function() {
-		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if ($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1119,14 +1119,14 @@ $("#xAxisLine, #yAxisLine").on({
 // for pie chart save button
 $("#valueField").on({
 	mouseenter: function() {
-		if ($("#valueField").val() == '') {
+		if($("#valueField").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if ($("#valueField").val() == '') {
+		if($("#valueField").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1137,14 +1137,14 @@ $("#valueField").on({
 // for map save button
 $("#locationField, #choroplethValueField").on({
 	mouseenter: function() {
-		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if ($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");

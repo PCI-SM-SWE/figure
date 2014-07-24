@@ -8,7 +8,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var client = new Handler(socket);
 	var graphs;
 
-	$(document).ready (function ()
+	$(document).ready(function()
 	{
 		jQuery.event.props.push("dataTransfer");
 		getSavedGraphs();
@@ -32,7 +32,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				statsCnt = 0;
 			var graphObject;
 			
-			for (var i = 0; i < graphObjects.length; i++)
+			for(var i = 0; i < graphObjects.length; i++)
 			{
 				graphObject = graphObjects[i];				
 				console.log(graphObject.type);
@@ -70,11 +70,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				a.onclick = function()
 				{
-					for (var j = 0; j < graphObjects.length; j++)
+					for(var j = 0; j < graphObjects.length; j++)
 					{
 						graphObject = graphObjects[j];
 
-						if (graphObject.file_name == this.innerHTML)
+						if(graphObject.file_name == this.innerHTML)
 							break;
 					}
 
@@ -115,7 +115,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				// $('#thumbnails').append(img);
 			}
 			$("#menu-bar").on({
-				mouseenter: function () {
+				mouseenter: function() {
 					$("#menu-bar ul").css("height", barCnt*31 + "px");
 				},
 				mouseleave: function() {
@@ -123,7 +123,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			});
 			$("#menu-line").on({
-				mouseenter: function () {
+				mouseenter: function() {
 					$("#menu-line ul").css("height", lineCnt*31 + "px");
 				},
 				mouseleave: function() {
@@ -131,7 +131,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			});
 			$("#menu-pie").on({
-				mouseenter: function () {
+				mouseenter: function() {
 					$("#menu-pie ul").css("height", pieCnt*31 + "px");
 				},
 				mouseleave: function() {
@@ -139,7 +139,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			});
 			$("#menu-map").on({
-				mouseenter: function () {
+				mouseenter: function() {
 					$("#menu-map ul").css("height", mapCnt*31 + "px");
 				},
 				mouseleave: function() {
@@ -147,7 +147,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			});
 			$("#menu-stats").on({
-				mouseenter: function () {
+				mouseenter: function() {
 					$("#menu-stats ul").css("height", statsCnt*31 + "px");
 				},
 				mouseleave: function() {
@@ -164,8 +164,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log(dragEl);
 		console.log(dropEl);
 
-		var drag = angular.element (dragEl);
-		var drop = angular.element (dropEl);
+		var drag = angular.element(dragEl);
+		var drop = angular.element(dropEl);
 
 		var graphObject;
 
@@ -180,7 +180,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log(JSON.stringify(graphObject));
 		console.log(drop.find('svg').attr('id'));
 
-		if (graphObject.type == "bar")
+		if(graphObject.type == "bar")
 		{			
 			nv.addGraph(function()
 			{
@@ -203,39 +203,41 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else if(graphObject.type == "line")
 		{
-			nv.addGraph (function ()
+			nv.addGraph(function()
 			{
 				var chart = nv.models.lineChart()
-				.useInteractiveGuideline (true)
-				.transitionDuration (350)
-				.showYAxis (true)
-				.showXAxis (true);
+				.useInteractiveGuideline(true)
+				.transitionDuration(350)
+				.showYAxis(true)
+				.showXAxis(true);
 				
 				chart.xAxis.rotateLabels(-65);
 
-				chart.xAxis.showMaxMin (true);
-				chart.xAxis.axisLabel (graphObject.xAxis);
+				chart.xAxis.showMaxMin(true);
+				chart.xAxis.axisLabel(graphObject.xAxis);
 				
-				if (graphObject.is_date_time == true)
+				if(graphObject.is_date_time == true)
 				{
-					chart.xAxis.tickFormat (function (d)
+					chart.xAxis.tickFormat(function(d)
 					{
-						return d3.time.format ('%c')(new Date (d));
+						return(d3.time.format('%c')(new Date(d)));
 					});
-					chart.margin ({left: 100, right: 30, bottom: 180});
+					
+					chart.margin({left: 100, right: 30, bottom: 180});
 				}
 				else
 				{
-					chart.xAxis.tickFormat (d3.format (',g'));
-					chart.margin ({left: 100, right: 30, bottom: 80});
+					chart.xAxis.tickFormat(d3.format(',g'));
+					chart.margin({left: 100, right: 30, bottom: 80});
 				}
 				
-				chart.yAxis.axisLabel (graphObject.yAxis);
-				chart.yAxis.tickFormat (d3.format (',g'));
+				chart.yAxis.axisLabel(graphObject.yAxis);
+				chart.yAxis.tickFormat(d3.format(',g'));
 				
-				d3.select ('#' + drop.find('svg').attr('id'))
-					.datum (graphObject.chart_data)
-					.call (chart);
+				d3.select('#' + drop.find('svg').attr('id'))
+					.datum(graphObject.chart_data)
+					.call(chart);
+				
 				nv.utils.windowResize(chart.update);		
 				
 				return(chart);		
