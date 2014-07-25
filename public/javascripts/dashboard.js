@@ -79,6 +79,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					}
 
 					$('#thumbnails').empty();
+
 					$('#thumbnails').append('<div class="btn-group" data-toggle="buttons"><label class="btn btn-default" name = "small"><input type="radio">Small</label><label class="btn btn-default" name = "large"><input type="radio">Large</label></div><br><br>');
 
 					$("label[name = 'small'").click(function()
