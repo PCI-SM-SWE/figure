@@ -93,6 +93,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					$('#thumbnails').empty();
 					$('#thumbnails').append(img);
+					//$('#'+img.graphObject.file_name).css({"margin-left":"auto", "margin-right":"auto"});
 				};
 
 				li.appendChild(a);
