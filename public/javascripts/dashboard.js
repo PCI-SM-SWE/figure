@@ -88,7 +88,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						var img = document.createElement('img');
 						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
 						img.setAttribute('src', graphObject.png); 
-						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 50%; height: 400%; margin-bottom: 0px; display: inline; margin: 4px;');
+						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 50%; height: 400%; margin-bottom: 0px; display: block; margin: 4px; margin-left: auto; margin-right: auto;');
 						img.setAttribute('x-lvl-draggable', 'true');
 						img.setAttribute('draggable', 'true');
 						img.setAttribute('id', graphObject.file_name);
@@ -107,7 +107,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						var img = document.createElement('img');
 						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
 						img.setAttribute('src', graphObject.png); 
-						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 80%; height: 500%; margin-bottom: 0px; display: inline; margin: 4px;');
+						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 80%; height: 500%; margin-bottom: 0px; display: block; margin: 4px; margin-left: auto; margin-right: auto;');
 						img.setAttribute('x-lvl-draggable', 'true');
 						img.setAttribute('draggable', 'true');
 						img.setAttribute('id', graphObject.file_name);
