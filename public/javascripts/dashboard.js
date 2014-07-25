@@ -78,21 +78,48 @@ app.controller('MainCtrl', ['$scope', function($scope)
 							break;
 					}
 
-					var img = document.createElement('img');
-					//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
-					img.setAttribute('src', graphObject.png); 
-					img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 50%; height: 400%; margin-bottom: 0px; display: inline; margin: 4px;');
-					img.setAttribute('x-lvl-draggable', 'true');
-					img.setAttribute('draggable', 'true');
-					img.setAttribute('id', graphObject.file_name);
-					img.setAttribute('class', 'thumbnail ui-draggable');
-
-					angular.element(document).injector().invoke(function($compile) {
-						$compile(img)($scope);
-					});	
-
 					$('#thumbnails').empty();
-					$('#thumbnails').append(img);
+					$('#thumbnails').append('<div class="btn-group" data-toggle="buttons"><label class="btn btn-default" name = "small"><input type="radio">Small</label><label class="btn btn-default" name = "large"><input type="radio">Large</label></div><br><br>');
+
+					$("label[name = 'small'").click(function()
+					{
+						$('#thumbnails').children("img").remove();
+						var img = document.createElement('img');
+						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
+						img.setAttribute('src', graphObject.png); 
+						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 50%; height: 400%; margin-bottom: 0px; display: inline; margin: 4px;');
+						img.setAttribute('x-lvl-draggable', 'true');
+						img.setAttribute('draggable', 'true');
+						img.setAttribute('id', graphObject.file_name);
+						img.setAttribute('class', 'thumbnail ui-draggable');
+
+						angular.element(document).injector().invoke(function($compile) {
+							$compile(img)($scope);
+						});	
+
+						$('#thumbnails').append(img);
+					});
+
+					$("label[name = 'large'").click(function()
+					{
+						$('#thumbnails').children("img").remove();
+						var img = document.createElement('img');
+						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
+						img.setAttribute('src', graphObject.png); 
+						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 80%; height: 500%; margin-bottom: 0px; display: inline; margin: 4px;');
+						img.setAttribute('x-lvl-draggable', 'true');
+						img.setAttribute('draggable', 'true');
+						img.setAttribute('id', graphObject.file_name);
+						img.setAttribute('class', 'thumbnail ui-draggable');
+
+						angular.element(document).injector().invoke(function($compile) {
+							$compile(img)($scope);
+						});	
+
+						$('#thumbnails').append(img);
+					});
+
+					$("label[name = 'small'").click();
 				};
 
 				li.appendChild(a);
@@ -215,14 +242,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				chart.xAxis.showMaxMin(true);
 				chart.xAxis.axisLabel(graphObject.xAxis);
-				
+					
 				if(graphObject.is_date_time == true)
 				{
 					chart.xAxis.tickFormat(function(d)
 					{
 						return(d3.time.format('%c')(new Date(d)));
 					});
-					
+
 					chart.margin({left: 100, right: 30, bottom: 180});
 				}
 				else
