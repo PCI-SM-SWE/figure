@@ -93,6 +93,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						img.setAttribute('draggable', 'true');
 						img.setAttribute('id', graphObject.file_name);
 						img.setAttribute('class', 'thumbnail ui-draggable');
+						img.setAttribute('title', 'small');
 
 						angular.element(document).injector().invoke(function($compile) {
 							$compile(img)($scope);
@@ -112,6 +113,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						img.setAttribute('draggable', 'true');
 						img.setAttribute('id', graphObject.file_name);
 						img.setAttribute('class', 'thumbnail ui-draggable');
+						img.setAttribute('title', 'large');
 
 						angular.element(document).injector().invoke(function($compile) {
 							$compile(img)($scope);
@@ -187,13 +189,106 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
+	function placeGraph (drag, drop)
+	{
+		var droppedRow = parseInt(drop.attr('id').charAt(3));
+		var droppedCol = parseInt(drop.attr('id').charAt(7));
+		var rowBounds = 2;
+		var colBounds = 3;
+		var graphRow;
+		var graphCol;
+
+		console.log(droppedRow + ' ' + droppedCol);
+
+		if (drag.attr('title') == 'small')
+		{
+			if (droppedRow + 1 <= rowBounds)
+			{
+				if (droppedCol + 1 <= colBounds)
+				{
+					graphRow = droppedRow;
+					graphCol = droppedCol;
+				}
+				else
+				{
+					graphRow = droppedRow;
+					graphCol = droppedCol - 1;
+				}
+
+			}
+			else
+			{
+				if (droppedCol + 1 <= colBounds)
+				{
+					graphRow = droppedRow - 1
+					graphCol = droppedCol;
+				}
+				else
+				{
+					graphRow = droppedRow - 1;
+					graphCol = droppedCol - 1;
+				}
+			}
+
+			console.log('#row' + graphRow + 'col' + graphCol);
+
+			$('#row' + graphRow + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none;');
+			$('#row' + (graphRow + 1) + 'col' + graphCol).attr('style', 'position: relative; z-index: -1; border-top: none; border-right: none;');
+			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
+
+			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;')
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "graph" style = "width: 200%; height: 200%; title = "small"></svg>');
+		}
+		else if (drag.attr('title') == 'large')
+		{
+			if (droppedRow + 1 <= rowBounds)
+			{
+				if (droppedCol + 2 <= colBounds)
+				{
+					graphRow = droppedRow;
+					graphCol = droppedCol;
+				}
+				else
+				{
+					graphRow = droppedRow;
+					graphCol = 1;
+				}
+
+			}
+			else
+			{
+				if (droppedCol + 2 <= colBounds)
+				{
+					graphRow = 1;
+					graphCol = droppedCol;
+				}
+				else
+				{
+					graphRow = 1;
+					graphCol = 1;
+				}
+			}
+
+			console.log('#row' + graphRow + 'col' + graphCol);
+
+			$('#row' + graphRow + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none; border-right: none;');
+			$('#row' + graphRow + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none;');
+			$('#row' + (graphRow + 1) + 'col' + graphCol).attr('style', 'position: relative; z-index: -1; border-top: none; border-right: none;');
+			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none; border-right: none;');
+			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
+
+			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;')
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "graph" style = "width: 300%; height: 200%; position: relative; z-index = auto; "></svg>');
+		}		
+	}
+
 	$scope.dropped = function(dragEl, dropEl)
 	{
-		console.log(dragEl);
-		console.log(dropEl);
-
 		var drag = angular.element(dragEl);
 		var drop = angular.element(dropEl);
+
+		console.log(drag);
+		console.log(drop);
 
 		var graphObject;
 
@@ -205,9 +300,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				break;
 		}
 
-		console.log(JSON.stringify(graphObject));
-		console.log(drop.find('svg').attr('id'));
-
+		// console.log(JSON.stringify(graphObject));
+	
 		if(graphObject.type == "bar")
 		{			
 			nv.addGraph(function()
@@ -220,10 +314,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						.showValues(true)       //...instead, show the bar value right on top of each bar.
 						.transitionDuration(350);
 
-				d3.select('#' + drop.find('svg').attr('id'))
+				placeGraph(drag, drop);
+
+				d3.select('#graph')
 				.datum(graphObject.chart_data)
 				.call(chart);
-
+				
 				nv.utils.windowResize(chart.update);
 
 				return(chart);
@@ -262,9 +358,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				chart.yAxis.axisLabel(graphObject.yAxis);
 				chart.yAxis.tickFormat(d3.format(',g'));
 				
-				d3.select('#' + drop.find('svg').attr('id'))
-					.datum(graphObject.chart_data)
-					.call(chart);
+				placeGraph(drag, drop);
+
+				d3.select('#graph')
+				.datum(graphObject.chart_data)
+				.call(chart);
 				
 				nv.utils.windowResize(chart.update);		
 				
@@ -280,7 +378,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				.y(function(d) { return d.value; })
 				.showLabels(true);
 
-				d3.select('#' + drop.find('svg').attr('id'))
+				placeGraph(drag, drop);
+
+				d3.select('#graph')
 				.datum(graphObject.chart_data)
 				.transition().duration(350)
 				.call(chart);
