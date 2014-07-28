@@ -66,6 +66,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				var li = document.createElement('li');
 				var a = document.createElement('a');
+				a.setAttribute('href','');
 				a.innerHTML = graphObject.file_name;
 
 				a.onclick = function()
