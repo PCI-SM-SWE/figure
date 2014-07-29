@@ -198,16 +198,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var colBounds = 5;
 	var grid = [[], [], [], [], [], []];
 
-	$scope.resetGrid = function()
+	$scope.resetCell = function(row, col)
 	{
-		for (var i = 0; i <= rowBounds; i++)
-		{
-			for (var j = 0; j <= colBounds; j++)
-			{
-				$('#row' + i + 'col' + j).empty();
-				$('#row' + i + 'col' + j).removeAttr('style');
-			}
-		}
+		$('#row' + row + 'col' + col).empty();
+		$('#row' + row + 'col' + col).removeAttr('style');		
 	}
 
 	function spaceTaken(droppedRow, droppedCol, usedRow, usedCol)
@@ -457,7 +451,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 					// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
 					$('#plot' + num).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
-					$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
+					//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 				}, 1);
 
 				d3.select('#plot' + graphCounter)
@@ -481,18 +475,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if(placeGraph(drag, drop) == false)
 					return;
-
-				setInterval(function()
-				{
-					var offset = $('#plot' + num).offset();
-					// var top = $(window).scrollTop();
-					// var left = $(window).scrollLeft();
-					$('body').children('.nvtooltip').offset({top: offset.top, left: offset.left});
-					// $('#plot' + graphCounter + ' > .nvtooltip').css('left', (left + 90) + 'px');
-					// $('#plot' + graphCounter + ' > .nvtooltip').css('top', top + 'px');
-					//$('.nvtooltip').css('margin-right: -600px');
-				}, 0);
-
 
 				d3.select('#plot' + graphCounter)
 				.datum(graphObject.chart_data)
