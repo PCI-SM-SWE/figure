@@ -180,6 +180,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#row' + row + 'col' + col).removeAttr('style');		
 	}
 
+	$scope.resetGrid = function()
+	{
+		for (var i = 0; i < grid.length; i++)
+		{
+			for (var j = 0; j < grid[i].length; j++)
+			{
+				grid[i][j] = undefined;
+				resetCell(i, j);
+			}
+		}
+	}
+
 	function spaceTaken(droppedRow, droppedCol, usedRow, usedCol)
 	{
 		for (var i = 0; i < usedRow.length; i++)
