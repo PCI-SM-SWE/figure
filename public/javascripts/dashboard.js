@@ -239,7 +239,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("false");
+				//alert("false");
 				return (false);
 			}
 
@@ -270,7 +270,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 				else
 				{
-					if (dropedCol + 1 > colBounds)
+					if (droppedCol + 1 > colBounds)
 					{
 						graphRow = droppedRow;
 						graphCol = droppedCol - 2;
@@ -291,7 +291,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 				else
 				{
-					if (dropedCol + 1 > colBounds)
+					if (droppedCol + 1 > colBounds)
 					{
 						graphRow = droppedRow;
 						graphCol = droppedCol - 2;
@@ -311,7 +311,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("false");
+				//alert("false");
 				return (false);
 			}
 
@@ -379,18 +379,41 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					graphRow = droppedRow - 1;
 					graphCol = droppedCol - 1;
 				}
-			}
+			}			
+
+			console.log(graphRow + " " + graphCol);
 
 			usedRow = [0, 0, 1, 1];
 			usedCol = [0, 1, 0, 1];
 
+			var gridOld = [[], [], [], [], [], []];
+
+			for (var i = 0; i < grid.length; i++)
+			{
+				for (var j = 0; j < grid[i].length; j++)
+					gridOld[i][j] = grid[i][j];
+			}
+
+			for (var i = 0; i < grid.length; i++)
+			{
+				for (var j = 0; j < grid[i].length; j++)
+				{
+					if (grid[i][j] == id)
+						grid[i][j] = undefined;
+				}
+			}
+
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("false");
+				//alert("false");
+				grid = gridOld;
 				return (false);
 			}
 
-			for(var i = 0; i < grid.length; i++)
+			console.log(gridOld);
+			grid = gridOld;
+
+			for (var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 				{
@@ -431,7 +454,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 				else
 				{
-					if (dropedCol + 1 > colBounds)
+					if (droppedCol + 1 > colBounds)
 					{
 						graphRow = droppedRow;
 						graphCol = droppedCol - 2;
@@ -465,16 +488,37 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
+			var gridOld = [[], [], [], [], [], []];
+
+			for (var i = 0; i < grid.length; i++)
+			{
+				for (var j = 0; j < grid[i].length; j++)
+					gridOld[i][j] = grid[i][j];
+			}
+
+			for (var i = 0; i < grid.length; i++)
+			{
+				for (var j = 0; j < grid[i].length; j++)
+				{
+					if (grid[i][j] == id)
+						grid[i][j] = undefined;
+				}
+			}
+
 			usedRow = [0, 0, 0, 1, 1, 1];
 			usedCol = [0, 1, 2, 0, 1, 2];
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("false");
+				//lert("false");
+				grid = gridOld;
 				return (false);
 			}
 
-			for(var i = 0; i < grid.length; i++)
+			console.log(gridOld);
+			grid = gridOld;
+
+			for (var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 				{
