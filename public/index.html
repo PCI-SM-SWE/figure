@@ -295,12 +295,17 @@
 							<label>X-Axis</label>
 							<input id="xAxisBar" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<div
-							class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
 							<label>Y-Axis</label>
 							<input id="yAxisBar" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titleBar" type="email" class="form-control" placeholder="Enter Title Here">
+							<br>
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
@@ -330,6 +335,12 @@
 							<input id="groupingLine" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titleLine" type="email" class="form-control" placeholder="Enter Title Here">
+							<br>
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
@@ -352,6 +363,12 @@
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titlePie" type="email" class="form-control" placeholder="Enter Title Here">
+							<br>
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>

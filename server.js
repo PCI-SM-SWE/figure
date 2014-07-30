@@ -7,7 +7,6 @@ var express = require('express');
 var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
-var graphCounter = 0;
 
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,10 +19,10 @@ client.on("error", function (err)
 client.on("connect", function()
 {
 	console.log("Redis connected");
-	client.hkeys("graphs", function (err, replies)
-	{
-		graphCounter = replies.length;
-	});
+	// client.hkeys("graphs", function (err, replies)
+	// {
+	// 	graphCounter = replies.length;
+	// });
 });
 
 function send404(response)
@@ -245,9 +244,7 @@ io.on('connection', function(socket)
 		// 	console.log(err);
 		// });
 		
-		graphObject.file_name = 'graph' + graphCounter;
-		client.hset('graphs', 'graph:' + graphCounter, JSON.stringify(graphObject));
-		graphCounter++;
+		client.hset('graphs', graphObject.title, JSON.stringify(graphObject));
 		console.log('finished saving');
 	});
 
@@ -256,6 +253,8 @@ io.on('connection', function(socket)
 		client.hkeys("graphs", function (err, replies)
 		{
 			console.log('in get saved graphs');
+			console.log(replies);
+
 			graphCounter = replies.length;
 
 			// fs.readdir('./public/saved_images', function(err, uploaded_files)
@@ -271,28 +270,36 @@ io.on('connection', function(socket)
 			// 		return (fs.statSync('./public/saved_images/' + a).mtime.getTime() - fs.statSync('./public/saved_images/' + b).mtime.getTime());
 			// 	});
 			// });	
-
 	
 			var graphObjects = new Array();
 			var multi = client.multi();
 			var indices = new Array();
 
-
-			for (var i = 0; i < graphCounter; i++)
+			replies.forEach(function(title)
 			{
-				indices.push(i);
-			}
-
-			indices.forEach(function(index)
-			{
-				multi.hget('graphs', 'graph:' + index, function(err, reply)
+				multi.hget('graphs', title, function(err, reply)
 				{
 					var graphObject = JSON.parse(reply);
-			 		//graphObject.file_name = uploaded_files[i];
-			 		// graphObject.file_name = 'graph' + i;
 					graphObjects.push(graphObject);				
 				});
-			});
+			})
+
+
+			// for (var i = 0; i < graphCounter; i++)
+			// {
+			// 	indices.push(i);
+			// }
+
+			// indices.forEach(function(index)
+			// {
+			// 	multi.hget('graphs', 'graph:' + index, function(err, reply)
+			// 	{
+			// 		var graphObject = JSON.parse(reply);
+			//  		//graphObject.file_name = uploaded_files[i];
+			//  		// graphObject.file_name = 'graph' + i;
+			// 		graphObjects.push(graphObject);				
+			// 	});
+			// });
 
 			// for (var i = 0; i < graphCounter; i++)
 			// {

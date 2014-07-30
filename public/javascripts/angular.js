@@ -1004,12 +1004,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var image;
 		var ctx;
 		var graph;
+		var title;
 
 		if($scope.graphTab == 1)
 		{
 			graph = document.getElementById('barGraph');
 			canvas = document.getElementById('barCanvas');
 			image = document.getElementById('barImage');
+			title = $('#titleBar').val();
+
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 500);
 			image.src = canvas.toDataURL();
@@ -1026,6 +1029,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			graph = document.getElementById('lineGraph');	
 			canvas = document.getElementById('lineCanvas');
 			image = document.getElementById('lineImage');
+			title = $('#titleLine').val();
+
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 1050, 850);
 			image.src = canvas.toDataURL();
@@ -1066,9 +1071,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log(canvas.toDataURL());
 
 		if(graphTypes[$scope.graphTab - 1] != "line")
-			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+			client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
 		else
-			client.saveGraph({'chart_data': chartData, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
+			client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
 		
 		alert("Graph saved.");
 	};
@@ -1081,16 +1086,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
  */
 
 // for bar graph save button
-$("#xAxisBar, #yAxisBar").on({
+$("#xAxisBar, #yAxisBar, #titleBar").on({
 	mouseenter: function() {
-		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1099,16 +1104,16 @@ $("#xAxisBar, #yAxisBar").on({
 });
 
 // for line graph save button
-$("#xAxisLine, #yAxisLine").on({
+$("#xAxisLine, #yAxisLine, #titleLine").on({
 	mouseenter: function() {
-		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1117,16 +1122,16 @@ $("#xAxisLine, #yAxisLine").on({
 });
 
 // for pie chart save button
-$("#valueField").on({
+$("#valueField, #titlePie").on({
 	mouseenter: function() {
-		if($("#valueField").val() == '') {
+		if($("#valueField").val() == '' || $("#titlePie").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#valueField").val() == '') {
+		if($("#valueField").val() == '' || $("#titlePie").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
