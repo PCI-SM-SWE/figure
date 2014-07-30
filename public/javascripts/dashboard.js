@@ -77,9 +77,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					$('#thumbnails').append('<div class="btn-group" data-toggle="buttons"><label class="btn btn-default" name = "small"><input type="radio">Small</label><label class="btn btn-default" name = "large"><input type="radio">Large</label></div><br><br>');
 
-					$("label[name = 'small'").click(function()
+					$("label[name = 'small']").click(function()
 					{
-						$('#thumbnails').children("img").remove();
+						$('#thumbnails').children("img, p").remove();
 						var img = document.createElement('img');
 						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
 						img.setAttribute('src', graphObject.png); 
@@ -95,11 +95,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
+						$('#thumbnails').append('<p>Drag image to place on dashboard</p>');
 					});
 
-					$("label[name = 'large'").click(function()
+					$("label[name = 'large']").click(function()
 					{
-						$('#thumbnails').children("img").remove();
+						$('#thumbnails').children("img, p").remove();
 						var img = document.createElement('img');
 						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
 						img.setAttribute('src', graphObject.png); 
@@ -115,9 +116,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
+						$('#thumbnails').append('<p>Drag image to place on dashboard</p>');
 					});
 
-					$("label[name = 'small'").click();
+					$("label[name = 'small']").click();
 				};
 
 				li.appendChild(a);
@@ -172,7 +174,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	var rowBounds = 3;
 	var colBounds = 5;
-	var grid = [[], [], [], [], [], []];
+	var grid = [[], [], [], []];
 
 	function resetCell(row, col)
 	{
@@ -251,7 +253,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				//alert("false");
+				alert("Graph cannot be placed there.");
 				return (false);
 			}
 
@@ -323,7 +325,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				//alert("false");
+				alert("Graph cannot be placed there.");
 				return (false);
 			}
 
@@ -398,7 +400,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			usedRow = [0, 0, 1, 1];
 			usedCol = [0, 1, 0, 1];
 
-			var gridOld = [[], [], [], [], [], []];
+			var gridOld = [[], [], [], []];
 
 			for (var i = 0; i < grid.length; i++)
 			{
@@ -417,7 +419,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				//alert("false");
+				alert("Graph cannot be placed there.");
 				grid = gridOld;
 				return (false);
 			}
@@ -500,7 +502,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
-			var gridOld = [[], [], [], [], [], []];
+			var gridOld = [[], [], [], []];
 
 			for (var i = 0; i < grid.length; i++)
 			{
@@ -522,7 +524,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				//lert("false");
+				alert("Graph cannot be placed there.");
 				grid = gridOld;
 				return (false);
 			}
