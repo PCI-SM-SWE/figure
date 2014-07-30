@@ -30,8 +30,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				graphObject = graphObjects[i];				
 				
-				console.log(graphObject.type);
-				
 				switch(graphObject.type) {
 				    case "bar":
 				        barCnt += 1;
@@ -172,7 +170,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	var graphCounter;
 	var rowBounds = 3;
 	var colBounds = 5;
 	var grid = [[], [], [], [], [], []];
@@ -240,7 +237,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			usedRow = [0, 0, 1, 1];
 			usedCol = [0, 1, 0, 1];
 
-			if (spaceTaken(droppedRow, droppedCol, usedRow, usedCol) == false)
+			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				alert("false");
 				return (false);
@@ -264,9 +261,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else if (drag.attr('title').indexOf('large') != -1)
 		{
-			rowDisp = [0, 0, 1, 1, 1];
-			colDisp = [1, 2, 0, 1, 2];
-
 			if (droppedRow + 1 <= rowBounds)
 			{
 				if (droppedCol + 2 <= colBounds)
@@ -315,7 +309,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			usedRow = [0, 0, 0, 1, 1, 1];
 			usedCol = [0, 1, 2, 0, 1, 2];
 
-			if (spaceTaken(droppedRow, droppedCol, usedRow, usedCol) == false)
+			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				alert("false");
 				return (false);
@@ -327,15 +321,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none; border-right: none;');
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
-			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;')
-			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "plot_' + drag.attr('id') + '" style = "width: 300%; height: 200%; position: relative; z-index = 1; "></svg>');
+			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "plot_' + id + '" class = "ui-draggable" title = "large placed" style = "width: 300%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
-			grid[graphRow][graphCol] = graphCounter;
-			grid[graphRow][graphCol + 1] = graphCounter;
-			grid[graphRow][graphCol + 2] = graphCounter;
-			grid[graphRow + 1][graphCol] = grpahCounter;
-			grid[graphRow + 1][graphCol + 1] = graphCounter;
-			grid[graphRow + 1][graphCol + 2] = graphCounter;
+			angular.element(document).injector().invoke(function($compile) {
+				$compile($('#plot_' + id))($scope);
+			});	
+
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow][graphCol + 2] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol + 2] = id;
 		}	
 		
 		console.log(grid);
@@ -383,6 +381,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
+			usedRow = [0, 0, 1, 1];
+			usedCol = [0, 1, 0, 1];
+
+			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
+			{
+				alert("false");
+				return (false);
+			}
+
 			for(var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
@@ -395,16 +402,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
-			console.log('#row' + graphRow + 'col' + graphCol);
-
-			usedRow = [0, 0, 1, 1];
-			usedCol = [0, 1, 0, 1];
-
-			if (spaceTaken(droppedRow, droppedCol, usedRow, usedCol) == false)
-			{
-				alert("false");
-				return (false);
-			}
+			console.log('#row' + graphRow + 'col' + graphCol);					
 
 			$('#row' + graphRow + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none;');
 			$('#row' + (graphRow + 1) + 'col' + graphCol).attr('style', 'position: relative; z-index: -1; border-top: none; border-right: none;');
@@ -424,7 +422,89 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else if (drag.attr('title').indexOf('large') != -1)
 		{
+			if (droppedRow + 1 <= rowBounds)
+			{
+				if (droppedCol + 2 <= colBounds)
+				{
+					graphRow = droppedRow;
+					graphCol = droppedCol;
+				}
+				else
+				{
+					if (dropedCol + 1 > colBounds)
+					{
+						graphRow = droppedRow;
+						graphCol = droppedCol - 2;
+					}
+					else
+					{
+						graphRow = droppedRow;
+						graphCol = droppedCol - 1;
+					}
+				}
+			}
+			else
+			{
+				if (droppedCol + 2 <= colBounds)
+				{
+					graphRow = droppedRow - 1;
+					graphCol = droppedCol;
+				}
+				else
+				{
+					if (dropedCol + 1 > colBounds)
+					{
+						graphRow = droppedRow;
+						graphCol = droppedCol - 2;
+					}
+					else
+					{
+						graphRow = droppedRow;
+						graphCol = droppedCol - 1;
+					}
+				}
+			}
 
+			usedRow = [0, 0, 0, 1, 1, 1];
+			usedCol = [0, 1, 2, 0, 1, 2];
+
+			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
+			{
+				alert("false");
+				return (false);
+			}
+
+			for(var i = 0; i < grid.length; i++)
+			{
+				for (var j = 0; j < grid[i].length; j++)
+				{
+					if (grid[i][j] == id)
+					{
+						grid[i][j] = undefined;
+						resetCell(i, j);
+					}
+				}
+			}
+
+			$('#row' + graphRow + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none; border-right: none;');
+			$('#row' + graphRow + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none;');
+			$('#row' + (graphRow + 1) + 'col' + graphCol).attr('style', 'position: relative; z-index: -1; border-top: none; border-right: none;');
+			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none; border-right: none;');
+			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
+
+			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "plot_' + id + '" class = "ui-draggable" title = "large placed" style = "width: 300%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
+
+			angular.element(document).injector().invoke(function($compile) {
+				$compile($('#plot_' + id))($scope);
+			});	
+
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow][graphCol + 2] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol + 2] = id;
 		}		
 
 		console.log(grid);
@@ -438,9 +518,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		var drag = angular.element(dragEl);
 		var drop = angular.element(dropEl);
-
-		console.log(drag);
-		console.log(drop);
 
 		var graphObject;
 
@@ -468,7 +545,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}
 		}
 
-		console.log(JSON.stringify(graphObject));
+		//console.log(JSON.stringify(graphObject));
 
 		if(graphObject.type == "bar")
 		{			
@@ -507,9 +584,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					nv.utils.windowResize(chart.update);
 
 					return(chart);
-				}
-
-				
+				}				
 			});
 		}
 		else if(graphObject.type == "line")
@@ -599,23 +674,39 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			nv.addGraph(function() 
 			{
-				var num = graphCounter;
 				var chart = nv.models.pieChart()
 				.x(function(d) { return d.label; })
 				.y(function(d) { return d.value; })
 				.showLabels(true);
 
-				if(placeGraph(drag, drop) == false)
-					return;
+				if (drag.attr('title').indexOf('placed') == -1)
+				{
+					if(placeGraph(drag, drop) == false)
+						return;
 
-				d3.select('#plot ' + drag.attr('id'))
-				.datum(graphObject.chart_data)
-				.transition().duration(350)
-				.call(chart);
-				
-				nv.utils.windowResize(chart.update);	
-				
-				return(chart);
+					d3.select('#plot_' + drag.attr('id'))
+					.datum(graphObject.chart_data)
+					.transition().duration(350)
+					.call(chart);
+					
+					nv.utils.windowResize(chart.update);	
+					
+					return(chart);
+				}
+				else
+				{
+					if(moveGraph(drag, drop) == false)
+						return;
+
+					d3.select('#' + drag.attr('id'))
+					.datum(graphObject.chart_data)
+					.transition().duration(350)
+					.call(chart);
+					
+					nv.utils.windowResize(chart.update);	
+					
+					return(chart);
+				}
 			});		
 		}
 	};

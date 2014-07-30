@@ -16,14 +16,14 @@ client.on("error", function (err)
 	console.log(err);
 });
 
-client.on("connect", function()
-{
-	console.log("Redis connected");
-	// client.hkeys("graphs", function (err, replies)
-	// {
-	// 	graphCounter = replies.length;
-	// });
-});
+// client.on("connect", function()
+// {
+// 	console.log("Redis connected");
+// 	// client.hkeys("graphs", function (err, replies)
+// 	// {
+// 	// 	graphCounter = replies.length;
+// 	// });
+// });
 
 function send404(response)
 {

@@ -1046,6 +1046,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			graph = document.getElementById('pieChart');
 			canvas = document.getElementById('pieCanvas');
 			image = document.getElementById('pieImage');
+			title = $('#titlePie').val();
+
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
 			image.src = canvas.toDataURL();
