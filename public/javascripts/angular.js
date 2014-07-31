@@ -1090,14 +1090,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 // for bar graph save button
 $("#xAxisBar, #yAxisBar, #titleBar").on({
 	mouseenter: function() {
-		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '' || $('#barGraph').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '') {
+		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '' || $('#barGraph').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1108,14 +1108,14 @@ $("#xAxisBar, #yAxisBar, #titleBar").on({
 // for line graph save button
 $("#xAxisLine, #yAxisLine, #titleLine").on({
 	mouseenter: function() {
-		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '' || $('#lineGraph').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '') {
+		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '' || $('#lineGraph').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
@@ -1126,14 +1126,14 @@ $("#xAxisLine, #yAxisLine, #titleLine").on({
 // for pie chart save button
 $("#valueField, #titlePie").on({
 	mouseenter: function() {
-		if($("#valueField").val() == '' || $("#titlePie").val() == '') {
+		if($("#valueField").val() == '' || $("#titlePie").val() == '' || $('#pieChart').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#valueField").val() == '' || $("#titlePie").val() == '') {
+		if($("#valueField").val() == '' || $("#titlePie").val() == '' || $('#pieChart').children().length == 0) {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
