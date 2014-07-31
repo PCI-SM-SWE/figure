@@ -640,7 +640,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			nv.addGraph(function()
 			{
-				var title = drag.attr('id');
+				var id;
 				
 				var chart = nv.models.lineChart()
 				.useInteractiveGuideline(true)
@@ -673,21 +673,23 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				
 				chart.interactiveLayer.tooltip.distance = 50;
 
-				if (drag.attr('title').indexOf('placed') == -1)
+				if (drag.attr('data-placed') == 'false')
 				{
+					id = String.fromCharCode(graphId);
+
 					if(placeGraph(drag, drop) == false)
 						return;
 
 					setInterval(function()
 					{
-						var offset = $('#plot_' + title).offset();
+						var offset = $('#' + id).offset();
 						// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 						// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-						$('#plot_' + title).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+						$('#' + id).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
 						//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 					}, 1);
 
-					d3.select('#plot_' + title)
+					d3.select('#' + id)
 					.datum(graphObject.chart_data)
 					.call(chart);
 					
@@ -696,28 +698,29 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					return(chart);		
 				}
-				else
+				
+				id = drag.attr('id');
+
+				if(moveGraph(drag, drop) == false)
+					return;
+
+				setInterval(function()
 				{
-					if(moveGraph(drag, drop) == false)
-						return;
+					var offset = $('#' + id).offset();
+					// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
+					// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
+					$('#' + id).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+					//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
+				}, 1);
 
-					setInterval(function()
-					{
-						var offset = $('#' + title).offset();
-						// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
-						// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-						$('#' + title).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
-						//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
-					}, 1);
-
-					d3.select('#' + title)
-					.datum(graphObject.chart_data)
-					.call(chart);
-					
-					nv.utils.windowResize(chart.update);
-					
-					return(chart);		
-				}
+				d3.select('#' + id)
+				.datum(graphObject.chart_data)
+				.call(chart);
+				
+				nv.utils.windowResize(chart.update);
+				
+				return(chart);		
+				
 			});	
 		}
 		else if(graphObject.type == "pie")
@@ -729,12 +732,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				.y(function(d) { return d.value; })
 				.showLabels(true);
 
-				if (drag.attr('title').indexOf('placed') == -1)
+				if (drag.attr('data-placed') == 'false')
 				{
 					if(placeGraph(drag, drop) == false)
 						return;
 
-					d3.select('#plot_' + drag.attr('id'))
+					d3.select('#' + String.fromCharCode(graphId))
 					.datum(graphObject.chart_data)
 					.transition().duration(350)
 					.call(chart);
@@ -744,20 +747,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					return(chart);
 				}
-				else
-				{
-					if(moveGraph(drag, drop) == false)
-						return;
+			
+				if(moveGraph(drag, drop) == false)
+					return;
 
-					d3.select('#' + drag.attr('id'))
-					.datum(graphObject.chart_data)
-					.transition().duration(350)
-					.call(chart);
-					
-					nv.utils.windowResize(chart.update);	
-					
-					return(chart);
-				}	
+				d3.select('#' + drag.attr('id'))
+				.datum(graphObject.chart_data)
+				.transition().duration(350)
+				.call(chart);
+				
+				nv.utils.windowResize(chart.update);	
+				
+				return(chart);					
 			});		
 		}
 	};
