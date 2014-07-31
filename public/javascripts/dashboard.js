@@ -267,7 +267,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;')
-			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#' + String.fromCharCode(graphId)))($scope);
@@ -341,7 +341,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "large" data-placed = "true" style = "width: 300%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "large" data-placed = "true" style = "width: 300%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#' + String.fromCharCode(graphId)))($scope);
@@ -451,7 +451,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;')
-			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#' + id))($scope);
@@ -556,7 +556,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "plot_' + id + '" class = "ui-draggable" title = "large placed" style = "width: 300%; height: 200%; position: relative; z-index = 1; cursor: move; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "plot_' + id + '" class = "ui-draggable" title = "large placed" style = "width: 300%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#' + id))($scope);

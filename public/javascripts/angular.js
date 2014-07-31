@@ -270,8 +270,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		if(currentTab == 1)
 		{
 			$('#xAxisBar').val('');
-			$('#yAxisBar').val(''	);
+			$('#yAxisBar').val('');
 			$('#barGraph').empty();
+			$('titleBar').val('');
 		}
 		else if(currentTab == 2)
 		{
@@ -280,12 +281,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#groupingLine').val('');
 			$('#lineGraph').empty();
 			$('#groupingLine').val('');
+			$('titleLine').val('');
 		}
 		else if(currentTab == 3)
 		{
 			$('#valueField').val('');
 			$('#countField').val('');
 			$('#pieChart').empty();
+			$('#title').val('');
 		}
 		else if(currentTab == 4)
 		{
@@ -1077,7 +1080,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		else
 			client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
 		
-		alert("Graph saved.");
+		alert(title + " graph saved.");
 	};
 }]);
 
