@@ -97,7 +97,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
-						$('#thumbnails').append('<p>Drag image to place on dashboard</p>');
+						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Drop location will be the top left corner of the graph</p>');
 					});
 
 					$("label[name = 'large']").click(function()
@@ -261,7 +261,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("Graph cannot be placed there.");
+				$('div.alert').remove();
+				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 1; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
+				$('.alert').offset({top: $(window).scrollTop() + 51, left: $(window).scrollLeft()});
 				return (false);
 			}
 
@@ -337,7 +339,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("Graph cannot be placed there.");
+				$('div.alert').remove();
+				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 1; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
+				$('.alert').offset({top: $(window).scrollTop() + 51, left: $(window).scrollLeft()});
 				return (false);
 			}
 
@@ -435,7 +439,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("Graph cannot be placed there.");
+				$('div.alert').remove();
+				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 1; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
+				$('.alert').offset({top: $(window).scrollTop() + 51, left: $(window).scrollLeft()});
+				
 				grid = gridOld;
 				return (false);
 			}
@@ -468,7 +475,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
 			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" title = "' + drag.attr('title') + '" data-size = "small" style = "width: 200%; height: 200%; position: relative; z-index = 1;"></svg>');
 
-			
 			//$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
@@ -480,7 +486,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol] = id;
 			grid[graphRow + 1][graphCol + 1] = id;
 		}
-		else if (drag.attr('title').indexOf('large') != -1)
+		else if (drag.attr('data-size') == 'large')
 		{
 			if (droppedRow + 1 <= rowBounds)
 			{
@@ -547,7 +553,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
-				alert("Graph cannot be placed there.");
+				$('div.alert').remove();
+				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 1; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
+				$('.alert').offset({top: $(window).scrollTop() + 51, left: $(window).scrollLeft()});
+				
 				grid = gridOld;
 				return (false);
 			}
