@@ -12,6 +12,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{		
 		jQuery.event.props.push("dataTransfer");
 		getSavedGraphs();
+
+		$scope.resetGrid();
 	});
 
 	function getSavedGraphs()
@@ -188,6 +190,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#row' + row + 'col' + col).removeAttr('draggable');
 		$('#row' + row + 'col' + col).removeAttr('x-lvl-draggable');
 		$('#row' + row + 'col' + col).attr('data-placed', 'false');
+		$('#row' + row + 'col' + col).attr('x-lvl-drop-target', 'true');
+		$('#row' + row + 'col' + col).attr('x-on-drop', 'dropped(dragEl, dropEl)');
+
+		// angular.element(document).injector().invoke(function($compile) {
+		// 	$compile($('#row' + row + 'col' + col))($scope);
+		// });	
 	}
 
 	$scope.resetGrid = function()
@@ -206,6 +214,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		for (var i = 0; i < usedRow.length; i++)
 		{
+			console.log(grid[graphRow + usedRow[i]][graphCol + usedCol[i]]);
 			if (grid[graphRow + usedRow[i]][graphCol + usedCol[i]] != undefined)
 				return (false);
 		}
@@ -224,6 +233,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var usedCol;
 	
 		var id = drag.attr('id');
+
+		var t = "";
+		for (var i = 0; i < grid.length; i++)
+		{
+			for (var j = 0; j < grid[i].length; j++)
+			{
+				t += grid[i][j] + " "
+			}
+			t += "\n";
+		}
+		console.log(t);
+
+
 
 		if (drag.attr('data-size') == 'small')
 		{
@@ -262,7 +284,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				$('div.alert').remove();
-				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 1; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
+				$('body').prepend('<div class="alert alert-danger" style = "position: fixed; z-index: 100; width: 100%"><a href="#" class="close" data-dismiss="alert">&times;</a><strong>Error!</strong> Graph cannot be placed there.</div>');
 				$('.alert').offset({top: $(window).scrollTop() + 51, left: $(window).scrollLeft()});
 				return (false);
 			}
@@ -275,6 +297,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
+
 			//$('#row' + graphRow + 'col' + graphCol).attr('class', 'ui-draggable');
 			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" title = "' + drag.attr('title') + '" data-size = "small" style = "width: 200%; height: 200%; position: relative; z-index = 1;"></svg>');
 
@@ -355,6 +380,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
 
 			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + String.fromCharCode(graphId) + '" title = "' + drag.attr('title') + '" data-size = "large" style = "width: 300%; height: 200%; position: relative; z-index = 1;"></svg>');
 
@@ -370,7 +397,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol + 2] = String.fromCharCode(graphId);
 		}	
 		
-		console.log(grid);
 		return (true);	
 	}
 
@@ -447,7 +473,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				return (false);
 			}
 
-			console.log(gridOld);
 			grid = gridOld;
 
 			for (var i = 0; i < grid.length; i++)
@@ -473,6 +498,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
+
 			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" title = "' + drag.attr('title') + '" data-size = "small" style = "width: 200%; height: 200%; position: relative; z-index = 1;"></svg>');
 
 			//$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
@@ -561,7 +589,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				return (false);
 			}
 
-			console.log(gridOld);
 			grid = gridOld;
 
 			for (var i = 0; i < grid.length; i++)
@@ -586,6 +613,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
 			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
+			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
+
 			$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" title = "' + drag.attr('title') + '" data-size = "large" style = "width: 300%; height: 200%; position: relative; z-index = 1;"></svg>');
 
 			
@@ -603,7 +633,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol + 2] = id;
 		}		
 
-		console.log(grid);
 		return (true);
 	}
 
@@ -679,7 +708,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			nv.addGraph(function()
 			{
 				var id;
-				
+				var temp;
+
 				var chart = nv.models.lineChart()
 				.useInteractiveGuideline(true)
 				.transitionDuration(350)
@@ -718,9 +748,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					if(placeGraph(drag, drop) == false)
 						return;
 
-					setInterval(function()
+					temp = setInterval(function()
 					{
 						var offset = $('#' + id).offset();
+						
+						if (offset == undefined)
+						{
+							clearInterval(temp);
+							return;
+						}
 						// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 						// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
 						$('#' + id).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
@@ -742,9 +778,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if(moveGraph(drag, drop) == false)
 					return;
 
-				setInterval(function()
+				temp = setInterval(function()
 				{
 					var offset = $('#' + id).offset();
+
+					if (offset == undefined)
+					{
+						clearInterval(temp);
+						return;
+					}
 					// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 					// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
 					$('#' + id).siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
