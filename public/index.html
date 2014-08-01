@@ -290,42 +290,40 @@
 				
 				<!-- Visualization Tab View -->
 				<div ng-show="graphTab != 5">
+				
+					<!-- Bar Graphs -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 1">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>X-Axis</label>
 							<input id="xAxisBar" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titleBar" type="email" class="form-control" placeholder="Enter Title Here">
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Y-Axis</label>
 							<input id="yAxisBar" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Title</label>
-							<input id="titleBar" type="email" class="form-control" placeholder="Enter title here" spellcheck>
-							<br>
-						</div>
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
 						<div id="chart1" class="pics col-xs-11 col-sm-11 col-md-11" style="height: 100%;">
 							<svg id="barGraph" style="width: 100%; height: 60%;"></svg>
 						</div>
-
 						<canvas id = "barCanvas" width = "800" height = "500" style = "display: none;"></canvas>
 						<a id = "aBarImage">
 							<img id = "barImage" width = "800" height = "500" style = "display: none;"></img>
 						</a>
 					</form>
 
+					<!-- Line Graphs -->
 					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 2">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>X-Axis</label>
 							<input id="xAxisLine" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<!-- TEST CODE HERE on div: id=div 
-						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Y-Axis</label>
 							<input id="yAxisLine" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">           
@@ -335,40 +333,36 @@
 							<input id="groupingLine" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Title</label>
-							<input id="titleLine" type="email" class="form-control" placeholder="Enter title here" spellcheck>
-							<br>
-						</div>
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titleLine" type="email" class="form-control" placeholder="Enter Title Here">
 						</div>
 						<div id="chart2" class="pics col-xs-11 col-sm-11 col-md-11" style="height: 100%;">
 							<svg id="lineGraph" style="width: 100%; height: 100%;"></svg>
 						</div>
-
 						<canvas id = "lineCanvas" width = "1050" height = "850" style = "display: none;"></canvas>
 						<img id = "lineImage" width = "1050", height = "850" style = "display: none;"></img>
 					</form>
 
+					<!-- Pie Graphs -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 3">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Value Field</label> <input id="valueField" type="email" class="form-control" placeholder="Drop field here"
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titlePie" type="email" class="form-control" placeholder="Enter Title Here">
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Count(Optional)</label> <input id="countField"
 								type="email" class="form-control" placeholder="Drop field here"
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
-							<label>Title</label>
-							<input id="titlePie" type="email" class="form-control" placeholder="Enter title here" spellcheck
-							<br>
-						</div>
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
-							<br>
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
@@ -376,19 +370,21 @@
 							<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
 							<svg id="pieChart" style="width: 100%; height: 60%;"></svg>
 						</div>
-
 						<canvas id = "pieCanvas" width = "800" height = "470" style = "display: none;"></canvas>
 						<img id = "pieImage" width = "800"; height = "470" style = "display: none;"></img>
 					</form>
 
+					<!-- Maps -->
 					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 4">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Location Field</label>
 							<input id="locationField" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
 						</div>
-						<!-- TEST CODE HERE on div: id=div 
-						class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">-->
-						<div class="form-group col-xs-4 col-sm-4 col-md-4 col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+						<div class="form-group col-xs-4 col-sm-4 col-md-4">
+							<label>Title</label>
+							<input id="titlePie" type="email" class="form-control" placeholder="Enter Title Here">
+						</div>
+						<div class="form-group col-xs-4 col-sm-4 col-md-4 ">
 							<label>Value Field</label>
 							<input id="choroplethValueField" type="email" class="form-control" placeholder="Drop field here"
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
