@@ -97,11 +97,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
-						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Drop location will be the top left corner of the graph</p>');
+						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Cursor drop location will be the top left corner of the graph</p>');
 					});
 
 					$("label[name = 'large']").click(function()
-					{
+					{	
 						$('#thumbnails').children("img, p").remove();
 						var img = document.createElement('img');
 						//img.setAttribute('src', 'saved_images/' + graphObject.file_name); 
