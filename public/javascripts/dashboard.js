@@ -94,9 +94,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 30%; height: 300%; margin-bottom: 0px; display: block; margin: 4px; margin-left: auto; margin-right: auto;');
 						img.setAttribute('x-lvl-draggable', 'true');
 						img.setAttribute('draggable', 'true');
-						//img.setAttribute('id', graphObject.title.replace(/ /g, '_'));
+						img.setAttribute('data-id', graphObject.title);
 						img.setAttribute('class', 'thumbnail ui-draggable');
-						img.setAttribute('title', graphObject.title);
+						//img.setAttribute('title', graphObject.title);
 						img.setAttribute('data-size', 'small');
 						img.setAttribute('data-placed', 'false');
 
@@ -117,9 +117,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						img.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none; width: 40%; height: 400%; margin-bottom: 0px; display: block; margin: 4px; margin-left: auto; margin-right: auto;');
 						img.setAttribute('x-lvl-draggable', 'true');
 						img.setAttribute('draggable', 'true');
-						//img.setAttribute('id', graphObject.title.replace(/ /g, '_'));
+						img.setAttribute('data-id', graphObject.title);
 						img.setAttribute('class', 'thumbnail ui-draggable');
-						img.setAttribute('title', graphObject.title);
+						//img.setAttribute('title', graphObject.title);
 						img.setAttribute('data-size', 'large')
 						img.setAttribute('data-placed', 'false');
 
@@ -187,7 +187,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var rowBounds = 3;
 	var colBounds = 5;
 	var grid = [[], [], [], []];
-	var graphId = 65;
 
 	function resetCell(row, col)
 	{
@@ -238,7 +237,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var usedRow;
 		var usedCol;
 	
-		var title = drag.attr('title');
+		var id = drag.attr('data-id');
+		var title = id.substring(0, id.indexOf('('));
+
+		if (id.indexOf('(') == -1)
+			title = id;
 
 		var t = "";
 		for (var i = 0; i < grid.length; i++)
@@ -306,16 +309,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			//$('#row' + graphRow + 'col' + graphCol).attr('class', 'ui-draggable');
 			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
-			grid[graphRow][graphCol] = title;
-			grid[graphRow][graphCol + 1] = title;
-			grid[graphRow + 1][graphCol] = title;
-			grid[graphRow + 1][graphCol + 1] = title;
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
 		}
 		else if (drag.attr('data-size') == 'large')
 		{
@@ -389,18 +392,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
 
 			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
-			grid[graphRow][graphCol] = title;
-			grid[graphRow][graphCol + 1] = title;
-			grid[graphRow][graphCol + 2] = title;
-			grid[graphRow + 1][graphCol] = title;
-			grid[graphRow + 1][graphCol + 1] = title;
-			grid[graphRow + 1][graphCol + 2] = title;
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow][graphCol + 2] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol + 2] = id;
 		}	
 		
 		return (true);	
@@ -416,6 +419,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var usedRow;
 		var usedCol;
 
+		var id = drag.attr('data-id');
 		var title = drag.attr('title');
 
 		if (drag.attr('data-size') == 'small')
@@ -464,7 +468,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 				{
-					if (grid[i][j] == title)
+					if (grid[i][j] == id)
 						grid[i][j] = undefined;
 				}
 			}
@@ -485,7 +489,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 				{
-					if (grid[i][j] == title)
+					if (grid[i][j] == id)
 					{
 						grid[i][j] = undefined;
 						resetCell(i, j);
@@ -508,7 +512,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
 
 			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
 
 			//$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
 
@@ -516,10 +520,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
-			grid[graphRow][graphCol] = title;
-			grid[graphRow][graphCol + 1] = title;
-			grid[graphRow + 1][graphCol] = title;
-			grid[graphRow + 1][graphCol + 1] = title;
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
 		}
 		else if (drag.attr('data-size') == 'large')
 		{
@@ -624,7 +628,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
 
 			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
 
 			
 			//$('#row' + graphRow + 'col' + graphCol).append('<svg id = "' + id + '" class = "ui-draggable" title = "' + drag.attr('title') + '" data-size = "small" data-placed = "true" style = "width: 200%; height: 200%; position: relative; z-index = 1; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;" draggable = "true" x-lvl-draggable = "true"></svg>');
@@ -633,12 +637,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
-			grid[graphRow][graphCol] = title;
-			grid[graphRow][graphCol + 1] = title;
-			grid[graphRow][graphCol + 2] = title;
-			grid[graphRow + 1][graphCol] = title;
-			grid[graphRow + 1][graphCol + 1] = title;
-			grid[graphRow + 1][graphCol + 2] = title;
+			grid[graphRow][graphCol] = id;
+			grid[graphRow][graphCol + 1] = id;
+			grid[graphRow][graphCol + 2] = id;
+			grid[graphRow + 1][graphCol] = id;
+			grid[graphRow + 1][graphCol + 1] = id;
+			grid[graphRow + 1][graphCol + 2] = id;
 		}		
 
 		return (true);
@@ -651,8 +655,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		var drag = angular.element(dragEl);
 		var drop = angular.element(dropEl);
-		var placed = false;
-	
+		var placed = false;	
 
 		var graphObject;
 
@@ -662,11 +665,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			placed = true;	
 		}
 
-		var title = drag.attr('title');;
+		var id = drag.attr('data-id');
 
 		for(var i = 0; i < graphs.length; i++)
 		{
-			if(graphs[i].title == title)
+			if(graphs[i].title == id)
 			{
 				graphObject = graphs[i]
 				break;
@@ -692,12 +695,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					if(placeGraph(drag, drop) == false)
 						return;
 
-					d3.select("svg[title='" + title + "']")
+					d3.select("svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.call(chart);
 					
-					nv.utils.windowResize(chart.update);
-					graphId++;	
+					nv.utils.windowResize(chart.update);	
 
 					return(chart);
 				}
@@ -705,7 +707,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if(moveGraph(drag, drop) == false)
 					return;
 
-				d3.select("svg[title='" + title + "']")
+				d3.select("svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.call(chart);
 				
@@ -758,7 +760,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					temp = setInterval(function()
 					{
-						var offset = $("svg[title='" + title + "']").offset();
+						var offset = $("svg[data-id='" + id + "']").offset();
 						
 						if (offset == undefined)
 						{
@@ -767,16 +769,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						}
 						// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 						// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-						$("svg[title='" + title + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+						$("svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
 						//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 					}, 1);
 
-					d3.select("svg[title='" + title + "']")
+					d3.select("svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.call(chart);
 					
 					nv.utils.windowResize(chart.update);
-					graphId++;	
 
 					return(chart);		
 				}
@@ -786,7 +787,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				temp = setInterval(function()
 				{
-					var offset = $("svg[title='" + title + "']").offset();
+					var offset = $("svg[data-id='" + id + "']").offset();
 
 					if (offset == undefined)
 					{
@@ -795,11 +796,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					}
 					// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 					// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-					$("svg[title='" + title + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+					$("svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
 					//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 				}, 1);
 
-				d3.select("svg[title='" + title + "']")
+				d3.select("svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.call(chart);
 				
@@ -822,13 +823,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					if(placeGraph(drag, drop) == false)
 						return;
 
-					d3.select("svg[title='" + title + "']")
+					d3.select("svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.transition().duration(350)
 					.call(chart);
 					
 					nv.utils.windowResize(chart.update);	
-					graphId++;	
 
 					return(chart);
 				}
@@ -836,7 +836,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if(moveGraph(drag, drop) == false)
 					return;
 
-				d3.select("svg[title='" + title + "']")
+				d3.select("svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.transition().duration(350)
 				.call(chart);
