@@ -15,6 +15,14 @@ var Handler = function(socket)
 // 	});
 // }
 
+Handler.prototype.redisError = function(callback)
+{
+	socket.on('Redis Error', function(err)
+	{
+		callback(err);
+	});
+}
+
 Handler.prototype.fileUploadRequest = function(callback)
 {
 	var response = socket.on('file data', function(data)

@@ -8,12 +8,17 @@ var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
 
+// Socket IO begins
+var io = require('socket.io')(server);
+var dl = require('delivery');
+
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
 
 client.on("error", function (err)
 {
 	console.log(err);
+	socket.emit('Redis Error', err);
 });
 
 // client.on("connect", function()
@@ -75,6 +80,8 @@ app.get('/', function (req, res)
 	res.render('./public/index.html');	
 });
 
+//app.get('')
+
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
@@ -108,9 +115,7 @@ function getFile(path, callback)
 // 	console.log("Server listening on port 80.");
 // });
 
-// Socket IO begins
-var io = require('socket.io')(server);
-var dl = require('delivery');
+
 
 //function handler(req, res) {
 //	fs.readFile(__dirname + '/index.html', function(err, data) {
@@ -136,7 +141,7 @@ io.on('connection', function(socket)
 		}
 		else
 		{
-			console.log(uploaded_files);
+			// console.log(uploaded_files);
 
 			for (var i = 0; i < uploaded_files.length; i++)
 				uploaded_files[i] = './uploaded_files/' + uploaded_files[i]
@@ -150,7 +155,7 @@ io.on('connection', function(socket)
 				}
 				else
 				{
-					console.log(sample_data);
+					// console.log(sample_data);
 
 					for (var i = 0; i < sample_data.length; i++)
 						sample_data[i] = './public/sample_data/' + sample_data[i]
@@ -245,15 +250,15 @@ io.on('connection', function(socket)
 		// });
 		
 		client.hset('graphs', graphObject.title, JSON.stringify(graphObject));
-		console.log('finished saving');
+		// console.log('finished saving');
 	});
 
 	socket.on('get saved graphs', function()
 	{
 		client.hkeys("graphs", function (err, replies)
 		{
-			console.log('in get saved graphs');
-			console.log(replies);
+			// console.log('in get saved graphs');
+			// console.log(replies);
 
 			graphCounter = replies.length;
 

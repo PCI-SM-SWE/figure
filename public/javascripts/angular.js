@@ -1075,12 +1075,43 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		console.log(canvas.toDataURL());
 
-		if(graphTypes[$scope.graphTab - 1] != "line")
-			client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
-		else
-			client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
-		
-		alert(title + " graph saved.");
+		client.getSavedGraphs(function(graphObjects)
+		{
+			for (var i = 0; i < graphObjects.length; i++)
+			{
+				if (graphObjects[i].title == title)
+				{
+					var r = window.confirm('A graph with title "' + title + '" already exists.  Do you still want to save?');
+
+					if (r == true)
+					{
+						var counter = 0;
+
+						for (var j = 0; j < graphObjects.length; j++)
+						{
+							if (graphObjects[j].title.indexOf(title) != -1)
+								counter++;
+						}		
+
+						if (graphTypes[$scope.graphTab - 1] != "line")
+							client.saveGraph({'chart_data': chartData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+						else
+							client.saveGraph({'chart_data': chartData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
+						
+						alert(title + '(' + counter + ')' + " graph saved.");
+					}
+					
+					exit();
+				}
+			}
+
+			if (graphTypes[$scope.graphTab - 1] != "line")
+				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+			else
+				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
+			
+			alert(title + " graph saved.");		
+		});
 	};
 }]);
 
