@@ -30,7 +30,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				graphs = graphObjects;
 								
-				$scope.resetGrid();
+				//$scope.resetGrid();
 
 				graph(title, dashboardGrid, graphs);
 			});
@@ -64,18 +64,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
-	function spaceTaken(graphRow, graphCol, usedRow, usedCol)
-	{
-		for (var i = 0; i < usedRow.length; i++)
-		{
-			console.log(grid[graphRow + usedRow[i]][graphCol + usedCol[i]]);
-			if (grid[graphRow + usedRow[i]][graphCol + usedCol[i]] != undefined)
-				return (false);
-		}
-
-		return (true);
-	}
-
 	function placeGraph (droppedRow, droppedCol, size, id)
 	{		
 		// var t = "";
@@ -101,24 +89,24 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (droppedRow + 1) + 'col' + (droppedCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + droppedRow + 'col' + droppedCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('draggable', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('x-lvl-draggable', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('data-placed', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-lvl-drop-target');
-			$('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-on-drop');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('draggable', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('x-lvl-draggable', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('data-placed', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-lvl-drop-target');
+			// $('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-on-drop');
 
 			//$('#row' + graphRow + 'col' + graphCol).attr('class', 'ui-draggable');
 			$('#row' + droppedRow + 'col' + droppedCol).append('<h3>' + title + '</h3>');	
 			$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
 
-			angular.element(document).injector().invoke(function($compile) {
-				$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
-			});	
+			// angular.element(document).injector().invoke(function($compile) {
+			// 	$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
+			// });	
 
-			grid[droppedRow][droppedCol] = id;
-			grid[droppedRow][droppedCol + 1] = id;
-			grid[droppedRow + 1][droppedCol] = id;
-			grid[droppedRow + 1][droppedCol + 1] = id;
+			// grid[droppedRow][droppedCol] = id;
+			// grid[droppedRow][droppedCol + 1] = id;
+			// grid[droppedRow + 1][droppedCol] = id;
+			// grid[droppedRow + 1][droppedCol + 1] = id;
 		}
 		else if (size == 'large')
 		{
@@ -129,25 +117,25 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (droppedRow + 1) + 'col' + (droppedCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + droppedRow + 'col' + droppedCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('draggable', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('x-lvl-draggable', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).attr('data-placed', 'true');
-			$('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-lvl-drop-target');
-			$('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-on-drop');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('draggable', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('x-lvl-draggable', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).attr('data-placed', 'true');
+			// $('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-lvl-drop-target');
+			// $('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-on-drop');
 
 			$('#row' + droppedRow + 'col' + droppedCol).append('<h3>' + title + '</h3>');	
 			$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
 
-			angular.element(document).injector().invoke(function($compile) {
-				$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
-			});	
+			// angular.element(document).injector().invoke(function($compile) {
+			// 	$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
+			// });	
 
-			grid[droppedRow][droppedCol] = id;
-			grid[droppedRow][droppedCol + 1] = id;
-			grid[droppedRow][droppedCol + 2] = id;
-			grid[droppedRow + 1][droppedCol] = id;
-			grid[droppedRow + 1][droppedCol + 1] = id;
-			grid[droppedRow + 1][droppedCol + 2] = id;
+			// grid[droppedRow][droppedCol] = id;
+			// grid[droppedRow][droppedCol + 1] = id;
+			// grid[droppedRow][droppedCol + 2] = id;
+			// grid[droppedRow + 1][droppedCol] = id;
+			// grid[droppedRow + 1][droppedCol + 1] = id;
+			// grid[droppedRow + 1][droppedCol + 2] = id;
 		}	
 	}
 

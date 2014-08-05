@@ -897,36 +897,36 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'<div class="container-fluid" style = "margin-left: 15px; margin-right: 15px;" id = "grid">\n' +
 			'<div class="row-fluid">\n' + 			
 			'<div class="row-fluid">\n' + 
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col0" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col1" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col2" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col3" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col4" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col5" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col0"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col1"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col2"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col3"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col4"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row0col5"></div>\n' +
 			'</div>\n' +
 			'<div class="row-fluid">\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col0" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col1" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col2" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col3" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col4" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col5" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col0"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col1"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col2"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col3"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col4"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row1col5"></div>\n' +
 			'</div>\n' +
 			'<div class="row-fluid">\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col0" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col1" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col2" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col3" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col4" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col5" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col0"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col1"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col2"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col3"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col4"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row2col5"></div>\n' +
 			'</div>\n' +
 			'<div class="row-fluid">\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col0" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col1" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col2" data-placed = "false" ></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col3" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col4" data-placed = "false"></div>\n' +
-			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col5" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col0"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col1"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col2"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col3"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col4"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col5"></div>\n' +
 			'</div>\n' +
 			'</div>\n' +
 			'</div>\n' +

@@ -128,7 +128,6 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 var io = require('socket.io')(server);
 var dl = require('delivery');
 
-
 client.on("error", function (err)
 {
 	console.log(err);
@@ -138,7 +137,7 @@ client.on("error", function (err)
 io.on('connection', function(socket)
 {
 	console.log('Client connected');
-	
+
 	// Sending list of previously uploaded files to client
 	fs.readdir('./uploaded_files', function(err, uploaded_files)
 	{
