@@ -10,11 +10,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready(function()
 	{		
-		client.redisError(function(err)
-		{
-			alert('Cannot connect to database.\nTry to refresh the page or contact IT.');
-			exit();
-		});
+		// client.redisError(function(err)
+		// {
+		// 	alert('Cannot connect to database.\nTry to refresh the page or contact IT.');
+		// 	exit();
+		// });
 
 		jQuery.event.props.push("dataTransfer");
 		getSavedGraphs();
@@ -187,6 +187,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var rowBounds = 3;
 	var colBounds = 5;
 	var grid = [[], [], [], []];
+	var dashboardGrid = [[], [], [], []];
 
 	function resetCell(row, col)
 	{
@@ -227,34 +228,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return (true);
 	}
 
-	function placeGraph (drag, drop)
-	{
-		var droppedRow = parseInt(drop.attr('id').charAt(3));
-		var droppedCol = parseInt(drop.attr('id').charAt(7));
-		
+	function placeGraph (droppedRow, droppedCol, size, id)
+	{		
 		var graphRow;
 		var graphCol;
 		var usedRow;
 		var usedCol;
 	
-		var id = drag.attr('data-id');
 		var title = id.substring(0, id.indexOf('('));
 
 		if (id.indexOf('(') == -1)
 			title = id;
 
-		var t = "";
-		for (var i = 0; i < grid.length; i++)
-		{
-			for (var j = 0; j < grid[i].length; j++)
-			{
-				t += grid[i][j] + " "
-			}
-			t += "\n";
-		}
-		console.log(t);
-
-		if (drag.attr('data-size') == 'small')
+		if (size == 'small')
 		{
 			if (droppedRow + 1 <= rowBounds)
 			{
@@ -319,8 +305,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol] = id;
 			grid[graphRow + 1][graphCol + 1] = id;
+
+			dashboardGrid[graphRow][graphCol] = id + 'S';
 		}
-		else if (drag.attr('data-size') == 'large')
+		else if (size == 'large')
 		{
 			if (droppedRow + 1 <= rowBounds)
 			{
@@ -404,25 +392,34 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol] = id;
 			grid[graphRow + 1][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol + 2] = id;
+
+			dashboardGrid[graphRow][grpahCol] = id + 'L';
 		}	
 		
-		return (true);	
+		var t = "";
+		for (var i = 0; i < grid.length; i++)
+		{
+			for (var j = 0; j < grid[i].length; j++)
+			{
+				t += grid[i][j] + " "
+			}
+			t += "\n";
+		}
+		console.log(t);
+
+		return ({'graphRow': graphRow, 'graphCol': graphCol});
 	}
 
-	function moveGraph (drag, drop)
-	{
-		var droppedRow = parseInt(drop.attr('id').charAt(3));
-		var droppedCol = parseInt(drop.attr('id').charAt(7));
-		
+	function moveGraph (dragRow, dragCol, droppedRow, droppedCol, size, id)
+	{		
 		var graphRow;
 		var graphCol;
 		var usedRow;
 		var usedCol;
 
-		var id = drag.attr('data-id');
-		var title = drag.attr('title');
+		var title = $("svg[data-id='" + id + "']").attr('title');
 
-		if (drag.attr('data-size') == 'small')
+		if (size == 'small')
 		{
 			if (droppedRow + 1 <= rowBounds)
 			{
@@ -458,19 +455,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var gridOld = [[], [], [], []];
 
+			//copy grid 
 			for (var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 					gridOld[i][j] = grid[i][j];
 			}
 
-			for (var i = 0; i < grid.length; i++)
+			for (var i = 0; i < usedRow.length; i++)
 			{
-				for (var j = 0; j < grid[i].length; j++)
-				{
-					if (grid[i][j] == id)
-						grid[i][j] = undefined;
-				}
+				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
 			}
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
@@ -485,17 +479,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			grid = gridOld;
 
-			for (var i = 0; i < grid.length; i++)
+			//clear old location
+			for (var i = 0; i < usedRow.length; i++)
 			{
-				for (var j = 0; j < grid[i].length; j++)
-				{
-					if (grid[i][j] == id)
-					{
-						grid[i][j] = undefined;
-						resetCell(i, j);
-					}
-				}
+				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
+				resetCell(dragRow + usedRow[i], dragCol + usedCol[i]);
 			}
+
+			dashboardGrid[dragRow][dragCol] = undefined;
 
 			console.log('#row' + graphRow + 'col' + graphCol);					
 
@@ -524,8 +515,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol] = id;
 			grid[graphRow + 1][graphCol + 1] = id;
+
+			dashboardGrid[graphRow][graphCol] = id + 'S';
 		}
-		else if (drag.attr('data-size') == 'large')
+		else if (size== 'large')
 		{
 			if (droppedRow + 1 <= rowBounds)
 			{
@@ -570,25 +563,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
+			usedRow = [0, 0, 0, 1, 1, 1];
+			usedCol = [0, 1, 2, 0, 1, 2];
+
 			var gridOld = [[], [], [], []];
 
+			//copy grid
 			for (var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 					gridOld[i][j] = grid[i][j];
 			}
 
-			for (var i = 0; i < grid.length; i++)
+			for (var i = 0; i < usedRow.length; i++)
 			{
-				for (var j = 0; j < grid[i].length; j++)
-				{
-					if (grid[i][j] == id)
-						grid[i][j] = undefined;
-				}
-			}
-
-			usedRow = [0, 0, 0, 1, 1, 1];
-			usedCol = [0, 1, 2, 0, 1, 2];
+				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
+			}		
 
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
@@ -602,17 +592,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			grid = gridOld;
 
-			for (var i = 0; i < grid.length; i++)
+			for (var i = 0; i < usedRow.length; i++)
 			{
-				for (var j = 0; j < grid[i].length; j++)
-				{
-					if (grid[i][j] == id)
-					{
-						grid[i][j] = undefined;
-						resetCell(i, j);
-					}
-				}
+				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
+				resetCell(dragRow + usedRow[i], dragCol + usedCol[i]);
 			}
+
+			dashboardGrid[dragRow][dragCol] = undefined;
 
 			$('#row' + graphRow + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none; border-right: none;');
 			$('#row' + graphRow + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-bottom: none;');
@@ -643,9 +629,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol] = id;
 			grid[graphRow + 1][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol + 2] = id;
+
+			dashboardGrid[graphRow][graphCol] = id + 'L';
 		}		
 
-		return (true);
+		var t = "";
+		for (var i = 0; i < grid.length; i++)
+		{
+			for (var j = 0; j < grid[i].length; j++)
+			{
+				t += grid[i][j] + " "
+			}
+			t += "\n";
+		}
+		console.log(t);
+
+		return ({'graphRow': graphRow, 'graphCol': graphCol});
 	}
 
 	$scope.dropped = function(dragEl, dropEl)
@@ -656,16 +655,27 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var drag = angular.element(dragEl);
 		var drop = angular.element(dropEl);
 		var placed = false;	
+		var returnedData;
 
 		var graphObject;
+
+		var dragRow;
+		var dragCol;
+		var droppedRow = parseInt(drop.attr('id').charAt(3));
+		var droppedCol = parseInt(drop.attr('id').charAt(7));
+		var dragRow;
+		var dragCol;
 
 		if (drag.attr('data-placed') == 'true')
 		{
 			drag = drag.children('svg');
 			placed = true;	
+			dragRow = parseInt(drag.parent().attr('id').charAt(3));
+			dragCol = parseInt(drag.parent().attr('id').charAt(7));
 		}
 
-		var id = drag.attr('data-id');
+		var id = drag.attr('data-id');		
+		var size = drag.attr('data-size');
 
 		for(var i = 0; i < graphs.length; i++)
 		{
@@ -674,7 +684,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				graphObject = graphs[i]
 				break;
 			}
-		}
+		}		
 
 		//console.log(JSON.stringify(graphObject));
 
@@ -692,10 +702,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					if(placeGraph(drag, drop) == false)
+					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+
+					if(returnedData == false)
 						return;
 
-					d3.select("svg[data-id='" + id + "']")
+					d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.call(chart);
 					
@@ -704,10 +716,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					return(chart);
 				}
 				
-				if(moveGraph(drag, drop) == false)
+				returnedData = moveGraph(dragRow, dragCol, droppedRow, droppedCol, size, id);
+
+				if(returnedData == false)
 					return;
 
-				d3.select("svg[data-id='" + id + "']")
+				d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.call(chart);
 				
@@ -755,12 +769,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					if(placeGraph(drag, drop) == false)
+					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+
+					if(returnedData == false)
 						return;
 
 					temp = setInterval(function()
 					{
-						var offset = $("svg[data-id='" + id + "']").offset();
+						var offset = $("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']").offset();
 						
 						if (offset == undefined)
 						{
@@ -769,11 +785,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						}
 						// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 						// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-						$("svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+						$("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
 						//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 					}, 1);
 
-					d3.select("svg[data-id='" + id + "']")
+					d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.call(chart);
 					
@@ -782,12 +798,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					return(chart);		
 				}
 
-				if(moveGraph(drag, drop) == false)
+				returnedData = moveGraph(dragRow, dragCol, droppedRow, droppedCol, size, id);
+
+				if(returnedData == false)
 					return;
 
 				temp = setInterval(function()
 				{
-					var offset = $("svg[data-id='" + id + "']").offset();
+					var offset = $("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']").offset();
 
 					if (offset == undefined)
 					{
@@ -796,11 +814,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					}
 					// $('#plot' + num).siblings('.nvtooltip').css('left', offset.left);
 					// $('#plot' + num).siblings('.nvtooltip').css('top', offset.top);
-					$("svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
+					$("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']").siblings('.nvtooltip').offset({top: offset.top, left: offset.left});
 					//$('#plot' + num).siblings('.nvtooltip').css('margin', 0);
 				}, 1);
 
-				d3.select("svg[data-id='" + id + "']")
+				d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.call(chart);
 				
@@ -820,10 +838,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					if(placeGraph(drag, drop) == false)
+					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+
+					if(returnedData == false)
 						return;
 
-					d3.select("svg[data-id='" + id + "']")
+					d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 					.datum(graphObject.chart_data)
 					.transition().duration(350)
 					.call(chart);
@@ -833,10 +853,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					return(chart);
 				}
 			
-				if(moveGraph(drag, drop) == false)
+				returnedData = moveGraph(dragRow, dragCol, droppedRow, droppedCol, size, id);
+
+				if(returnedData == false)
 					return;
 
-				d3.select("svg[data-id='" + id + "']")
+				d3.select("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > svg[data-id='" + id + "']")
 				.datum(graphObject.chart_data)
 				.transition().duration(350)
 				.call(chart);
@@ -850,7 +872,94 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	
 	$scope.publish = function()
 	{
+		var dashboardName = prompt('What would you like to name this dashboard?');
 
+		if (dashboardName == null)
+			return;
+
+		dashboardName = dashboardName.split(' ').join('_');
+
+		prompt('Copy Dashboard URL', 'localhost/' + dashboardName);
+
+		var html = '<!DOCTYPE html>\n' +
+			'<html lang="en" ng-app = "Dashboard">\n' +
+			'<head>\n' +
+			'<meta charset="utf-8">\n' +
+			'<meta http-equiv="X-UA-Compatible" content="IE=edge">\n' +
+			'<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+			'<meta name="description" content="">\n' +
+			'<meta name="author" content="">\n' +
+			'<link rel="icon" href="favicon.ico">\n' +
+			'<title>' + dashboardName + '</title>\n' +
+			'</head>\n' + 
+			'<body ng-controller="MainCtrl">\n' + 
+			'<div class="container-fluid" style = "margin-left: 15px; margin-right: 15px;" id = "grid">\n'+ 
+			'<div class="container-fluid" style = "margin-left: 15px; margin-right: 15px;" id = "grid">\n' +
+			'<div class="row-fluid">\n' + 			
+			'<div class="row-fluid">\n' + 
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col0" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col1" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col2" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col3" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col4" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row0col5" data-placed = "false"></div>\n' +
+			'</div>\n' +
+			'<div class="row-fluid">\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col0" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col1" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col2" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col3" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col4" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row1col5" data-placed = "false"></div>\n' +
+			'</div>\n' +
+			'<div class="row-fluid">\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col0" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col1" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col2" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col3" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col4" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row2col5" data-placed = "false"></div>\n' +
+			'</div>\n' +
+			'<div class="row-fluid">\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col0" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col1" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col2" data-placed = "false" ></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col3" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col4" data-placed = "false"></div>\n' +
+			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" id = "row3col5" data-placed = "false"></div>\n' +
+			'</div>\n' +
+			'</div>\n' +
+			'</div>\n' +
+			'</div>\n' +  
+			'<br><br>\n' +
+			'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>\n' +
+			'<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>\n' +
+			'<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>\n' +
+			'<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>\n' +
+			'<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>\n' + 
+			'<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>\n' +
+			'<script type = "text/javascript" src = "../javascripts/nv.d3.js"></script>\n' + 
+			'<link rel = "stylesheet" href = "../stylesheets/nv.d3.css">\n' +  
+			'<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>\n' + 
+			'<script src="/socket.io/socket.io.js"></script>\n' + 
+			'<script src="../javascripts/client_handler.js"></script>\n' +
+			'<script type = "text/javascript" src = "../javascripts/lvl-uuid.js"></script>\n' +
+			'<script type = "text/javascript" src = "../javascripts/lvl-drag-drop.js"></script>\n' +
+			'<!-- Bootstrap core CSS -->\n' + 
+			'<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">\n' + 	
+			'<!-- Custom styles for this template -->\n' + 
+			'<link rel="stylesheet" href="../stylesheets/style.css">\n' +
+			'<script type = "text/javascript" src = "../javascripts/dashboard_display.js"></script>\n' + 
+			'</body>\n' + 
+			'</html>';		
+
+		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function(response)
+		{
+			if (response == "dashboard saved")
+				alert("Dashboard saved.");
+			else
+				alert("Dashboard could not be saved.");
+		});
 	}
 }]);
 

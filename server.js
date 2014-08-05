@@ -8,18 +8,8 @@ var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
 
-// Socket IO begins
-var io = require('socket.io')(server);
-var dl = require('delivery');
-
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
-
-client.on("error", function (err)
-{
-	console.log(err);
-	socket.emit('Redis Error', err);
-});
 
 // client.on("connect", function()
 // {
@@ -30,57 +20,63 @@ client.on("error", function (err)
 // 	// });
 // });
 
-function send404(response)
-{
-	response.writeHead(404, {'Content-Type': 'text/plain'});
-	response.write('Error 404: resource not found.');
-	response.end();
-}
+// function send404(response)
+// {
+// 	response.writeHead(404, {'Content-Type': 'text/plain'});
+// 	response.write('Error 404: resource not found.');
+// 	response.end();
+// }
 
-function sendFile(response, filePath, fileContents)
-{
-	response.writeHead(
-		200,
-		{"content-type": mime.lookup(path.basename(filePath))}
-		);
-	response.end(fileContents);
-}
+// function sendFile(response, filePath, fileContents)
+// {
+// 	response.writeHead(
+// 		200,
+// 		{"content-type": mime.lookup(path.basename(filePath))}
+// 		);
+// 	response.end(fileContents);
+// }
 
-function serveStatic(response, cache, absPath)
-{
-	if (cache[absPath])
-	{
-		sendFile(response, absPath, cache[absPath]);
-	} 
-	else
-	{
-		fs.exists(absPath, function(exists)
-		{
-			if (exists)
-			{
-				fs.readFile(absPath, function(err, data)
-				{
-					if (err) 
-						send404(response);
-					else 
-					{
-						cache[absPath] = data;
-						sendFile(response, absPath, data);
-					}
-				});
-			} 
-			else
-				send404(response);
-		});
-	}
-}
+// function serveStatic(response, cache, absPath)
+// {
+// 	if (cache[absPath])
+// 	{
+// 		sendFile(response, absPath, cache[absPath]);
+// 	} 
+// 	else
+// 	{
+// 		fs.exists(absPath, function(exists)
+// 		{
+// 			if (exists)
+// 			{
+// 				fs.readFile(absPath, function(err, data)
+// 				{
+// 					if (err) 
+// 						send404(response);
+// 					else 
+// 					{
+// 						cache[absPath] = data;
+// 						sendFile(response, absPath, data);
+// 					}
+// 				});
+// 			} 
+// 			else
+// 				send404(response);
+// 		});
+// 	}
+// }
 
-app.get('/', function (req, res)
+app.get('/', function(req, res)
 {
 	res.render('./public/index.html');	
 });
 
-//app.get('')
+app.get('/*', function(req, res)
+{
+	console.log(req.originalUrl.substring(1));
+	res.sendfile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
+});
+
+app.listen();
 
 var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
@@ -99,16 +95,16 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 // 	serveStatic(response, cache, absPath);
 // });
 
-function getFile(path, callback)
-{
-	fs.readFile(path,'utf-8', function (err, data)
-	{
-		if (err)
-			throw err;
-		if (typeof callback === "function") 
-			callback(data);		
-	});
-}
+// function getFile(path, callback)
+// {
+// 	fs.readFile(path,'utf-8', function (err, data)
+// 	{
+// 		if (err)
+// 			throw err;
+// 		if (typeof callback === "function") 
+// 			callback(data);		
+// 	});
+// }
 
 // server.listen(80, function()
 // {
@@ -127,6 +123,17 @@ function getFile(path, callback)
 //		res.end(data);
 //	});fff
 //}
+
+// Socket IO begins
+var io = require('socket.io')(server);
+var dl = require('delivery');
+
+
+client.on("error", function (err)
+{
+	console.log(err);
+	socket.emit('Redis Error', err);
+});
 
 io.on('connection', function(socket)
 {
@@ -325,6 +332,32 @@ io.on('connection', function(socket)
 			});
 		});		
 	});
+
+	socket.on('save dashboard', function(dashboardObject)
+	{
+		fs.writeFile('./public/saved_dashboards/' + dashboardObject.title + '.html', dashboardObject.html, function(err)
+		{		
+			if (err)
+			{
+				console.log(err);
+				socket.emit('dashboard not saved');
+				return;
+			}
+
+			console.log(JSON.stringify(dashboardObject.grid));
+			client.hset('dashboards', dashboardObject.title, JSON.stringify(dashboardObject.grid))
+			socket.emit('dashboard saved');
+		});
+	});
+
+	socket.on('get dashboard', function(title)
+	{
+		client.hget('dashboards', title, function(err, reply)
+		{
+			console.log(JSON.parse(reply));
+			socket.emit('dashboard data sent', {'title': title, 'grid': JSON.parse(reply)});
+		});
+	})
 });
 
 /*

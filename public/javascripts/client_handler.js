@@ -15,13 +15,13 @@ var Handler = function(socket)
 // 	});
 // }
 
-Handler.prototype.redisError = function(callback)
-{
-	socket.on('Redis Error', function(err)
-	{
-		callback(err);
-	});
-}
+// Handler.prototype.redisError = function(callback)
+// {
+// 	socket.on('Redis Error', function(err)
+// 	{
+// 		callback(err);
+// 	});
+// }
 
 Handler.prototype.fileUploadRequest = function(callback)
 {
@@ -64,4 +64,29 @@ Handler.prototype.getSavedGraphs = function(callback)
 	{
 		callback(graphObjects);
 	});
+}
+
+Handler.prototype.saveDashboard = function(dashboardObject, callback)
+{
+	socket.emit('save dashboard', dashboardObject);
+
+	socket.on('dashboard not saved', function()
+	{
+		callback('dashboard not saved');
+	});
+
+	socket.on('dashboard saved', function()
+	{
+		callback('dashboard saved');
+	});
+}
+
+Handler.prototype.getDashboard = function(title, callback)
+{
+	socket.emit('get dashboard', title);
+
+	socket.on('dashboard data sent', function(dashboardObject)
+	{
+		callback(dashboardObject);
+	})
 }
