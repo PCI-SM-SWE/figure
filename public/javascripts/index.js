@@ -1,4 +1,4 @@
-var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -623,7 +623,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		isDateTime = false;
 		chartData = new Array();			
 		var temp;
-		
+		var max = 0;
+
 		if(xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time' || xAxis == 'Field1')
 			isDateTime = true;
 		else
@@ -650,13 +651,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				{
 					xValue = parseDateTime(xValue.toString());
 
+					console.log(xValue instanceof Date);
+
 					if(xValue instanceof Date == true)
 						value = {x: xValue.getTime(), y: parseFloat(yValue)};
+				
 					else
+					{
 						value = {x: xValue, y: parseFloat(yValue)};
+						isDateTime = false;
+					}
 				}
 				else
 					value = {x: xValue, y: parseFloat(yValue)};	
+
+				if (parseFloat(yValue) > max)
+					max = parseFloat(yValue);
 
 				//console.log(JSON.stringify(value));
 
@@ -713,10 +723,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					if(xValue instanceof Date == true)
 						value = {x: xValue.getTime(), y: parseFloat(yValue)};
 					else
+					{
 						value = {x: xValue, y: parseFloat(yValue)};
+						isDateTime = false;
+					}
 				}
 				else
 					value = {x: xValue, y: parseFloat(yValue)};	
+
+				if (parseFloat(yValue) > max)
+					max = parseFloat(yValue);
 
 				if (chartData.length == 0)
 				{
@@ -876,7 +892,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			
 
 			chart.xAxis.rotateLabels(-65);
-
 			chart.xAxis.showMaxMin(true);
 			chart.xAxis.axisLabel(xAxis);
 			
@@ -886,16 +901,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				{
 					return d3.time.format('%c')(new Date(d));
 				});
-				chart.margin({left: 100, right: 30, bottom: 180});
+				chart.margin({left: 80, right: 80, bottom: 180});
 			}
 			else
 			{
 				chart.xAxis.tickFormat(d3.format(',g'));
-				chart.margin({left: 100, right: 30, bottom: 80});
+				chart.margin({left: 100, right: 80, bottom: 80});
 			}
 
 			chart.yAxis.axisLabel(yAxis);
 			chart.yAxis.tickFormat(d3.format(',g'));
+			chart.lines.forceY([0, max]);
+
 			
 			d3.select('#lineGraph').datum(chartData).call(chart);
 			nv.utils.windowResize(chart.update);		

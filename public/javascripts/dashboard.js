@@ -1,5 +1,5 @@
-//var socket = io('datapuking.com');
-var socket = io('datapuking.com');
+//var socket = io('localhost');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -957,7 +957,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log("saving");
 		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function()
 		{
-			prompt('Copy Dashboard URL', 'datapuking.com/' + dashboardName);
+			prompt('Copy Dashboard URL', 'localhost/' + dashboardName);
 			//alert("You will not be redirected to your dashbaord.");
 			window.open('/' + dashboardName, "_blank", "menubar = yes, status = yes, titlebar = yes", false);
 			// location.reload(true);
