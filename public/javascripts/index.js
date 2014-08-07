@@ -1,4 +1,3 @@
-//var socket = io('datapuking.com');
 var socket = io('datapuking.com');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);

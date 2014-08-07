@@ -66,9 +66,10 @@ Handler.prototype.getSavedGraphs = function(callback)
 	});
 }
 
-Handler.prototype.saveDashboard = function(dashboardObject)
+Handler.prototype.saveDashboard = function(dashboardObject, callback)
 {
 	socket.emit('save dashboard', dashboardObject);
+	callback();
 }
 
 Handler.prototype.getDashboard = function(title, callback)
