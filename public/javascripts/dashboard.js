@@ -1,5 +1,5 @@
+//var socket = io('datapuking.com');
 var socket = io('datapuking.com');
-//var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -879,7 +879,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		dashboardName = dashboardName.split(' ').join('_');
 
-		prompt('Copy Dashboard URL', 'localhost/' + dashboardName);
+	
 
 		var html = '<!DOCTYPE html>\n' +
 			'<html lang="en" ng-app = "Dashboard">\n' +
@@ -953,12 +953,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'</body>\n' + 
 			'</html>';		
 
-		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function(response)
+		
+		console.log("saving");
+		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function()
 		{
-			if (response == "dashboard saved")
-				alert("Dashboard saved.");
-			else
-				alert("Dashboard could not be saved.");
+			prompt('Copy Dashboard URL', 'datapuking.com/' + dashboardName);
+			//alert("You will not be redirected to your dashbaord.");
+			window.open('/' + dashboardName, "_blank", "menubar = yes, status = yes, titlebar = yes", false);
+			// location.reload(true);
+			
 		});
 	}
 }]);

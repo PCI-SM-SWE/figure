@@ -72,7 +72,6 @@ app.get('/', function(req, res)
 
 app.get('/*', function(req, res)
 {
-	console.log(req.originalUrl.substring(1));
 	res.sendfile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
 });
 
@@ -95,16 +94,16 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 // 	serveStatic(response, cache, absPath);
 // });
 
-// function getFile(path, callback)
-// {
-// 	fs.readFile(path,'utf-8', function (err, data)
-// 	{
-// 		if (err)
-// 			throw err;
-// 		if (typeof callback === "function") 
-// 			callback(data);		
-// 	});
-// }
+function getFile(path, callback)
+{
+	fs.readFile(path,'utf-8', function (err, data)
+	{
+		if (err)
+			throw err;
+		if (typeof callback === "function") 
+			callback(data);		
+	});
+}
 
 // server.listen(80, function()
 // {
@@ -234,7 +233,7 @@ io.on('connection', function(socket)
 	// Sending data previously uploaded
 	socket.on('stored data requested', function(name)
 	{
-		console.log(name + " requested");
+		//console.log(name + " requested");
 		getFile(name, function(data)
 		{	
 			socket.emit(name + ' data', data);
@@ -242,7 +241,7 @@ io.on('connection', function(socket)
 
 		socket.on(name + ' received', function(response)
 		{
-			console.log(name + " sent succesfully");
+			//console.log(name + " sent succesfully");
 		})
 	});
 
@@ -339,13 +338,13 @@ io.on('connection', function(socket)
 			if (err)
 			{
 				console.log(err);
-				socket.emit('dashboard not saved');
 				return;
 			}
 
-			console.log(JSON.stringify(dashboardObject.grid));
-			client.hset('dashboards', dashboardObject.title, JSON.stringify(dashboardObject.grid))
-			socket.emit('dashboard saved');
+			client.hset('dashboards', dashboardObject.title, JSON.stringify(dashboardObject.grid));
+			// console.log("1");
+			// socket.emit('dashboard received', true);
+			// console.log("2");
 		});
 	});
 
@@ -353,7 +352,7 @@ io.on('connection', function(socket)
 	{
 		client.hget('dashboards', title, function(err, reply)
 		{
-			console.log(JSON.parse(reply));
+			//console.log(JSON.parse(reply));
 			socket.emit('dashboard data sent', {'title': title, 'grid': JSON.parse(reply)});
 		});
 	})

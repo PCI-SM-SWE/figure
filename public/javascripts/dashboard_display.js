@@ -1,5 +1,5 @@
-var socket = io('datapukin.com');
-//var socket = io('localhost');
+//var socket = io('datapuking.com');
+var socket = io('datapuking.com');
 
 var app = angular.module("Dashboard", ['lvl.directives.dragdrop']);
 

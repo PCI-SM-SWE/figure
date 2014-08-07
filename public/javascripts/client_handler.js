@@ -34,7 +34,7 @@ Handler.prototype.fileUploadRequest = function(callback)
 Handler.prototype.storedDataRequest = function(name, callback)
 {
 	socket.emit('stored data requested', name);
-	console.log(name);
+	// console.log(name);
 	
 	socket.on(name + ' data', function(data)
 	{
@@ -66,19 +66,9 @@ Handler.prototype.getSavedGraphs = function(callback)
 	});
 }
 
-Handler.prototype.saveDashboard = function(dashboardObject, callback)
+Handler.prototype.saveDashboard = function(dashboardObject)
 {
 	socket.emit('save dashboard', dashboardObject);
-
-	socket.on('dashboard not saved', function()
-	{
-		callback('dashboard not saved');
-	});
-
-	socket.on('dashboard saved', function()
-	{
-		callback('dashboard saved');
-	});
 }
 
 Handler.prototype.getDashboard = function(title, callback)
@@ -88,5 +78,5 @@ Handler.prototype.getDashboard = function(title, callback)
 	socket.on('dashboard data sent', function(dashboardObject)
 	{
 		callback(dashboardObject);
-	})
+	});
 }
