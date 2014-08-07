@@ -127,11 +127,11 @@ function getFile(path, callback)
 var io = require('socket.io')(server);
 var dl = require('delivery');
 
-client.on("error", function (err)
-{
-	console.log(err);
-	socket.emit('Redis Error', err);
-});
+// client.on("error", function (err)
+// {
+// 	console.log(err);
+// 	socket.emit('Redis Error', err);
+// });
 
 io.on('connection', function(socket)
 {
@@ -265,6 +265,12 @@ io.on('connection', function(socket)
 			// console.log('in get saved graphs');
 			// console.log(replies);
 
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+
 			graphCounter = replies.length;
 
 			// fs.readdir('./public/saved_images', function(err, uploaded_files)
@@ -292,7 +298,7 @@ io.on('connection', function(socket)
 					var graphObject = JSON.parse(reply);
 					graphObjects.push(graphObject);				
 				});
-			})
+			});
 
 
 			// for (var i = 0; i < graphCounter; i++)
@@ -352,10 +358,16 @@ io.on('connection', function(socket)
 	{
 		client.hget('dashboards', title, function(err, reply)
 		{
+			if (err)
+			{
+				console.log(err);
+				return;
+			}
+
 			//console.log(JSON.parse(reply));
 			socket.emit('dashboard data sent', {'title': title, 'grid': JSON.parse(reply)});
 		});
-	})
+	});
 });
 
 /*
