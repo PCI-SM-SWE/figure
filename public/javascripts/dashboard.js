@@ -1,5 +1,5 @@
 //var socket = io('datapuking');
-var socket = io('datapuking');
+var socket = io('datapuking.com');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
@@ -878,7 +878,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			return;
 
 		dashboardName = dashboardName.split(' ').join('_');
-		
+
 		var html = '<!DOCTYPE html>\n' +
 			'<html lang="en" ng-app = "Dashboard">\n' +
 			'<head>\n' +
