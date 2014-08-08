@@ -156,7 +156,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			generateFields();
 			generateOperators();
 
-			console.log(JSON.stringify(dataObjectArray));
+			//console.log(JSON.stringify(dataObjectArray));
 		});
 	}
 
@@ -630,8 +630,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		else
 			isDateTime = false;
 
-		console.log(grouping);
-
 		if (grouping != '')
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
@@ -650,8 +648,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				if (isDateTime == true)
 				{
 					xValue = parseDateTime(xValue.toString());
-
-					console.log(xValue instanceof Date);
 
 					if(xValue instanceof Date == true)
 						value = {x: xValue.getTime(), y: parseFloat(yValue)};
@@ -686,9 +682,27 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
 						{
 							chartData[j].values.push(value);
+
+							// var values = chartData[j].values;
+							//console.log(chartData[j].values.length);
+
+							// for (var k = 0; k < chartData[j].values.length; k++)
+							// {
+							// 	console.log("value.x: " + value.x + "\nchartData[j].values[k].x: " + chartData[j].values[k].x);
+							// 	if (value.x < chartData[j].values[k].x || k == chartData[j].values.length - 1)
+							// 	{
+							// 		chartData[j].values.splice(k, 0, value);
+							// 		// console.log(JSON.stringify(chartData[j].values));
+							// 		// console.log("**************************************************************************");
+							// 		break;
+							// 	}
+							// }
+
+			
+							//chartData[j].values = values;
 							groupExists = true;
 							break;
-						}
+						}						
 					}
 
 					if (groupExists == false)
@@ -743,7 +757,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					colorsIndex = (colorsIndex + 1) % colors.length;
 				}
 				else
-					chartData[0].values.push(value);
+					chartData[0].values.push(value);					
 			}
 		}
 
