@@ -1,10 +1,11 @@
-var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 
 app.controller('MainCtrl', ['$scope', function($scope) 
 {
 	var client = new Handler(socket);
+	var fields;
 	var dataObjectArray;				// JSON format for the data
 	var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
 	var graphTypes = ['bar', 'line', 'pie', 'choropleth'];
@@ -27,8 +28,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var results = $.parse(data);
 				//console.log(results.results.rows);
 				dataObjectArray = results.results.rows;
-				$scope.fields = results.results.fields;
+				fields = results.results.fields;
 
+				$('#dataTable').empty();
 				generateFields();
 				generateOperators();
 
@@ -93,7 +95,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#metricEquation').mouseenter(submitCheck);	
 	});	// end $(document).ready
 
-	// populates dropdown list with already uploaded files
+	// populates uploaded files and sample data dropdown
 	function populateFileList()
 	{
 		client.filesList(function(filesObject)
@@ -141,9 +143,30 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				li.appendChild(a);
 				$('#sampleData').append(li);
 			}
+
+			var mysqlTables = filesObject.mysql_tables;
+
+			for (var i = 0; i < mysqlTables.length; i++)
+			{
+				var table_name = mysqlTables[i];
+
+				var li = document.createElement('li');
+				var a = document.createElement('a');
+				a.setAttribute('id', table_name);
+		
+				a.onclick = function()
+				{
+					storedTable(this.getAttribute('id'));
+				};
+
+				a.innerHTML = table_name;	
+				li.appendChild(a);
+				$('#mysqlTables').append(li);
+			}
 		});
 	}
 
+	// access uploaded file or sample data
 	function storedData(name)
 	{	
 		client.storedDataRequest(name, function(data)
@@ -151,31 +174,84 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#area').val(data);
 			var results = $.parse(data);	
 			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
+			fields = results.results.fields;
 			
+			$('#dataTable').empty();
 			generateFields();
+			populateTable();
 			generateOperators();
 
 			//console.log(JSON.stringify(dataObjectArray));
 		});
 	}
 
-	// generates the draggable fields 
+	function storedTable(table)
+	{
+		client.storedTable(table, function(tableObject)
+		{
+			fields = tableObject.headers;
+			dataObjectArray = tableObject.data;
+
+			console.log(JSON.stringify(dataObjectArray));
+
+			var rawData = "";
+
+			for (var i = 0; i < fields.length; i++)
+			{
+				rawData += fields[i];
+
+				if (i < fields.length - 1)
+					rawData += ",";
+			}
+
+			rawData += "\n";
+
+			for (var i = 0; i < dataObjectArray.length; i++)
+			{
+				var keys = Object.keys(dataObjectArray[i]);
+
+				for (var j = 0; j < keys.length; j++)
+				{
+					rawData += dataObjectArray[i][keys[j]];
+
+					if (j < fields.length - 1)
+						rawData += ",";
+				}
+
+				rawData += "\n";
+			}
+
+			$('#area').val(rawData);
+
+			$('#dataTable').empty();
+			generateFields();
+			populateTable();
+			generateOperators();
+		});
+	}
+
+	// generates the draggable fields and table header
 	function generateFields()
 	{
 		$('.fields').empty();
 
-		for(var i = 0; i < $scope.fields.length; i++)
+		var tr;
+
+		tr = document.createElement('tr');
+		tr.setAttribute('id', 'header');
+		$('#dataTable').append(tr);
+
+		for(var i = 0; i < fields.length; i++)
 		{
 			var tr = document.createElement('tr');
 			tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
 			tr.setAttribute('x-lvl-draggable', 'true');
 			tr.setAttribute('draggable', 'true');
-			tr.setAttribute('id', $scope.fields[i]);
+			tr.setAttribute('id', fields[i]);
 			tr.setAttribute('class', 'ui-draggable');
 
 			var td = document.createElement('td');
-			td.innerHTML = $scope.fields[i];
+			td.innerHTML = fields[i];
 			
 			tr.appendChild(td);
 
@@ -184,6 +260,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});	
 
 			$('.fields').append(tr);	
+
+			var th = document.createElement('th');			
+			th.innerHTML = fields[i];
+
+			$('#header').append(th);
 		}
 	}
 
@@ -214,6 +295,24 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}//
 	}
 
+	function populateTable()
+	{
+		
+		for (var i = 0; i < dataObjectArray.length; i++)
+		{
+			var tr = document.createElement('tr');
+			
+			for (var key in dataObjectArray[i])
+			{
+				var value = dataObjectArray[i][key];				
+				var td = document.createElement('td');
+				td.innerHTML = value;
+				tr.appendChild(td);
+				$('#dataTable').append(tr);
+			}
+		}
+	}
+
 	// select sample data 
 	// $scope.sampleData = function(num)
 	// {
@@ -225,7 +324,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// 		var results = $.parse(data);	
 	// 		console.log(results.results.rows[0]);
 	// 		dataObjectArray = results.results.rows;
-	// 		$scope.fields = results.results.fields;
+	// 		fields = results.results.fields;
 			
 	// 		generateFields();
 	// 		generateOperators();
@@ -244,7 +343,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			var results = $.parse(data);	
 			console.log(results.results.rows[0]);
 			dataObjectArray = results.results.rows;
-			$scope.fields = results.results.fields;
+			fields = results.results.fields;
 			
 			generateFields();
 
@@ -617,6 +716,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var individualData;
 		var group;
 		var groupExists = false;
+		var xValueString;
+		var yValueString;
 		var xValue;
 		var yValue;
 		var limit = 65;
@@ -635,34 +736,42 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
 				group = dataObjectArray[i][grouping];
-				xValue = dataObjectArray[i][xAxis];
-				yValue = dataObjectArray[i][yAxis];
+				xValueString = dataObjectArray[i][xAxis];
+				yValueString = dataObjectArray[i][yAxis];
 
-				if (group == '' || xValue == '')
+				if (group == '' || xValueString == '')
 					continue;
-				else if (yValue == '')
-					yValue = '0';
+				else if (yValueString == '')
+					yValueString = '0';
 
 				// console.log(group);
 
 				if (isDateTime == true)
 				{
-					xValue = parseDateTime(xValue.toString());
+					//xValue = parseDateTime(xValue.toString());
+					var format = d3.time.format('%m/%d/%Y');
+					xValue = format.parse(xValueString.toString());
+
+					if (xValue == null)
+					{
+						format = d3.time.format('%m/%d/%Y %H:%M:%S');
+						xValue = format.parse(xValueString.toString());
+					}
 
 					if(xValue instanceof Date == true)
-						value = {x: xValue.getTime(), y: parseFloat(yValue)};
+						value = {x: xValue.getTime(), y: parseFloat(yValueString)};
 				
 					else
 					{
-						value = {x: xValue, y: parseFloat(yValue)};
+						value = {x: xValueString, y: parseFloat(yValueString)};
 						isDateTime = false;
 					}
 				}
 				else
-					value = {x: xValue, y: parseFloat(yValue)};	
+					value = {x: xValueString, y: parseFloat(yValueString)};	
 
-				if (parseFloat(yValue) > max)
-					max = parseFloat(yValue);
+				if (parseFloat(yValueString) > max)
+					max = parseFloat(yValueString);
 
 				//console.log(JSON.stringify(value));
 
@@ -722,35 +831,43 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				xValue = dataObjectArray[i][xAxis];
-				yValue = dataObjectArray[i][yAxis];
+				xValueString = dataObjectArray[i][xAxis];
+				yValueString = dataObjectArray[i][yAxis];
 
-				if (xValue == '')
+				if (xValueString == '')
 					continue;
-				else if (yValue == '')
-					yValue = '0';
+				else if (yValueString == '')
+					yValueString = '0';
 
 				if (isDateTime == true)
 				{
-					xValue = parseDateTime(xValue.toString());
+					//xValue = parseDateTime(xValue.toString());
+					var format = d3.time.format('%m/%d/%Y');
+					xValue = format.parse(xValueString.toString());
+
+					if (xValue == null)
+					{
+						format = d3.time.format('%m/%d/%Y %H:%M:%S');
+						xValue = format.parse(xValueString.toString());
+					}
 
 					if(xValue instanceof Date == true)
-						value = {x: xValue.getTime(), y: parseFloat(yValue)};
+						value = {x: xValue.getTime(), y: parseFloat(yValueString)};
 					else
 					{
-						value = {x: xValue, y: parseFloat(yValue)};
+						value = {x: xValueString, y: parseFloat(yValueString)};
 						isDateTime = false;
 					}
 				}
 				else
-					value = {x: xValue, y: parseFloat(yValue)};	
+					value = {x: xValueString, y: parseFloat(yValueString)};	
 
-				if (parseFloat(yValue) > max)
-					max = parseFloat(yValue);
+				if (parseFloat(yValueString) > max)
+					max = parseFloat(yValueString);
 
 				if (chartData.length == 0)
 				{
-					temp = new Array ();
+					temp = new Array();
 					temp.push(value);
 
 					chartData[0] = {values: temp, key: yAxis, color: colors[colorsIndex]};
@@ -1114,43 +1231,43 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		map.legendControl.addLegend(getLegendHTML());
 
-		$('.leaflet-zoom-animated').attr('width', '2000');
-		$('.leaflet-zoom-animated').attr('height', '629');
+		// $('.leaflet-zoom-animated').attr('width', '2000');
+		// $('.leaflet-zoom-animated').attr('height', '629');
 		
-		$('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
+		// $('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
 
-		var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		e.setAttribute('width', '2000');
-		e.setAttribute('height', '629')
-		e.setAttribute('viewBox', '0 0 2000 629')
-		e.setAttribute('id', 'choroplethMap');
+		// var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
+		// e.setAttribute('width', '2000');
+		// e.setAttribute('height', '629')
+		// e.setAttribute('viewBox', '0 0 2000 629')
+		// e.setAttribute('id', 'choroplethMap');
 		
-		var x;
-		var y;
-		var z;
+		// var x;
+		// var y;
+		// var z;
 
-		setInterval(function()
-		{
-			var attr = $('.leaflet-map-pane').attr('style');
-			attr = attr.substring(attr.indexOf('(') + 1);
+		// setInterval(function()
+		// {
+		// 	var attr = $('.leaflet-map-pane').attr('style');
+		// 	attr = attr.substring(attr.indexOf('(') + 1);
 
-			var x = attr.substr(0, attr.indexOf('px'));			
-			attr = attr.substring(attr.indexOf('px') + 4);
+		// 	var x = attr.substr(0, attr.indexOf('px'));			
+		// 	attr = attr.substring(attr.indexOf('px') + 4);
 
-			var y = attr.substr(0, attr.indexOf('px'));
-			attr = attr.substring(attr.indexOf('px') + 4);
+		// 	var y = attr.substr(0, attr.indexOf('px'));
+		// 	attr = attr.substring(attr.indexOf('px') + 4);
 
-			var z = attr.substr(0, attr.indexOf('px'));
+		// 	var z = attr.substr(0, attr.indexOf('px'));
 
-			// console.log('x = ' + x);
-			// console.log('y = ' + y);
-			// console.log('z = ' + z);
+		// 	// console.log('x = ' + x);
+		// 	// console.log('y = ' + y);
+		// 	// console.log('z = ' + z);
 
-			$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
+		// 	$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
 
-			if(document.getElementById('choroplethMap') != undefined)
-				document.getElementById('choroplethMap').removeAttribute('viewBox');	
-		}, 1000);
+		// 	if(document.getElementById('choroplethMap') != undefined)
+		// 		document.getElementById('choroplethMap').removeAttribute('viewBox');	
+		// }, 1000);
 	}
 
 	// saving chart to local drive

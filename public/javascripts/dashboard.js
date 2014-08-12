@@ -1,5 +1,5 @@
 //var socket = io('datapuking');
-var socket = io('datapuking.com');
+var socket = io('localhost');
 
 var app = angular.module("Visualization", ['lvl.directives.dragdrop']);
 

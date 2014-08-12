@@ -68,14 +68,16 @@
 						ng-class="{active:dataTab == 1}" ng-click="dataTab = 1">
 						Enter Data   <span class="glyphicon glyphicon-pencil"></span></button>
 				</div>
+				
 				<!-- Upload button -->
-					<div class="btn-group">
-						<button type="button" class="btn btn-default"
-							ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
-							Upload Data <span class="glyphicon glyphicon-folder-open"></span>
-						</button>
-					</div>
-				<!-- My files dropdown button -->
+				<div class="btn-group">
+					<button type="button" class="btn btn-default"
+						ng-class="{active:dataTab == 2}" ng-click="dataTab = 2">
+						Upload Data <span class="glyphicon glyphicon-folder-open"></span>
+					</button>
+				</div>
+				
+				<!-- My Uploads Dropdown -->
 				<div class="btn-group" ng-class="{active:dataTab == 3}" ng-click="dataTab = 3">
 					<button type="button" class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown">
@@ -85,19 +87,37 @@
 					
 					</ul>
 				</div>
-					<!-- Sample dropdown button -->
+				
+				<!-- Sample Data Dropdown -->
 				<div class="btn-group" ng-class="{active:dataTab == 4}" ng-click="dataTab = 4">
 					<button type="button" class="btn btn-default dropdown-toggle"
 						data-toggle="dropdown">
 						Sample Data <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" id = "sampleData">
-						<!-- <li><a href="" ng-click="sampleData(1)">Charm City Circulator</a></li>
-						<li><a href="" ng-click="sampleData(2)">Sample Pie Chart Data</a></li>
-						<li><a href="" ng-click="sampleData(3)">Sample Choropleth Map Data</a></li>
-						<li><a href="" ng-click="sampleData(4)">Upload Testing</a></li> -->
+
 					</ul>
 				</div>
+
+				<div class="btn-group" ng-class="{active:dataTab == 5}" ng-click="dataTab = 5">
+					<button type="button" class="btn btn-default dropdown-toggle"
+						data-toggle="dropdown">
+						ifloops.com <span class="caret"></span>
+					</button>
+				
+					<ul class="dropdown-menu" id="mysqlTables">
+
+					</ul>
+				</div>
+
+				<div class="btn-group" ng-class="{active:dataTab == 6}" ng-click="dataTab = 6">
+					<button type="button" class="btn btn-default dropdown-toggle"
+						data-toggle="dropdown">
+						Table Format <span class="glyphicon glyphicon-list"></span>
+					</button>				
+				</div>
+
+
 			</div>
 			<br>
 			<div class="col-xs-6 col-sm-6 col-md-6" ng-show="dataTab == 2">
@@ -128,8 +148,14 @@
 	        </div>
 			<!-- Text area for manual data input -->
 			<textarea class="form-control" id="area" rows="15" placeholder="Enter Data Here"
-				ng-model="textAreaTop" ng-show="true" style = "resize: none;"></textarea>
+				ng-model="textAreaTop" ng-show="dataTab == 1 || dataTab == 2 || dataTab == 3 || dataTab == 4 || dataTab == 5" style = "resize: none;"></textarea>
 			
+			<div class = "well" ng-show = "dataTab == 6" style = "overflow:auto; height: 314px;">
+				<table class = "table table-bordered" id = "dataTable">
+
+				</table>
+			</div>
+
 			<br>
 			<!-- Submit button -->
 			<!-- 

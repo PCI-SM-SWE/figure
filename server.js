@@ -7,6 +7,51 @@ var express = require('express');
 var app = express();
 var redis = require("redis");
 var client = redis.createClient(6379, "107.170.173.86", {max_attempts:5});
+var mysql = require('mysql');
+// var pool = mysql.createPool(
+// {
+// 	host: 'ifloops.com',
+// 	user: 'figure',
+// 	password: 'figure'
+// });
+
+// pool.getConnection(function(err, connection)
+// {
+// 	connection.query('use test_source', function(err)
+// 	{
+// 		if (err)
+// 		{
+// 			console.log(err);
+// 			return;
+// 		}
+
+// 		console.log('connected to mysql');
+// 	});
+
+// 	connection.release();
+// });
+
+var mysqlConnection = mysql.createConnection(
+{
+	host: 'ifloops.com',
+	user: 'figure',
+	password: 'figure',
+	database: 'test_source'
+});
+
+mysqlConnection.connect(function(err)
+{
+	if (err)
+	{
+		console.log(err.stack);
+		return;
+	}
+
+	console.log('connected to mysql');
+});
+
+
+
 
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -163,9 +208,17 @@ io.on('connection', function(socket)
 					// console.log(sample_data);
 
 					for (var i = 0; i < sample_data.length; i++)
-						sample_data[i] = './public/sample_data/' + sample_data[i]
+						sample_data[i] = './public/sample_data/' + sample_data[i]					
 
-					socket.emit('files', {'uploaded_files': uploaded_files, 'sample_data': sample_data});
+					mysqlConnection.query("select table_name from information_schema.tables where table_type = 'Base Table' and table_schema = 'test_source'", function(err, fields)
+					{
+						var mysqlTables = [];
+						
+						for (var j = 0; j < fields.length; j++)
+							mysqlTables[j] = fields[j].table_name;
+
+						socket.emit('files', {'uploaded_files': uploaded_files, 'sample_data': sample_data, 'mysql_tables' : mysqlTables});
+					});					
 				}
 			});
 		}
@@ -243,6 +296,29 @@ io.on('connection', function(socket)
 		{
 			//console.log(name + " sent succesfully");
 		})
+	});
+
+	socket.on('stored table requested', function(table)
+	{
+		console.log('stored table requested');		
+		console.log(table);
+		mysqlConnection.query("select column_name from information_schema.columns where table_name = 'fec_contrib';", function(err, fields)
+		{
+			if (err)
+				console.log(err);
+
+			//console.log(fields);
+
+			var column_names = [];
+
+			for (var i = 0; i < fields.length; i++)
+				column_names[i] = fields[i].column_name;
+			
+			mysqlConnection.query("select * from fec_contrib limit 100", function(err, data)
+			{
+				socket.emit(table + ' data', {'headers': column_names, 'data': data});
+			});
+		});		
 	});
 
 	socket.on('save graph', function(graphObject)

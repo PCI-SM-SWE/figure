@@ -31,6 +31,14 @@ Handler.prototype.fileUploadRequest = function(callback)
 	});
 }
 
+Handler.prototype.filesList = function(callback)
+{
+	var response = socket.on('files', function(filesObject)
+	{
+		callback(filesObject);
+	});
+}
+
 Handler.prototype.storedDataRequest = function(name, callback)
 {
 	socket.emit('stored data requested', name);
@@ -43,11 +51,13 @@ Handler.prototype.storedDataRequest = function(name, callback)
 	});
 }
 
-Handler.prototype.filesList = function(callback)
+Handler.prototype.storedTable = function(table, callback)
 {
-	var response = socket.on('files', function(filesObject)
+	socket.emit('stored table requested', table)
+
+	socket.on(table + ' data', function(data)
 	{
-		callback(filesObject);
+		callback(data);
 	});
 }
 
