@@ -68,6 +68,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				var li = document.createElement('li');
 				var a = document.createElement('a');
+				a.setAttribute('style', 'cursor: default;');
 				// a.setAttribute('href','');
 				a.innerHTML = graphObject.title;
 

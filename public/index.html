@@ -151,7 +151,7 @@
 				ng-model="textAreaTop" ng-show="dataTab == 1 || dataTab == 2 || dataTab == 3 || dataTab == 4 || dataTab == 5" style = "resize: none;"></textarea>
 			
 			<div class = "well" ng-show = "dataTab == 6" style = "overflow:auto; height: 314px;">
-				<table class = "table table-bordered" id = "dataTable">
+				<table class = "table table-bordered tablesorter" id = "dataTable" style = "background-color: white;">
 
 				</table>
 			</div>
@@ -488,6 +488,10 @@
 	<script type="text/javascript" src="javascripts/StackBlur.js"></script>
 	<script type="text/javascript" src="javascripts/canvg.js"></script>
 
-	<script src="javascripts/index.js"></script>
+	<link rel = "stylesheet" href = "blue_theme/style.css">
+
+	<script type = "text/javascript" src = "javascripts/jquery.tablesorter.js"></script>
+
+	<script type = "text/javascript" src="javascripts/index.js"></script>
 </body>
 </html>

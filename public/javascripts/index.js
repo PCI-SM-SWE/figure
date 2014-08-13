@@ -111,6 +111,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', file);
+				a.setAttribute('style', 'cursor: default;');
 
 				a.onclick = function()
 				{
@@ -133,6 +134,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', file);
+				a.setAttribute('style', 'cursor: default;');
 		
 				a.onclick = function()
 				{
@@ -153,6 +155,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('id', table_name);
+				a.setAttribute('style', 'cursor: default;');
 		
 				a.onclick = function()
 				{
@@ -235,15 +238,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('.fields').empty();
 
+		var thead = document.createElement('thead');
+		$('#dataTable').append(thead);
+
+
 		var tr;
 
 		tr = document.createElement('tr');
 		tr.setAttribute('id', 'header');
-		$('#dataTable').append(tr);
+		$('thead').append(tr);
 
 		for(var i = 0; i < fields.length; i++)
 		{
-			var tr = document.createElement('tr');
+			tr = document.createElement('tr');
 			tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
 			tr.setAttribute('x-lvl-draggable', 'true');
 			tr.setAttribute('draggable', 'true');
@@ -262,7 +269,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('.fields').append(tr);	
 
 			var th = document.createElement('th');			
-			th.innerHTML = fields[i];
+			th.innerHTML = fields[i] + "&nbsp;&nbsp;&nbsp;";
 
 			$('#header').append(th);
 		}
@@ -297,7 +304,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function populateTable()
 	{
-		
+		var tbody = document.createElement('tbody');
+		tbody.setAttribute('id', 'tableBody')
+		$('#dataTable').append(tbody);
+
 		for (var i = 0; i < dataObjectArray.length; i++)
 		{
 			var tr = document.createElement('tr');
@@ -308,9 +318,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				var td = document.createElement('td');
 				td.innerHTML = value;
 				tr.appendChild(td);
-				$('#dataTable').append(tr);
+				$('#tableBody').append(tr);
 			}
 		}
+
+		$('#dataTable').tablesorter();
 	}
 
 	// select sample data 
