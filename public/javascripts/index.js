@@ -12,6 +12,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready(function()
 	{
+		$('#loader').css('top', ($(window).height() / 2) + 'px'); 
+		$('#loader').css('left', ($(window).width() / 2) + 'px');
+
 		populateFileList();
 
 		jQuery.event.props.push('dataTransfer');
@@ -24,6 +27,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			setTimeout(function()
 			{		       
+				addLoader();
+
 				var data = $('#area').val();
 				var results = $.parse(data);
 				//console.log(results.results.rows);
@@ -33,6 +38,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#dataTable').empty();
 				generateFields();
 				generateOperators();
+
+				removeLoader();
 
 				//console.log(JSON.stringify(dataObjectArray));
 			}, 1000);
@@ -94,6 +101,27 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#metricEquation').keyup(submitCheck);
 		$('#metricEquation').mouseenter(submitCheck);	
 	});	// end $(document).ready
+
+	function addLoader()
+	{
+		// setTimeout(function()
+		// {
+			$('#loader').css('display', '');
+			$('#darkLayer').css('display', '');
+			$('#darkLayer').css('height', $(document).height());
+			
+		// }, 0)
+	}
+
+	function removeLoader()
+	{
+		setTimeout(function()
+		{
+			$('#loader').css('display', 'none');
+			$('#darkLayer').css('display', 'none');			
+		}, 1000);
+		
+	}
 
 	// populates uploaded files and sample data dropdown
 	function populateFileList()
@@ -172,6 +200,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// access uploaded file or sample data
 	function storedData(name)
 	{	
+		setTimeout(addLoader(), 0);
+
 		client.storedDataRequest(name, function(data)
 		{	
 			$('#area').val(data);
@@ -183,6 +213,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			generateFields();
 			populateTable();
 			generateOperators();
+
+			removeLoader();
 
 			//console.log(JSON.stringify(dataObjectArray));
 		});
@@ -240,7 +272,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		var thead = document.createElement('thead');
 		$('#dataTable').append(thead);
-
 
 		var tr;
 
@@ -350,6 +381,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		client.fileUploadRequest(function(data)
 		{			
 			console.log(data);
+			addLoader();
 
 			$('#area').val(data);
 			var results = $.parse(data);	
@@ -358,6 +390,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			fields = results.results.fields;
 			
 			generateFields();
+
+			removeLoader();
 
 			console.log(JSON.stringify(dataObjectArray));
 		});
