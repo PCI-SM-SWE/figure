@@ -50,9 +50,6 @@ mysqlConnection.connect(function(err)
 	console.log('connected to mysql');
 });
 
-
-
-
 app.set('port', process.env.PORT || 80);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -183,7 +180,7 @@ io.on('connection', function(socket)
 	console.log('Client connected');
 
 	// Sending list of previously uploaded files to client
-	fs.readdir('./uploaded_files', function(err, uploaded_files)
+	fs.readdir('./public/uploaded_files', function(err, uploaded_files)
 	{
 		if(err)
 		{
@@ -194,7 +191,7 @@ io.on('connection', function(socket)
 			// console.log(uploaded_files);
 
 			for (var i = 0; i < uploaded_files.length; i++)
-				uploaded_files[i] = './uploaded_files/' + uploaded_files[i]
+				uploaded_files[i] = './public/uploaded_files/' + uploaded_files[i]
 
 			// Sending list of samples files to client
 			fs.readdir('./public/sample_data', function(err, sample_data)
@@ -456,7 +453,7 @@ io.sockets.on('connection', function(socket)
 
 	delivery.on('receive.success',function(file)
 	{
-		fs.writeFile('./uploaded_files/'+file.name,file.buffer, function(err)
+		fs.writeFile('./public/uploaded_files/'+file.name,file.buffer, function(err)
 		{
 			if(err)
 			{
