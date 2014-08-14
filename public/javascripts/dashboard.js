@@ -16,11 +16,39 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// 	exit();
 		// });
 
+		$('#loader').css('top', ($(window).height() / 2) + 'px'); 
+		$('#loader').css('left', ($(window).width() / 2) + 'px');
+
+		addLoader();
+
 		jQuery.event.props.push("dataTransfer");
 		getSavedGraphs();
 
 		$scope.resetGrid();
+
+		removeLoader();
 	});
+
+	function addLoader()
+	{
+		// setTimeout(function()
+		// {
+			$('#loader').show();
+			$('#darkLayer').show();
+			$('#darkLayer').css('height', $(document).height());
+			
+		// }, 0)
+	}
+
+	function removeLoader()
+	{
+		setTimeout(function()
+		{
+			$('#loader').hide();
+			$('#darkLayer').hide();
+		}, 1000);		
+	}
+
 
 	function getSavedGraphs()
 	{

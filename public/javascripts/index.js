@@ -15,6 +15,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#loader').css('top', ($(window).height() / 2) + 'px'); 
 		$('#loader').css('left', ($(window).width() / 2) + 'px');
 
+		addLoader();
+
 		populateFileList();
 
 		jQuery.event.props.push('dataTransfer');
@@ -100,14 +102,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$('#metricEquation').keyup(submitCheck);
 		$('#metricEquation').mouseenter(submitCheck);	
+
+		removeLoader();
 	});	// end $(document).ready
 
 	function addLoader()
 	{
 		// setTimeout(function()
 		// {
-			$('#loader').css('display', '');
-			$('#darkLayer').css('display', '');
+			$('#loader').show();
+			$('#darkLayer').show();
 			$('#darkLayer').css('height', $(document).height());
 			
 		// }, 0)
@@ -117,10 +121,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		setTimeout(function()
 		{
-			$('#loader').css('display', 'none');
-			$('#darkLayer').css('display', 'none');			
-		}, 1000);
-		
+			$('#loader').hide();
+			$('#darkLayer').hide();
+		}, 1000);		
 	}
 
 	// populates uploaded files and sample data dropdown
@@ -200,7 +203,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// access uploaded file or sample data
 	function storedData(name)
 	{	
-		setTimeout(addLoader(), 0);
+		setTimeout(addLoader(), 10);
 
 		client.storedDataRequest(name, function(data)
 		{	
