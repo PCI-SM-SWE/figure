@@ -14,8 +14,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('#loader').css('top', ($(window).height() / 2) + 'px'); 
 		$('#loader').css('left', ($(window).width() / 2) + 'px');
+		$('#darkLayer').css('height', $(document).height());
 
-		addLoader();
+		setTimeout(addLoader(), 0);
 
 		populateFileList();
 
@@ -29,7 +30,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			setTimeout(function()
 			{		       
-				addLoader();
+				setTimeout(addLoader(), 0);
 
 				var data = $('#area').val();
 				var results = $.parse(data);
@@ -112,7 +113,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// {
 			$('#loader').show();
 			$('#darkLayer').show();
-			$('#darkLayer').css('height', $(document).height());
 			
 		// }, 0)
 	}
@@ -190,7 +190,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 				a.onclick = function()
 				{
-					storedTable(this.getAttribute('id'));
+					//var numEntries = prompt('How many entries would you like?');
+
+					storedTable(this.getAttribute('id'), prompt('How many entries would you like?'));
 				};
 
 				a.innerHTML = table_name;	
@@ -203,7 +205,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// access uploaded file or sample data
 	function storedData(name)
 	{	
-		setTimeout(addLoader(), 10);
+		setTimeout(addLoader(), 0);
 
 		client.storedDataRequest(name, function(data)
 		{	
@@ -223,9 +225,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	function storedTable(table)
+	function storedTable(table, numEntries)
 	{
-		client.storedTable(table, function(tableObject)
+		setTimeout(addLoader(), 0);
+
+		client.storedTable(table, numEntries, function(tableObject)
 		{
 			fields = tableObject.headers;
 			dataObjectArray = tableObject.data;
@@ -265,6 +269,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			generateFields();
 			populateTable();
 			generateOperators();
+
+			removeLoader();
 		});
 	}
 
@@ -304,6 +310,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var th = document.createElement('th');			
 			th.innerHTML = fields[i] + "&nbsp;&nbsp;&nbsp;";
+
+			th.onclick = function()
+			{
+				setTimeout(addLoader(), 0);
+				removeLoader();
+			};
 
 			$('#header').append(th);
 		}
@@ -384,7 +396,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		client.fileUploadRequest(function(data)
 		{			
 			console.log(data);
-			addLoader();
+			setTimeout(addLoader(), 0);
 
 			$('#area').val(data);
 			var results = $.parse(data);	

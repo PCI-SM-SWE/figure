@@ -51,9 +51,9 @@ Handler.prototype.storedDataRequest = function(name, callback)
 	});
 }
 
-Handler.prototype.storedTable = function(table, callback)
+Handler.prototype.storedTable = function(table, numEntries, callback)
 {
-	socket.emit('stored table requested', table)
+	socket.emit('stored table requested', {'table': table, 'num_entries': numEntries});
 
 	socket.on(table + ' data', function(data)
 	{

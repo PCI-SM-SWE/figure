@@ -295,11 +295,9 @@ io.on('connection', function(socket)
 		})
 	});
 
-	socket.on('stored table requested', function(table)
+	socket.on('stored table requested', function(param)
 	{
-		console.log('stored table requested');		
-		console.log(table);
-		mysqlConnection.query("select column_name from information_schema.columns where table_name = 'fec_contrib';", function(err, fields)
+		mysqlConnection.query("select column_name from information_schema.columns where table_name = '" + param.table  + "'", function(err, fields)
 		{
 			if (err)
 				console.log(err);
@@ -311,9 +309,9 @@ io.on('connection', function(socket)
 			for (var i = 0; i < fields.length; i++)
 				column_names[i] = fields[i].column_name;
 			
-			mysqlConnection.query("select * from fec_contrib limit 100", function(err, data)
+			mysqlConnection.query("select * from " + param.table + " limit " + param.num_entries, function(err, data)
 			{
-				socket.emit(table + ' data', {'headers': column_names, 'data': data});
+				socket.emit(param.table + ' data', {'headers': column_names, 'data': data});
 			});
 		});		
 	});
