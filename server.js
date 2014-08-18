@@ -107,11 +107,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 	}
 // }
 
+//graphing/dashboard creation page
 app.get('/', function(req, res)
 {
 	res.render('./public/index.html');	
 });
 
+// accessing saved dashboard page
 app.get('/*', function(req, res)
 {
 	res.sendfile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
@@ -295,6 +297,7 @@ io.on('connection', function(socket)
 		})
 	});
 
+	// accessing mysql table data
 	socket.on('stored table requested', function(param)
 	{
 		mysqlConnection.query("select column_name from information_schema.columns where table_name = '" + param.table  + "'", function(err, fields)
@@ -316,6 +319,7 @@ io.on('connection', function(socket)
 		});		
 	});
 
+	// saving graph data to redis
 	socket.on('save graph', function(graphObject)
 	{
 		// var base64Data = graphObject.png.replace(/^data:image\/png;base64,/, "");
@@ -329,6 +333,7 @@ io.on('connection', function(socket)
 		// console.log('finished saving');
 	});
 
+	// retrieving graph data from redis
 	socket.on('get saved graphs', function()
 	{
 		client.hkeys("graphs", function (err, replies)
@@ -408,6 +413,7 @@ io.on('connection', function(socket)
 		});		
 	});
 
+	// save dashbaord data to redis
 	socket.on('save dashboard', function(dashboardObject)
 	{
 		fs.writeFile('./public/saved_dashboards/' + dashboardObject.title + '.html', dashboardObject.html, function(err)
@@ -425,6 +431,7 @@ io.on('connection', function(socket)
 		});
 	});
 
+	// retrieving dashbaord data from redis
 	socket.on('get dashboard', function(title)
 	{
 		client.hget('dashboards', title, function(err, reply)

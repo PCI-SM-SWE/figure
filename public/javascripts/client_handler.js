@@ -23,6 +23,7 @@ var Handler = function(socket)
 // 	});
 // }
 
+// used for uploading a file to the server
 Handler.prototype.fileUploadRequest = function(callback)
 {
 	var response = socket.on('file data', function(data)
@@ -31,6 +32,8 @@ Handler.prototype.fileUploadRequest = function(callback)
 	});
 }
 
+// client requests the file names in uploaded_files and sample_data directories
+// client requests all tables names in ifloops.com
 Handler.prototype.filesList = function(callback)
 {
 	var response = socket.on('files', function(filesObject)
@@ -39,6 +42,7 @@ Handler.prototype.filesList = function(callback)
 	});
 }
 
+// request actual contents of a file
 Handler.prototype.storedDataRequest = function(name, callback)
 {
 	socket.emit('stored data requested', name);
@@ -51,6 +55,7 @@ Handler.prototype.storedDataRequest = function(name, callback)
 	});
 }
 
+// request a specified number of rows from table
 Handler.prototype.storedTable = function(table, numEntries, callback)
 {
 	socket.emit('stored table requested', {'table': table, 'num_entries': numEntries});
@@ -61,11 +66,13 @@ Handler.prototype.storedTable = function(table, numEntries, callback)
 	});
 }
 
+// save a graph image with its information
 Handler.prototype.saveGraph = function(graphObject)
 {
 	socket.emit('save graph', graphObject);
 }
 
+// retrieve all saved graphs
 Handler.prototype.getSavedGraphs = function(callback)
 {
 	socket.emit('get saved graphs');
@@ -76,12 +83,14 @@ Handler.prototype.getSavedGraphs = function(callback)
 	});
 }
 
+// save dashboard as (dashboardName).html
 Handler.prototype.saveDashboard = function(dashboardObject, callback)
 {
 	socket.emit('save dashboard', dashboardObject);
 	callback();
 }
 
+// retrieve dashboard data
 Handler.prototype.getDashboard = function(title, callback)
 {
 	socket.emit('get dashboard', title);

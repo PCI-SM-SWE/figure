@@ -107,6 +107,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		removeLoader();
 	});	// end $(document).ready
 
+	// shows laoding gif
 	function addLoader()
 	{
 		// setTimeout(function()
@@ -117,6 +118,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// }, 0)
 	}
 
+	// hides loading gif
 	function removeLoader()
 	{
 		setTimeout(function()
@@ -126,11 +128,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}, 1000);		
 	}
 
-	// populates uploaded files and sample data dropdown
+	// populates uploaded files, sample data, ifloops.com
 	function populateFileList()
 	{
 		client.filesList(function(filesObject)
 		{
+			// gets uploaded files
 			$('#storedList').empty();
 
 			var uploaded_files = filesObject.uploaded_files;
@@ -154,6 +157,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#storedList').append(li);
 			}
 
+			// gets sample data
 			$('#sampleData').empty();
 
 			var sample_data = filesObject.sample_data;
@@ -177,6 +181,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#sampleData').append(li);
 			}
 
+			//gets tabels from ifloops.com
+			$('#mysqlTables').empty();
+
 			var mysqlTables = filesObject.mysql_tables;
 
 			for (var i = 0; i < mysqlTables.length; i++)
@@ -190,9 +197,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 				a.onclick = function()
 				{
-					//var numEntries = prompt('How many entries would you like?');
+					var numEntries = prompt('How many entries would you like?\n(Exceeding 1000 entries may impact performance)')
 
-					storedTable(this.getAttribute('id'), prompt('How many entries would you like?'));
+					if (numEntries == null || isNaN(numEntries) == true)
+					{
+						alert('Invalid input.');
+						return;
+					}
+					storedTable(this.getAttribute('id'), numEntries);
 				};
 
 				a.innerHTML = table_name;	
@@ -225,6 +237,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
+	// access a table from ifloops.com
 	function storedTable(table, numEntries)
 	{
 		setTimeout(addLoader(), 0);
@@ -345,9 +358,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});	
 
 			$('.operators').append(tr);	
-		}//
+		}
 	}
 
+	// displays the raw data in table format
 	function populateTable()
 	{
 		var tbody = document.createElement('tbody');
@@ -391,6 +405,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// 	});
 	// };
 	
+	// uploading a file
 	$scope.fileUpload = function()
 	{
 		client.fileUploadRequest(function(data)
@@ -1180,6 +1195,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	//-------------------------- MAP GRAPHING ----------------------------------
+	// Still glitchy, shading won't display unless I force the location of 
+	// element with class leaflet-zoom-animated
 	var map;
 	var popup;
 	var closeTooltip;
@@ -1274,7 +1291,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function plotChoroplethMap()
 	{
-
 		var i;
 		var locationField = $('#locationField').val();
 		var valueField = $('#valueField'). val();
@@ -1404,8 +1420,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// image.setAttribute('style', 'border: 1px solid;')
 		}		
 
-		console.log(canvas.toDataURL());
-
+		// send chart information to redis, for dashboard.js to use
 		client.getSavedGraphs(function(graphObjects)
 		{
 			for (var i = 0; i < graphObjects.length; i++)
