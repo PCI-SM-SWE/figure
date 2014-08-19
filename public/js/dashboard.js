@@ -959,24 +959,20 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'</div>\n' +
 			'</div>\n' +  
 			'<br><br>\n' +
-			'<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>\n' +
-			'<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>\n' +
-			'<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>\n' +
-			'<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>\n' +
-			'<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>\n' + 
-			'<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>\n' +
-			'<script type = "text/javascript" src = "../javascripts/nv.d3.js"></script>\n' + 
-			'<link rel = "stylesheet" href = "../stylesheets/nv.d3.css">\n' +  
-			'<script src="http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>\n' + 
-			'<script src="/socket.io/socket.io.js"></script>\n' + 
-			'<script src="../javascripts/client_handler.js"></script>\n' +
-			'<script type = "text/javascript" src = "../javascripts/lvl-uuid.js"></script>\n' +
-			'<script type = "text/javascript" src = "../javascripts/lvl-drag-drop.js"></script>\n' +
-			'<!-- Bootstrap core CSS -->\n' + 
-			'<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">\n' + 	
-			'<!-- Custom styles for this template -->\n' + 
-			'<link rel="stylesheet" href="../stylesheets/style.css">\n' +
-			'<script type = "text/javascript" src = "../javascripts/dashboard_display.js"></script>\n' + 
+			'<link rel = "stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">\n' + 	
+			'<link rel = "stylesheet" href="../css/style.css">\n' +
+			'<link rel = "stylesheet" href = "../bower_components/nvd3/nv.d3.css">\n' +  
+			'<script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>\n' +
+			// '<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>\n' +
+			'<script type = "text/javascript" src = "../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>\n' +
+			'<script type = "text/javascript" src = "../bower_components/angular/angular.min.js"></script>\n' +
+			'<script type = "text/javascript" src = "../bower_components/d3/d3.min.js"></script>\n' + 
+			'<script type = "text/javascript" src = "../bower_components/nvd3/nv.d3.min.js"></script>\n' +			
+			'<script type = "text/javascript" src = "../bower_components/socket.io-client/socket.io.js"></script>\n' + 		
+			'<script type = "text/javascript" src = "../bower_components/lvl-drag-drop/script/lvl-uuid.js"></script>\n' +
+			'<script type = "text/javascript" src = "../bower_components/lvl-drag-drop/script/lvl-drag-drop.js"></script>\n' +
+			'<script type = "text/javascript" src = "../js/client_handler.js"></script>\n' +
+			'<script type = "text/javascript" src = "../js/dashboard_display.js"></script>\n' + 
 			'</body>\n' + 
 			'</html>';		
 
@@ -984,8 +980,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		console.log("saving");
 		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function()
 		{
-			prompt('Copy Dashboard URL', 'datapuking/' + dashboardName);
-			//alert("You will not be redirected to your dashbaord.");
+			alert("You will now be redirected to your dashbaord.");
 			var popup = window.open('/' + dashboardName, "_blank", "location = yes, menubar = yes, status = yes, titlebar = yes, height = " + screen.height + ", width = " + screen.width, false);
 			popup.moveTo(0, 0);
 			// location.reload(true);

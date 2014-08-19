@@ -113,11 +113,11 @@ app.get('/', function(req, res)
 	res.render('./public/index.html');	
 });
 
-// // accessing saved dashboard page
-// app.get('/*', function(req, res)
-// {
-// 	res.sendFile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
-// });
+// accessing saved dashboard page
+app.get('/*', function(req, res)
+{
+	res.sendFile(__dirname + '/public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
+});
 
 app.listen();
 
