@@ -134,22 +134,21 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		client.fileUploadRequest(function(data)
 		{			
-			$('#area').val(data);
+			dataObjectArray = new Array();
 
-			var results = Papa.parse(data, 
+			Papa.parse(data, 
 			{
-				header: true
-			});
-
-			dataObjectArray = results.data;
-			fields = Object.keys(results.data[0]);
-
-			$('#dataTable').empty();
-			generateFields();
-			populateTable();
-			generateOperators();
-
-			removeLoader();
+				header: true,
+				worker: true,
+				step: function(row)
+				{
+					dataObjectArray.push(row);
+				},
+				complete: function()
+				{					
+					finishedParsing(data);
+				}
+			});		
 		});
 	};
 
@@ -239,33 +238,44 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
+	function finishedParsing(data)
+	{	
+		fields = Object.keys(dataObjectArray[0]);
+
+		$('#dataTable').empty();
+		generateFields();
+		populateTable();
+		generateOperators();
+
+		$('#area').val(data);
+
+		removeLoader();
+	}
+
 	// access uploaded file or sample data
 	function storedData(name)
 	{	
-		setTimeout(addLoader(), 0);
+		setTimeout(addLoader(), 0);		
 
 		client.storedDataRequest(name, function(data)
 		{
-			$('#area').val(data);
+			dataObjectArray = new Array();
 
-			var results = Papa.parse(data, 
+			Papa.parse(data, 
 			{
-				header: true
-			});
-
-			console.log(JSON.stringify(results.data));
-
-			dataObjectArray = results.data;
-			fields = Object.keys(results.data[0]);
-
-			$('#dataTable').empty();
-			generateFields();
-			populateTable();
-			generateOperators();
-
-			removeLoader();
-
-			//console.log(JSON.stringify(dataObjectArray));
+				header: true,
+				worker: true,
+				step: function(row)
+				{
+					//console.log(JSON.stringify(row.data[0]));
+					dataObjectArray.push(row.data[0]);
+				},
+				complete: function()
+				{	
+					console.log(JSON.stringify(dataObjectArray));				
+					finishedParsing(data);
+				}
+			});		
 		});
 	}
 
@@ -279,41 +289,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			fields = tableObject.headers;
 			dataObjectArray = tableObject.data;
 
-			console.log(JSON.stringify(dataObjectArray));
-
-			var rawData = "";
-
-			for (var i = 0; i < fields.length; i++)
-			{
-				rawData += fields[i];
-
-				if (i < fields.length - 1)
-					rawData += ",";
-			}
-
-			rawData += "\n";
-
-			var keys = Object.keys(dataObjectArray[0]);
-
-			for (var i = 0; i < dataObjectArray.length; i++)
-			{
-				for (var j = 0; j < keys.length; j++)
-				{
-					rawData += dataObjectArray[i][keys[j]];
-
-					if (j < fields.length - 1)
-						rawData += ",";
-				}
-
-				rawData += "\n";
-			}
-
-			$('#area').val(rawData);
+			var rawData = Papa.unparse(dataObjectArray);
 
 			$('#dataTable').empty();
 			generateFields();
 			populateTable();
 			generateOperators();
+
+			$('#area').val(rawData);
 
 			removeLoader();
 		});

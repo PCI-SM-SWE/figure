@@ -314,7 +314,7 @@
 				<div ng-show="graphTab != 5">
 				
 					<!-- Bar Graphs -->
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 1">
+					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 1">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>X-Axis</label>
 							<input id="xAxisBar" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
@@ -370,7 +370,7 @@
 					</form>
 
 					<!-- Pie Graphs -->
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 3">
+					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 3">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Value Field</label> <input id="valueField" type="email" class="form-control" placeholder="Drop field here"
 								x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
@@ -397,7 +397,7 @@
 					</form>
 
 					<!-- Maps -->
-					<form class="col-xs-7 col-sm-7 col-md-7 well" ng-show="graphTab == 4">
+					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 4">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Location Field</label>
 							<input id="locationField" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
@@ -454,20 +454,20 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href = "css/map.css">
 
-	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="bower_components/angular/angular.min.js"></script>
-	<script src="bower_components/bootstrap-file-input/bootstrap.file-input.js"></script>
-	<script src='bower_components/socket.io-client/socket.io.js' type='text/javascript'></script>
+	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="bower_components/bootstrap-file-input/bootstrap.file-input.js"></script>
+	<script type="text/javascript" src='bower_components/socket.io-client/socket.io.js' type='text/javascript'></script>
 	
-	<script src="bower_components/socket.io-client/socket.io.js"></script>
+	<script type="text/javascript" src="bower_components/socket.io-client/socket.io.js"></script>
 	
-	<script src="js/client_handler.js"></script>
+	<script type="text/javascript" src="js/client_handler.js"></script>
 	
-	<script src="js/papaparse.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/papaparse.min.js" type="text/javascript"></script>
 
-	<script src="js/delivery.js"></script>
+	<script type="text/javascript"  src="js/delivery.js"></script>
 	
 	<script type = "text/javascript" src="bower_components/d3/d3.min.js"></script>
 	<script type = "text/javascript" src = "bower_components/nvd3/nv.d3.min.js"></script>
@@ -476,9 +476,9 @@
 	<script type = "text/javascript" src = "bower_components/lvl-drag-drop/script/lvl-drag-drop.js"></script>
 	<script type = "text/javascript" src='bower_components/mapbox.js/docs/assets/data/us-states.js'></script>
 
-	<!--<script type = "text/javascript" src = "bower_components/mapbox.js/src/mapbox.js"></script>
-	<link  rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'>
- -->
+	<script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
+	
 	<script type="text/javascript" src="bower_components/rgb-color/rgb-color.min.js"></script> 
 	<script type="text/javascript" src="bower_components/StackBlur/StackBlur.js"></script>
 	<script type="text/javascript" src="bower_components/canvg/dist/canvg.min.js"></script>
