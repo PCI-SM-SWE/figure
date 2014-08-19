@@ -26,8 +26,13 @@
         "angular": "~1.2.14",
         "font-awesome": "~4.0.3",
         "bootstrap": "~3.1.1",
-        "d3": "~3.4.3",
+        "bootstrap-file-input": "~1.0.0",
+        "socket.io-clien",
         "mapbox.js": "~2.0.1",
+        "lvl-drag-drop": null,t": "~1.0.6",
+        "nvd3": "~1.1.15
+        "rgb-color": null,
+        "StackBlur": null,
         "canvg": "~1.3.0",
         "jquery.tablesorter": "~2.17.7"
     }

@@ -113,11 +113,11 @@ app.get('/', function(req, res)
 	res.render('./public/index.html');	
 });
 
-// accessing saved dashboard page
-app.get('/*', function(req, res)
-{
-	res.sendfile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
-});
+// // accessing saved dashboard page
+// app.get('/*', function(req, res)
+// {
+// 	res.sendFile('./public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
+// });
 
 app.listen();
 
@@ -177,9 +177,36 @@ var dl = require('delivery');
 // 	socket.emit('Redis Error', err);
 // });
 
+/*
+ * Using delivery to send uploaded files to the server, then back from the server to the
+ * client, having converted the contents of the file to a string to be parsed client-side(for now)
+ */
+// io.sockets.on('connection', function(socket)
+// {
+	
+// });
+
 io.on('connection', function(socket)
 {
 	console.log('Client connected');
+
+	var delivery = dl.listen(socket);
+
+	delivery.on('receive.success', function(file)
+	{
+		fs.writeFile('./public/uploaded_files/' + file.name, file.buffer, function(err)
+		{
+			if(err)
+			{
+				console.log('File could not be saved.');
+			}
+			else
+			{
+				console.log('File ' + file.name + ' recieved');
+				socket.emit('file data', file.buffer.toString());
+			}
+		});
+	});
 
 	// Sending list of previously uploaded files to client
 	fs.readdir('./public/uploaded_files', function(err, uploaded_files)
@@ -288,6 +315,7 @@ io.on('connection', function(socket)
 		//console.log(name + " requested");
 		getFile(name, function(data)
 		{	
+			console.log(name);
 			socket.emit(name + ' data', data);
 		});
 
@@ -448,30 +476,7 @@ io.on('connection', function(socket)
 	});
 });
 
-/*
- * Using delivery to send uploaded files to the server, then back from the server to the
- * client, having converted the contents of the file to a string to be parsed client-side(for now)
- */
-io.sockets.on('connection', function(socket)
-{
-	var delivery = dl.listen(socket);
 
-	delivery.on('receive.success',function(file)
-	{
-		fs.writeFile('./public/uploaded_files/'+file.name,file.buffer, function(err)
-		{
-			if(err)
-			{
-				console.log('File could not be saved.');
-			}
-			else
-			{
-				console.log('File ' + file.name + ' recieved');
-				socket.emit('file data', file.buffer.toString());
-			}
-		});
-	});
-});
 
 
 //var chatServer = require('./public/javascripts/server_handler.js');

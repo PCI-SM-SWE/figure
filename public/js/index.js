@@ -54,9 +54,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			var numFiles = input.get(0).files ? input.get(0).files.length : 1
 			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 
-			console.log(numFiles);
-			console.log(label);
-
 			input.trigger('fileselect', [numFiles, label]);		// calls the event below
 		});
 
@@ -80,15 +77,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				$("button[type=submit]").click(function(evt)
 				{
+					setTimeout(addLoader(), 0);
 					var file = $("input[type=file]")[0].files[0];
 					delivery.send(file);
 					evt.preventDefault();
 				});
 			});
 
-			delivery.on('send.success',function(fileUID)
+			delivery.on('send.success', function(fileUID)
 			{
-				console.log("file was successfully sent.");
+				alert(fileUID.name  + " was successfully uploaded.");
+				$scope.fileUpload();
 			});
 		});
 
@@ -127,6 +126,32 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#darkLayer').hide();
 		}, 1000);		
 	}
+
+	// uploading a file
+	$scope.fileUpload = function()
+	{
+		setTimeout(addLoader(), 0);
+
+		client.fileUploadRequest(function(data)
+		{			
+			$('#area').val(data);
+
+			var results = Papa.parse(data, 
+			{
+				header: true
+			});
+
+			dataObjectArray = results.data;
+			fields = Object.keys(results.data[0]);
+
+			$('#dataTable').empty();
+			generateFields();
+			populateTable();
+			generateOperators();
+
+			removeLoader();
+		});
+	};
 
 	// populates uploaded files, sample data, ifloops.com
 	function populateFileList()
@@ -220,12 +245,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		setTimeout(addLoader(), 0);
 
 		client.storedDataRequest(name, function(data)
-		{	
+		{
 			$('#area').val(data);
-			var results = $.parse(data);	
-			dataObjectArray = results.results.rows;
-			fields = results.results.fields;
-			
+
+			var results = Papa.parse(data, 
+			{
+				header: true
+			});
+
+			console.log(JSON.stringify(results.data));
+
+			dataObjectArray = results.data;
+			fields = Object.keys(results.data[0]);
+
 			$('#dataTable').empty();
 			generateFields();
 			populateTable();
@@ -261,10 +293,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			rawData += "\n";
 
+			var keys = Object.keys(dataObjectArray[0]);
+
 			for (var i = 0; i < dataObjectArray.length; i++)
 			{
-				var keys = Object.keys(dataObjectArray[i]);
-
 				for (var j = 0; j < keys.length; j++)
 				{
 					rawData += dataObjectArray[i][keys[j]];
@@ -404,28 +436,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// 		console.log(JSON.stringify(dataObjectArray));
 	// 	});
 	// };
-	
-	// uploading a file
-	$scope.fileUpload = function()
-	{
-		client.fileUploadRequest(function(data)
-		{			
-			console.log(data);
-			setTimeout(addLoader(), 0);
 
-			$('#area').val(data);
-			var results = $.parse(data);	
-			console.log(results.results.rows[0]);
-			dataObjectArray = results.results.rows;
-			fields = results.results.fields;
-			
-			generateFields();
-
-			removeLoader();
-
-			console.log(JSON.stringify(dataObjectArray));
-		});
-	};
 
 	var xAxis;					// bar/line
 	var yAxis;					// bar/line
