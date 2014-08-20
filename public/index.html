@@ -390,7 +390,7 @@
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
 						<div id="chart3" class="pics col-xs-11 col-sm-11 col-md-11" style="height: 20%;">
-							<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
+						
 							<svg id="pieChart" style="width: 100%; height: 60%;"></svg>
 						</div>
 						<canvas id = "pieCanvas" width = "800" height = "470" style = "display: none;"></canvas>
@@ -398,7 +398,7 @@
 					</form>
 
 					<!-- Maps -->
-					<form class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 4">
+					<form id = "mapWell" class="col-xs-9 col-sm-9 col-md-9 well" ng-show="graphTab == 4">
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Location Field</label>
 							<input id="locationField" type="email" class="form-control" placeholder="Drop field here" x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)">
@@ -416,8 +416,8 @@
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
-						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-						<div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div>
+		
+						<!-- <div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div> -->
 
 						<canvas id = "choroplethMapCanvas" width = "800" height = "470" style = "display: none;"></canvas>
 						<img id = "choroplethMapImage" width = "800", height = "470" style = "display: none;"></img>

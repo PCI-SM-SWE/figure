@@ -470,7 +470,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			$('#locationField').val('');
 			$('#choroplethValueField').val('');
-			$('#map').empty();
+			$('#map').remove();
+			$('#mapWell').css('height', '');
 		}
 
 		xAxis = '';
@@ -488,6 +489,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$scope.clearAll();
 		currentTab = $scope.graphTab;
 
+		// nv.d3.css was messing up the choropleth mapping functionality, so
+		// this file will only be loaded if the map data visualization is not selected
 		if (currentTab == 4)
 			$('link[href="bower_components/nvd3/nv.d3.css"]').remove();
 		else if ($('link[href="bower_components/nvd3/nv.d3.css"]').length == 0)
@@ -1197,8 +1200,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	//-------------------------- MAP GRAPHING ----------------------------------
-	// Still glitchy, shading won't display unless I force the location of 
-	// element with class leaflet-zoom-animated
 	var map;
 	var popup;
 	var closeTooltip;
@@ -1293,15 +1294,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function plotChoroplethMap()
 	{
+		$('#mapWell').append('<div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div>');
+
 		var i;
 		var locationField = $('#locationField').val();
 		var valueField = $('#valueField'). val();
 
-		$('#map').css('height', ($('#map').parent().outerHeight(true) * 3.7) + 'px');
+		$('#map').css('height', ($('#mapWell').outerHeight(true) * 3.7) + 'px');
 
 		L.mapbox.accessToken = 'pk.eyJ1IjoiaHVtcGhyZXk4MTQ2IiwiYSI6Im9RTi1Nem8ifQ.LTyEXsadU42usXI8O4k2tg';
-		map = L.mapbox.map('map', 'examples.map-i86nkdio')
-		.setView([37.8, -96], 4);
+		
+		//if (map == undefined)
+			map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([37.8, -96], 4);
 
 		popup = new L.Popup({ autoPan: false });	  
 		
@@ -1312,10 +1316,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		map.legendControl.addLegend(getLegendHTML());
 
-		console.log($('#map').parent().height());
-		console.log($('#map').height());
-		console.log($('#map').parent().height() + $('#map').height());
-		$('#map').parent().css('height', ($('#map').parent().outerHeight(true) + $('#map').outerHeight()) + 'px');
+		$('#mapWell').css('height', ($('#mapWell').outerHeight(true) + $('#map').outerHeight()) + 'px');
 	}
 
 	// saving chart to local drive
