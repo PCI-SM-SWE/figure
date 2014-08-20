@@ -9,7 +9,8 @@
 <link rel="icon" href="favicon.ico">
 
 <title>Data Visualization</title>
-
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
 <style>
 
 /*.nv-x text {
@@ -416,7 +417,7 @@
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
 						<!-- <img src="images/bargraph.svg" class="img-responsive" alt="Responsive image"> -->
-						<div id="map" style="height: 600px;" class="col-xs-12 col-sm-12 col-md-12"></div>
+						<div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div>
 
 						<canvas id = "choroplethMapCanvas" width = "800" height = "470" style = "display: none;"></canvas>
 						<img id = "choroplethMapImage" width = "800", height = "470" style = "display: none;"></img>
@@ -447,49 +448,55 @@
 		</div>
 	</section>
 
+	<style>
+.map-legend .swatch {
+  width:20px;
+  height:20px;
+  float:left;
+  margin-right:10px;
+  }
+.leaflet-popup-close-button {
+  display: none;
+  }
+.leaflet-popup-content-wrapper {
+  pointer-events: none;
+  }
+</style>
+
+
 	<!-- ********************** CSS ************************************-->
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">
+	<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<!-- <link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css"> -->
 	<link rel = "stylesheet" href = "css/blue_theme/style.css">
 	<!-- Custom styles for this template -->
-	<link rel="stylesheet" href="css/style.css">
-	<link rel="stylesheet" href = "css/map.css">
-	<link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css' rel='stylesheet' />
-
-
+	<link rel = "stylesheet" href = "css/style.css">
 
 	<!-- ********************** JavaScript ************************************-->
-	<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script type = "text/javascript" src = "bower_components/jquery/dist/jquery.min.js"></script>
 
-	<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-	<script type="text/javascript" src="bower_components/bootstrap-file-input/bootstrap.file-input.js"></script>
-	<script type="text/javascript" src='bower_components/socket.io-client/socket.io.js'></script>
+	<script type = "text/javascript" src = "bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type = "text/javascript" src = "bower_components/angular/angular.min.js"></script>
+	<script type = "text/javascript" src = "bower_components/bootstrap-file-input/bootstrap.file-input.js"></script>
+	<script type = "text/javascript" src = "bower_components/socket.io-client/socket.io.js"></script>
 	
-	<script type="text/javascript" src="bower_components/socket.io-client/socket.io.js"></script>
-	
-	<script type="text/javascript" src="js/client_handler.js"></script>
-	
-	<script type="text/javascript" src="js/papaparse.min.js" type="text/javascript"></script>
+	<script type = "text/javascript" src = "js/papaparse.min.js" type="text/javascript"></script>
 
-	<script type="text/javascript"  src="js/delivery.js"></script>
+	<script type = "text/javascript" src = "js/delivery.js"></script>
 	
-	<script type = "text/javascript" src="bower_components/d3/d3.min.js"></script>
+	<script type = "text/javascript" src = "bower_components/d3/d3.min.js"></script>
 	<script type = "text/javascript" src = "bower_components/nvd3/nv.d3.min.js"></script>
 
 	<script type = "text/javascript" src = "bower_components/lvl-drag-drop/script/lvl-uuid.js"></script>
 	<script type = "text/javascript" src = "bower_components/lvl-drag-drop/script/lvl-drag-drop.js"></script>
-	<script type = "text/javascript" src='bower_components/mapbox.js/docs/assets/data/us-states.js'></script>
-
-	<script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
-
 	
-	<script type="text/javascript" src="bower_components/rgb-color/rgb-color.min.js"></script> 
-	<script type="text/javascript" src="bower_components/StackBlur/StackBlur.js"></script>
-	<script type="text/javascript" src="bower_components/canvg/dist/canvg.min.js"></script>
+	<script type = "text/javascript" src = "bower_components/rgb-color/rgb-color.min.js"></script> 
+	<script type = "text/javascript" src = "bower_components/StackBlur/StackBlur.js"></script>
+	<script type = "text/javascript" src = "bower_components/canvg/dist/canvg.min.js"></script>
 
 	<script type = "text/javascript" src = "bower_components/jquery.tablesorter/js/jquery.tablesorter.min.js"></script>
 
-	<script type = "text/javascript" src="js/index.js"></script>
+	<script type = "text/javascript" src = "js/client_handler.js"></script>
+	<script type = "text/javascript" src = "bower_components/mapbox.js/docs/assets/data/us-states.js"></script>
+	<script type = "text/javascript" src = "js/index.js"></script>
 </body>
 </html>

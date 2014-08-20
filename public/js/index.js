@@ -103,6 +103,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#metricEquation').keyup(submitCheck);
 		$('#metricEquation').mouseenter(submitCheck);	
 
+		$('body').append('<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">');
+
 		removeLoader();
 	});	// end $(document).ready
 
@@ -434,7 +436,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	// clears/resets all fields, labels, and charts,
 	$scope.clearAll = function()
 	{
-		$(".saveBtn").attr("disabled", "disabled"); // to make save button unclickable
+		$(".saveBtn").attr("disabled", "disabled");		// to make save button unclickable
+		
 		if(currentTab == 1)
 		{
 			$('#xAxisBar').val('');
@@ -453,7 +456,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			temp = setInterval(function()
 			{
-				$('.nvtooltip').css('display', 'none');
+				$('.nvtooltip').hide();;
 			}, 0);
 		}
 		else if(currentTab == 3)
@@ -484,6 +487,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$scope.clearAll();
 		currentTab = $scope.graphTab;
+
+		if (currentTab == 4)
+			$('link[href="bower_components/nvd3/nv.d3.css"]').remove();
+		else if ($('link[href="bower_components/nvd3/nv.d3.css"]').length == 0)
+			$('body').append('<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">');
 	};
 
 	// drag and drop functionality for the fields of the visualization
@@ -1289,12 +1297,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var locationField = $('#locationField').val();
 		var valueField = $('#valueField'). val();
 
+		$('#map').css('height', ($('#map').parent().outerHeight(true) * 3.7) + 'px');
+
+		L.mapbox.accessToken = 'pk.eyJ1IjoiaHVtcGhyZXk4MTQ2IiwiYSI6Im9RTi1Nem8ifQ.LTyEXsadU42usXI8O4k2tg';
 		map = L.mapbox.map('map', 'examples.map-i86nkdio')
 		.setView([37.8, -96], 4);
 
 		popup = new L.Popup({ autoPan: false });	  
-
-		console.log(statesData);
+		
 		statesLayer = L.geoJson(statesData,  {
 			style: getStyle,
 			onEachFeature: onEachFeature
@@ -1302,43 +1312,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		map.legendControl.addLegend(getLegendHTML());
 
-		// $('.leaflet-zoom-animated').attr('width', '2000');
-		// $('.leaflet-zoom-animated').attr('height', '629');
-		
-		// $('.leaflet-zoom-animated').attr('style', '-webkit-transform: translate3d(0, 0, 0); width: 2000px; height: 629px;');
-
-		// var e = document.getElementsByClassName('leaflet-zoom-animated')[0];
-		// e.setAttribute('width', '2000');
-		// e.setAttribute('height', '629')
-		// e.setAttribute('viewBox', '0 0 2000 629')
-		// e.setAttribute('id', 'choroplethMap');
-		
-		// var x;
-		// var y;
-		// var z;
-
-		// setInterval(function()
-		// {
-		// 	var attr = $('.leaflet-map-pane').attr('style');
-		// 	attr = attr.substring(attr.indexOf('(') + 1);
-
-		// 	var x = attr.substr(0, attr.indexOf('px'));			
-		// 	attr = attr.substring(attr.indexOf('px') + 4);
-
-		// 	var y = attr.substr(0, attr.indexOf('px'));
-		// 	attr = attr.substring(attr.indexOf('px') + 4);
-
-		// 	var z = attr.substr(0, attr.indexOf('px'));
-
-		// 	// console.log('x = ' + x);
-		// 	// console.log('y = ' + y);
-		// 	// console.log('z = ' + z);
-
-		// 	$('#choroplethMap').attr('style', '-webkit-transform: translate3d(' + x + ', ' + y + 'px, ' + z + 'px); width: 2000px; height: 629px;');
-
-		// 	if(document.getElementById('choroplethMap') != undefined)
-		// 		document.getElementById('choroplethMap').removeAttribute('viewBox');	
-		// }, 1000);
+		console.log($('#map').parent().height());
+		console.log($('#map').height());
+		console.log($('#map').parent().height() + $('#map').height());
+		$('#map').parent().css('height', ($('#map').parent().outerHeight(true) + $('#map').outerHeight()) + 'px');
 	}
 
 	// saving chart to local drive
