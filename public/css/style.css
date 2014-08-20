@@ -214,3 +214,21 @@ nav {
     top: 0px;
     left: 0px;
 }
+
+.map-legend .swatch
+{
+  width:20px;
+  height:20px;
+  float:left;
+  margin-right:10px;
+}
+
+.leaflet-popup-close-button
+{
+  display: none;
+}
+
+.leaflet-popup-content-wrapper
+{
+  pointer-events: none;
+}
