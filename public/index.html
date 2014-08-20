@@ -9,8 +9,7 @@
 <link rel="icon" href="favicon.ico">
 
 <title>Data Visualization</title>
-<script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>
-<link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
+
 <style>
 
 /*.nv-x text {
@@ -20,6 +19,10 @@
 
 }*/
 </style>
+
+<script>
+L_PREFER_CANVAS = true;
+</script>
 
 </head>
 
@@ -389,8 +392,7 @@
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
-						<div id="chart3" class="pics col-xs-11 col-sm-11 col-md-11" style="height: 20%;">
-						
+						<div id="chart3" class="pics col-xs-11 col-sm-11 col-md-11" style="height: 20%;">						
 							<svg id="pieChart" style="width: 100%; height: 60%;"></svg>
 						</div>
 						<canvas id = "pieCanvas" width = "800" height = "470" style = "display: none;"></canvas>
@@ -405,7 +407,7 @@
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4">
 							<label>Title</label>
-							<input id="titlePie" type="email" class="form-control" placeholder="Enter Title Here">
+							<input id="titleChoroplethMap" type="email" class="form-control" placeholder="Enter Title Here">
 						</div>
 						<div class="form-group col-xs-4 col-sm-4 col-md-4 ">
 							<label>Value Field</label>
@@ -416,11 +418,9 @@
 							<button id="clearBtn" type="button" class="btn btn-danger" ng-click="clearAll()">Clear Fields</button>
 							<button type="button" class="btn btn-success saveBtn" ng-click="saveFigure()" disabled="disabled">Save</button>
 						</div>
-		
-						<!-- <div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div> -->
 
 						<canvas id = "choroplethMapCanvas" width = "800" height = "470" style = "display: none;"></canvas>
-						<img id = "choroplethMapImage" width = "800", height = "470" style = "display: none;"></img>
+						<img id = "choroplethMapImage" style = "display: none;"></img>
 					</form>
 				</div>
 
@@ -448,13 +448,16 @@
 		</div>
 	</section>
 
-
 	<!-- ********************** CSS ************************************-->
+
 	<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<!-- <link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css"> -->
+	
 	<link rel = "stylesheet" href = "css/blue_theme/style.css">
+
 	<!-- Custom styles for this template -->
 	<link rel = "stylesheet" href = "css/style.css">
+
+	<link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
 
 	<!-- ********************** JavaScript ************************************-->
 	<script type = "text/javascript" src = "bower_components/jquery/dist/jquery.min.js"></script>
@@ -471,6 +474,9 @@
 	<script type = "text/javascript" src = "bower_components/d3/d3.min.js"></script>
 	<script type = "text/javascript" src = "bower_components/nvd3/nv.d3.min.js"></script>
 
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>	
+	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
+
 	<script type = "text/javascript" src = "bower_components/lvl-drag-drop/script/lvl-uuid.js"></script>
 	<script type = "text/javascript" src = "bower_components/lvl-drag-drop/script/lvl-drag-drop.js"></script>
 	
@@ -478,7 +484,7 @@
 	<script type = "text/javascript" src = "bower_components/StackBlur/StackBlur.js"></script>
 	<script type = "text/javascript" src = "bower_components/canvg/dist/canvg.min.js"></script>
 
-	<script type = "text/javascript" src = "bower_components/jquery.tablesorter/js/jquery.tablesorter.min.js"></script>
+	<script type = "text/javascript" src = "js/jquery.tablesorter.js"></script>
 
 	<script type = "text/javascript" src = "js/client_handler.js"></script>
 	<script type = "text/javascript" src = "bower_components/mapbox.js/docs/assets/data/us-states.js"></script>

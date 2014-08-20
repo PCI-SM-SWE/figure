@@ -42,7 +42,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				generateFields();
 				generateOperators();
 
-				removeLoader();
+				setTimeout(removeLoader(), 0);
 
 				//console.log(JSON.stringify(dataObjectArray));
 			}, 1000);
@@ -105,7 +105,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$('body').append('<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">');
 
-		removeLoader();
+		setTimeout(removeLoader(), 0);
 	});	// end $(document).ready
 
 	// shows laoding gif
@@ -251,7 +251,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		$('#area').val(data);
 
-		removeLoader();
+		setTimeout(removeLoader(), 0);
 	}
 
 	// access uploaded file or sample data
@@ -300,7 +300,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			$('#area').val(rawData);
 
-			removeLoader();
+			setTimeout(removeLoader(), 0);
 		});
 	}
 
@@ -344,7 +344,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			th.onclick = function()
 			{
 				setTimeout(addLoader(), 0);
-				removeLoader();
+				setTimeout(removeLoader(), 0);
 			};
 
 			$('#header').append(th);
@@ -1203,6 +1203,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var map;
 	var popup;
 	var closeTooltip;
+	L_PREFER_CANVAS = true;
 
     function getColor(d)
     {
@@ -1304,8 +1305,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		L.mapbox.accessToken = 'pk.eyJ1IjoiaHVtcGhyZXk4MTQ2IiwiYSI6Im9RTi1Nem8ifQ.LTyEXsadU42usXI8O4k2tg';
 		
-		//if (map == undefined)
-			map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([37.8, -96], 4);
+		map = L.mapbox.map('map', 'examples.map-i86nkdio').setView([37.8, -96], 4);
 
 		popup = new L.Popup({ autoPan: false });	  
 		
@@ -1319,86 +1319,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#mapWell').css('height', ($('#mapWell').outerHeight(true) + $('#map').outerHeight()) + 'px');
 	}
 
-	// saving chart to local drive
-	$scope.saveFigure = function()
+	function sendGraphToRedis(title, canvas)
 	{
-		var canvas;
-		var image;
-		var ctx;
-		var graph;
-		var title;
-
-		if($scope.graphTab == 1)
+		if (title == "")
 		{
-			graph = document.getElementById('barGraph');
-			canvas = document.getElementById('barCanvas');
-			image = document.getElementById('barImage');
-			title = $('#titleBar').val();
-
-			ctx = canvas.getContext('2d');
-			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 500);
-			image.src = canvas.toDataURL();
-			console.log(image.src);
-
-		
-			// var download = document.createElement('a');
-			// download.href = canvas.toDataURL();
-			// download.download = 'asdf';
-			// download.click();			
-		}
-		else if($scope.graphTab == 2)
-		{			
-			graph = document.getElementById('lineGraph');	
-			canvas = document.getElementById('lineCanvas');
-			image = document.getElementById('lineImage');
-			title = $('#titleLine').val();
-
-			ctx = canvas.getContext('2d');
-			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 1050, 850);
-			image.src = canvas.toDataURL();
-
-			// var download = document.createElement('a');
-			// download.href = canvas.toDataURL();
-			// download.download = 'asdf';
-			// download.click();			
+			alert("Must enter a title for this graph.")
+			setTimeout(removeLoader(), 0);
+			return;
 		}
 
-		else if($scope.graphTab == 3)
-		{
-			graph = document.getElementById('pieChart');
-			canvas = document.getElementById('pieCanvas');
-			image = document.getElementById('pieImage');
-			title = $('#titlePie').val();
-
-			ctx = canvas.getContext('2d');
-			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
-			image.src = canvas.toDataURL();
-
-			// var download = document.createElement('a');
-			// download.href = canvas.toDataURL();
-			// download.download = 'asdf';
-			// download.click();			
-		}		
-		else if($scope.graphTab == 4)
-		{
-			// var style = $('#map').attr('style');
-			// $('#map').attr('style', 'display: none;' + style);
-			// tmp.appendChild(document.getElementById('choroplethMap'));
-			// canvas = document.getElementById('choroplethMapCanvas');
-			// image = document.getElementById('choroplethMapImage');
-			// ctx = canvas.getContext('2d');
-			// ctx.drawSvg(tmp.innerHTML, 0, 0, 800, 470);
-			// image.src = canvas.toDataURL();
-			// image.setAttribute('style', 'border: 1px solid;')
-		}		
-
-		// send chart information to redis, for dashboard.js to use
 		client.getSavedGraphs(function(graphObjects)
 		{
 			for (var i = 0; i < graphObjects.length; i++)
 			{
 				if (graphObjects[i].title == title)
 				{
+					setTimeout(removeLoader(), 0);
 					var r = window.confirm('A graph with title "' + title + '" already exists.  Do you still want to save?');
 
 					if (r == true)
@@ -1428,8 +1364,92 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			else
 				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
 			
+			setTimeout(removeLoader(), 0);
 			alert(title + " graph saved.");		
 		});
+	}
+
+	// saving chart to local drive
+	$scope.saveFigure = function()
+	{
+		var canvas;
+		var image;
+		var ctx;
+		var graph;
+		var title;
+
+		setTimeout(addLoader(), 0);
+
+		if($scope.graphTab == 1)
+		{
+			graph = document.getElementById('barGraph');
+			canvas = document.getElementById('barCanvas');
+			image = document.getElementById('barImage');
+			title = $('#titleBar').val();
+
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 800, 500);
+			image.src = canvas.toDataURL();
+			console.log(image.src);
+
+		
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
+		}
+		else if($scope.graphTab == 2)
+		{			
+			graph = document.getElementById('lineGraph');	
+			canvas = document.getElementById('lineCanvas');
+			image = document.getElementById('lineImage');
+			title = $('#titleLine').val();
+
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 1050, 850);
+			image.src = canvas.toDataURL();
+
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
+		}
+
+		else if($scope.graphTab == 3)
+		{
+			graph = document.getElementById('pieChart');
+			canvas = document.getElementById('pieCanvas');
+			image = document.getElementById('pieImage');
+			title = $('#titlePie').val();
+
+			ctx = canvas.getContext('2d');
+			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
+			image.src = canvas.toDataURL();
+
+			// var download = document.createElement('a');
+			// download.href = canvas.toDataURL();
+			// download.download = 'asdf';
+			// download.click();			
+		}	
+
+		else if($scope.graphTab == 4)
+		{			
+			leafletImage(map, function(err, canvas)
+			{
+				image = document.getElementById('choroplethMapImage');
+				var dimensions = map.getSize();
+				image.width = dimensions.x;
+				image.height = dimensions.y;
+				image.src = canvas.toDataURL();
+
+				title = $('#titleChoroplethMap').val();
+				console.log(canvas.toDataURL());
+				sendGraphToRedis(title, canvas);
+			});
+		}		
+		
+		// send chart information to redis, for dashboard.js to use
+		
 	};
 }]);
 
