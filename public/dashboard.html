@@ -77,9 +77,9 @@
 					</div>
 					<div class="menu-item" id="menu-map">
 						<h4>
-							<a>Map <span class="badge" id="map-badge"></span></a>
+							<a>Choropleth Map <span class="badge" id="map-badge"></span></a>
 						</h4>
-						<ul>
+						<ul id = "choroplethGraphs">
 						</ul>
 					</div>
 					<div class="menu-item" id="menu-stats">
@@ -151,11 +151,12 @@
 
 	<!-- ********************** CSS ************************************ -->
 	<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.min.css">
+	
 	<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">
-
+	<link rel = "stylesheet" href = "https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css">	
 	<!-- Custom styles for this template -->
 	<link rel = "stylesheet" href = "css/style.css">
-	<link rel = "stylesheet" href = "https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css">	
+	
 
 
 	<!-- ********************** JavaScript ************************************ -->

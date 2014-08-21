@@ -66,6 +66,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				graphObject = graphObjects[i];				
 				
+				console.log(JSON.stringify(graphObject));
+
 				switch(graphObject.type) {
 				    case "bar":
 				        barCnt += 1;
@@ -76,7 +78,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				    case "pie":
 				        pieCnt += 1;
 				        break;
-				    case "map":
+				    case "choropleth":
 				        mapCnt += 1;
 				        break;
 				    case "stats":
@@ -134,7 +136,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
-						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Cursor drop location will be the top left corner of the graph</p>');
+						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Cursor drop location will be the top left corner of the graph<br/>Width: 2 boxes</br>Height: 2 boxes</br>Maps cannot be moved after placed</p>');
 					});
 
 					$("label[name = 'large']").click(function()
@@ -157,7 +159,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						});	
 
 						$('#thumbnails').append(img);
-						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Cursor drop location will be the top left corner of the graph</p>');
+						$('#thumbnails').append('<p>Drag image to place on dashboard<br/>Cursor drop location will be the top left corner of the graph<br/>Width: 3 boxes</br>Height: 2 boxes</br>Maps cannot be moved after placed</p>');
 					});
 
 					$("label[name = 'small']").click();
@@ -249,7 +251,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		for (var i = 0; i < usedRow.length; i++)
 		{
-			console.log(grid[graphRow + usedRow[i]][graphCol + usedCol[i]]);
 			if (grid[graphRow + usedRow[i]][graphCol + usedCol[i]] != undefined)
 				return (false);
 		}
@@ -257,7 +258,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return (true);
 	}
 
-	function placeGraph (droppedRow, droppedCol, size, id)
+	function placeGraph (droppedRow, droppedCol, size, type, id)
 	{		
 		var graphRow;
 		var graphCol;
@@ -316,15 +317,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 1)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
-			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
-			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
+			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');
 
-			//$('#row' + graphRow + 'col' + graphCol).attr('class', 'ui-draggable');
-			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			if (type != "choropleth")
+			{		
+				$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
+				$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
+				$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+				$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" class = "nvd3" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			}
+			else
+				$('#row' + graphRow + 'col' + graphCol).append('<div data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 220%; height: 170%; position: relative; z-index = 1;"></div>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
@@ -402,14 +407,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#row' + (graphRow + 1) + 'col' + (graphCol + 2)).attr('style', 'position: relative; z-index: -1; border-left: none; border-top: none;');
 
 			$('#row' + graphRow + 'col' + graphCol).attr('style', 'overflow: visible; border-right: none; border-bottom: none;');
-			$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
-			$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
-			$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-lvl-drop-target');
 			$('#row' + graphRow + 'col' + graphCol).removeAttr('x-on-drop');
+			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');
 
-			$('#row' + graphRow + 'col' + graphCol).append('<h3>' + title + '</h3>');	
-			$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			if (type != "choropleth")
+			{		
+				$('#row' + graphRow + 'col' + graphCol).attr('draggable', 'true');
+				$('#row' + graphRow + 'col' + graphCol).attr('x-lvl-draggable', 'true');
+				$('#row' + graphRow + 'col' + graphCol).attr('data-placed', 'true');
+				$('#row' + graphRow + 'col' + graphCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" class = "nvd3" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			}
+			else
+				$('#row' + graphRow + 'col' + graphCol).append('<div data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 338%; height: 170%; position: relative; z-index = 1;"></div>');
 
 			angular.element(document).injector().invoke(function($compile) {
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
@@ -422,7 +432,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			grid[graphRow + 1][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol + 2] = id;
 
-			dashboardGrid[graphRow][grpahCol] = id + 'L';
+			dashboardGrid[graphRow][graphCol] = id + 'L';
 		}	
 		
 		var t = "";
@@ -676,6 +686,98 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return ({'graphRow': graphRow, 'graphCol': graphCol});
 	}
 
+	var map;
+	var popup;
+	var closeTooltip;
+
+    function getColor(d)
+    {
+		return d > 1000 ? '#8c2d04' :
+			d > 500  ? '#cc4c02' :
+			d > 200  ? '#ec7014' :
+			d > 100  ? '#fe9929' :
+			d > 50   ? '#fec44f' :
+			d > 20   ? '#fee391' :
+			d > 10   ? '#fff7bc' :
+			'#ffffe5';
+  	}
+
+  	function getStyle(feature)
+  	{
+     	return {
+        	weight: 2,
+        	opacity: 0.1,
+        	color: 'black',
+        	fillOpacity: 0.7,
+        	fillColor: getColor(feature.properties.density)
+    	};
+ 	}
+  
+	function mousemove(e)
+	{
+		var layer = e.target;
+
+		popup.setLatLng(e.latlng);
+		popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
+		layer.feature.properties.density + ' people per square mile');
+
+		if(!popup._map) 
+			popup.openOn(map);
+		window.clearTimeout(closeTooltip);
+
+		// highlight feature
+		layer.setStyle({
+			weight: 3,
+			opacity: 0.3,
+			fillOpacity: 0.9
+		});
+
+		if(!L.Browser.ie && !L.Browser.opera)
+			layer.bringToFront();
+	}
+
+	function mouseout(e)
+	{
+		statesLayer.resetStyle(e.target);
+		closeTooltip = window.setTimeout(function() {
+			map.closePopup();
+		}, 100);
+	}
+
+	function zoomToFeature(e)
+	{
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer)
+	{
+		console.log('onEachFeature');
+		layer.on({
+			mousemove: mousemove,
+			mouseout: mouseout,
+			click: zoomToFeature
+		});
+	}
+
+	function getLegendHTML()
+	{
+		var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+		labels = [],
+		from, to;
+
+		for(var i = 0; i < grades.length; i++)
+		{
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+			'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
+			from +(to ? '&ndash;' + to : '+')) + '</li>';
+		}
+
+		return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
+	}
+
 	$scope.dropped = function(dragEl, dropEl)
 	{
 		console.log(dragEl);
@@ -731,7 +833,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+					returnedData = placeGraph(droppedRow, droppedCol, size, graphObject.type, id);
 
 					if(returnedData == false)
 						return;
@@ -798,7 +900,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+					returnedData = placeGraph(droppedRow, droppedCol, size, graphObject.type, id);
 
 					if(returnedData == false)
 						return;
@@ -867,7 +969,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				if (placed == false)
 				{
-					returnedData = placeGraph(droppedRow, droppedCol, size, id);
+					returnedData = placeGraph(droppedRow, droppedCol, size, graphObject.type, id);
 
 					if(returnedData == false)
 						return;
@@ -897,6 +999,32 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				return(chart);					
 			});		
 		}
+		else if(graphObject.type == "choropleth")
+		{
+			if (placed == false)
+			{
+				returnedData = placeGraph(droppedRow, droppedCol, size, graphObject.type, id);
+
+				if (returnedData == false)
+					return;
+
+				L.mapbox.accessToken = 'pk.eyJ1IjoiaHVtcGhyZXk4MTQ2IiwiYSI6Im9RTi1Nem8ifQ.LTyEXsadU42usXI8O4k2tg';
+				
+				console.log($("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > div[data-id='" + id + "']")[0]);
+
+
+				map = L.mapbox.map($("#row" + returnedData.graphRow + "col" + returnedData.graphCol +" > div[data-id='" + id + "']")[0], 'examples.map-i86nkdio').setView([37.8, -96], 4);
+
+				popup = new L.Popup({ autoPan: false });	  
+				
+				statesLayer = L.geoJson(graphObject.chart_data,  {
+					style: getStyle,
+					onEachFeature: onEachFeature
+				}).addTo(map);	  
+
+				map.legendControl.addLegend(getLegendHTML());
+			}
+		}
 	};
 	
 	$scope.publish = function()
@@ -920,7 +1048,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'<title>' + dashboardName + '</title>\n' +
 			'</head>\n' + 
 			'<body ng-controller="MainCtrl">\n' + 
-			'<div class="container-fluid" style = "margin-left: 15px; margin-right: 15px;" id = "grid">\n'+ 
+			'<img id = "loader" src = "images/ajax-loader.gif" style = "position: fixed; z-index: 9999; display: none;">\n' + 
+			'<div id="darkLayer" class="darkClass" style="display:none"></div>\n' +
 			'<div class="container-fluid" style = "margin-left: 15px; margin-right: 15px;" id = "grid">\n' +
 			'<div class="row-fluid">\n' + 			
 			'<div class="row-fluid">\n' + 
@@ -956,12 +1085,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 dashboardScaffodling" id = "row3col5"></div>\n' +
 			'</div>\n' +
 			'</div>\n' +
-			'</div>\n' +
-			'</div>\n' +  
+			'</div>\n' + 
 			'<br><br>\n' +
 			'<link rel = "stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">\n' + 	
 			'<link rel = "stylesheet" href="../css/style.css">\n' +
 			'<link rel = "stylesheet" href = "../bower_components/nvd3/nv.d3.css">\n' +  
+			'<link rel = "stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css">\n' + 
 			'<script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>\n' +
 			// '<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>\n' +
 			'<script type = "text/javascript" src = "../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>\n' +
@@ -971,6 +1100,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			'<script type = "text/javascript" src = "../bower_components/socket.io-client/socket.io.js"></script>\n' + 		
 			'<script type = "text/javascript" src = "../bower_components/lvl-drag-drop/script/lvl-uuid.js"></script>\n' +
 			'<script type = "text/javascript" src = "../bower_components/lvl-drag-drop/script/lvl-drag-drop.js"></script>\n' +
+			'<script src="https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js"></script>\n' + 
 			'<script type = "text/javascript" src = "../js/client_handler.js"></script>\n' +
 			'<script type = "text/javascript" src = "../js/dashboard_display.js"></script>\n' + 
 			'</body>\n' + 

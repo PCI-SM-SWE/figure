@@ -12,6 +12,9 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	$(document).ready(function()
 	{	
+		$('#loader').css('top', ($(window).height() / 2) + 'px'); 
+		$('#loader').css('left', ($(window).width() / 2) + 'px');
+		addLoader();
 		displayDashboard();
 	});
 
@@ -31,53 +34,34 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			{
 				graphs = graphObjects;
 								
-				//$scope.resetGrid();
-
 				graph(title, dashboardGrid, graphs);
+				removeLoader();
 			});
 		});
 	}	
 
-	function resetCell(row, col)
+	function addLoader()
 	{
-		$('#row' + row + 'col' + col).empty();
-		$('#row' + row + 'col' + col).removeAttr('style');		
-		$('#row' + row + 'col' + col).removeAttr('draggable');
-		$('#row' + row + 'col' + col).removeAttr('x-lvl-draggable');
-		$('#row' + row + 'col' + col).attr('data-placed', 'false');
-		$('#row' + row + 'col' + col).attr('x-lvl-drop-target', 'true');
-		$('#row' + row + 'col' + col).attr('x-on-drop', 'dropped(dragEl, dropEl)');
-
-		// angular.element(document).injector().invoke(function($compile) {
-		// 	$compile($('#row' + row + 'col' + col))($scope);
-		// });	
-	}
-
-	$scope.resetGrid = function()
-	{
-		for (var i = 0; i <= rowBounds; i++)
-		{
-			for (var j = 0; j <= colBounds; j++)
-			{
-				grid[i][j] = undefined;
-				resetCell(i, j);
-			}
-		}
-	}
-
-	function placeGraph (droppedRow, droppedCol, size, id)
-	{		
-		// var t = "";
-		// for (var i = 0; i < grid.length; i++)
+		// setTimeout(function()
 		// {
-		// 	for (var j = 0; j < grid[i].length; j++)
-		// 	{
-		// 		t += grid[i][j] + " "
-		// 	}
-		// 	t += "\n";
-		// }
-		// console.log(t);
+			$('#loader').show();
+			$('#darkLayer').show();
+			$('#darkLayer').css('height', $(document).height());
+			
+		// }, 0)
+	}
 
+	function removeLoader()
+	{
+		setTimeout(function()
+		{
+			$('#loader').hide();
+			$('#darkLayer').hide();
+		}, 1000);		
+	}
+
+	function placeGraph (droppedRow, droppedCol, size, type, id)
+	{		
 		var title = id.substring(0, id.indexOf('('));
 
 		if (id.indexOf('(') == -1)
@@ -98,7 +82,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			//$('#row' + graphRow + 'col' + graphCol).attr('class', 'ui-draggable');
 			$('#row' + droppedRow + 'col' + droppedCol).append('<h3>' + title + '</h3>');	
-			$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			
+			if (type != 'choropleth')
+				$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 200%; height: 180%; position: relative; z-index = 1;"></svg>');
+			else
+				$('#row' + droppedRow + 'col' + droppedCol).append('<div data-id = "' + id + '" title = "' + title + '" data-size = "small" style = "width: 220%; height: 170%; position: relative; z-index = 1;"></div>');
 
 			// angular.element(document).injector().invoke(function($compile) {
 			// 	$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
@@ -125,7 +113,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			// $('#row' + droppedRow + 'col' + droppedCol).removeAttr('x-on-drop');
 
 			$('#row' + droppedRow + 'col' + droppedCol).append('<h3>' + title + '</h3>');	
-			$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			
+			if (type != 'choropleth')
+				$('#row' + droppedRow + 'col' + droppedCol).append('<svg data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 300%; height: 180%; position: relative; z-index = 1;"></svg>');
+			else
+				$('#row' + droppedRow + 'col' + droppedCol).append('<div data-id = "' + id + '" title = "' + title + '" data-size = "large" style = "width: 338%; height: 170%; position: relative; z-index = 1;"></div>');
+
 
 			// angular.element(document).injector().invoke(function($compile) {
 			// 	$compile($('#row' + droppedRow + 'col' + droppedCol))($scope);
@@ -151,7 +144,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				.transitionDuration(350);
 
 	
-		placeGraph(row, col, size, id);
+		placeGraph(row, col, size, 'bar', id);
 
 		console.log("#row" + row + "col" + col +" > svg[data-id='" + id + "']");
 		d3.select("#row" + row + "col" + col +" > svg[data-id='" + id + "']")
@@ -198,7 +191,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		
 		chart.interactiveLayer.tooltip.distance = 50;
 
-		placeGraph(row, col, size, id);
+		placeGraph(row, col, size, 'line', id);
 
 		temp = setInterval(function()
 		{
@@ -231,7 +224,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		.y(function(d) { return d.value; })
 		.showLabels(true);
 		
-		placeGraph(row, col, size, id);
+		placeGraph(row, col, size, 'pie', id);
 
 		d3.select("#row" + row + "col" + col +" > svg[data-id='" + id + "']")
 		.datum(graphObject.chart_data)
@@ -242,6 +235,116 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		return(chart);		
 	}
+
+	var map;
+	var popup;
+	var closeTooltip;
+
+    function getColor(d)
+    {
+		return d > 1000 ? '#8c2d04' :
+			d > 500  ? '#cc4c02' :
+			d > 200  ? '#ec7014' :
+			d > 100  ? '#fe9929' :
+			d > 50   ? '#fec44f' :
+			d > 20   ? '#fee391' :
+			d > 10   ? '#fff7bc' :
+			'#ffffe5';
+  	}
+
+  	function getStyle(feature)
+  	{
+     	return {
+        	weight: 2,
+        	opacity: 0.1,
+        	color: 'black',
+        	fillOpacity: 0.7,
+        	fillColor: getColor(feature.properties.density)
+    	};
+ 	}
+  
+	function mousemove(e)
+	{
+		var layer = e.target;
+
+		popup.setLatLng(e.latlng);
+		popup.setContent('<div class="marker-title">' + layer.feature.properties.name + '</div>' +
+		layer.feature.properties.density + ' people per square mile');
+
+		if(!popup._map) 
+			popup.openOn(map);
+		window.clearTimeout(closeTooltip);
+
+		// highlight feature
+		layer.setStyle({
+			weight: 3,
+			opacity: 0.3,
+			fillOpacity: 0.9
+		});
+
+		if(!L.Browser.ie && !L.Browser.opera)
+			layer.bringToFront();
+	}
+
+	function mouseout(e)
+	{
+		statesLayer.resetStyle(e.target);
+		closeTooltip = window.setTimeout(function() {
+			map.closePopup();
+		}, 100);
+	}
+
+	function zoomToFeature(e)
+	{
+		map.fitBounds(e.target.getBounds());
+	}
+
+	function onEachFeature(feature, layer)
+	{
+		console.log('onEachFeature');
+		layer.on({
+			mousemove: mousemove,
+			mouseout: mouseout,
+			click: zoomToFeature
+		});
+	}
+
+	function getLegendHTML()
+	{
+		var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+		labels = [],
+		from, to;
+
+		for(var i = 0; i < grades.length; i++)
+		{
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+			'<li><span class="swatch" style="background:' + getColor(from + 1) + '"></span> ' +
+			from +(to ? '&ndash;' + to : '+')) + '</li>';
+		}
+
+		return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
+	}
+
+	function graphChoroplethMap(row, col, graphObject, size, id)
+	{
+		placeGraph(row, col, size, 'choropleth', id);
+
+		L.mapbox.accessToken = 'pk.eyJ1IjoiaHVtcGhyZXk4MTQ2IiwiYSI6Im9RTi1Nem8ifQ.LTyEXsadU42usXI8O4k2tg';	
+
+		map = L.mapbox.map($("#row" + row + "col" + col +" > div[data-id='" + id + "']")[0], 'examples.map-i86nkdio').setView([37.8, -96], 4);
+
+		popup = new L.Popup({ autoPan: false });	  
+		
+		statesLayer = L.geoJson(graphObject.chart_data,  {
+			style: getStyle,
+			onEachFeature: onEachFeature
+		}).addTo(map);	  
+
+		map.legendControl.addLegend(getLegendHTML());
+}
 
 	function graph(title, dashboardGrid, graphs)
 	{
@@ -288,6 +391,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					else if(graphObject.type == "pie")
 					{
 						nv.addGraph(graphPie(i, j, graphObject, size, id));
+					}
+					else if(graphObject.type == "choropleth")
+					{
+						graphChoroplethMap(i, j, graphObject, size, id);
 					}
 				}
 			}

@@ -103,8 +103,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#metricEquation').keyup(submitCheck);
 		$('#metricEquation').mouseenter(submitCheck);	
 
-		$('body').append('<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">');
-
 		setTimeout(removeLoader(), 0);
 	});	// end $(document).ready
 
@@ -488,13 +486,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$scope.clearAll();
 		currentTab = $scope.graphTab;
-
-		// nv.d3.css was messing up the choropleth mapping functionality, so
-		// this file will only be loaded if the map data visualization is not selected
-		if (currentTab == 4)
-			$('link[href="bower_components/nvd3/nv.d3.css"]').remove();
-		else if ($('link[href="bower_components/nvd3/nv.d3.css"]').length == 0)
-			$('body').append('<link rel = "stylesheet" href = "bower_components/nvd3/nv.d3.css">');
 	};
 
 	// drag and drop functionality for the fields of the visualization
@@ -1203,7 +1194,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var map;
 	var popup;
 	var closeTooltip;
-	L_PREFER_CANVAS = true;
 
     function getColor(d)
     {
@@ -1266,7 +1256,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function onEachFeature(feature, layer)
 	{
-		console.log('onEachFeature');
 		layer.on({
 			mousemove: mousemove,
 			mouseout: mouseout,
@@ -1297,7 +1286,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	{
 		$('#mapWell').append('<div id="map" style = "position: absolute; top: 150px; bottom: 10px; width: 95%;"></div>');
 
-		var i;
 		var locationField = $('#locationField').val();
 		var valueField = $('#valueField'). val();
 
@@ -1321,13 +1309,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function sendGraphToRedis(title, canvas)
 	{
-		if (title == "")
-		{
-			alert("Must enter a title for this graph.")
-			setTimeout(removeLoader(), 0);
-			return;
-		}
-
 		client.getSavedGraphs(function(graphObjects)
 		{
 			for (var i = 0; i < graphObjects.length; i++)
@@ -1347,11 +1328,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 								counter++;
 						}		
 
-						if (graphTypes[$scope.graphTab - 1] != "line")
-							client.saveGraph({'chart_data': chartData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
-						else
+						if (graphTypes[$scope.graphTab - 1] == "line")
 							client.saveGraph({'chart_data': chartData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
+						else if (graphTypes[$scope.graphTab - 1] == "choropleth")
+							client.saveGraph({'chart_data': statesData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+						else					
+							client.saveGraph({'chart_data': chartData, 'title': title + '(' + counter + ')', 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
 						
+							
 						alert(title + '(' + counter + ')' + " graph saved.");
 					}
 					
@@ -1359,11 +1343,13 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 
-			if (graphTypes[$scope.graphTab - 1] != "line")
-				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
-			else
+			if (graphTypes[$scope.graphTab - 1] == "line")
 				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL(), 'xAxis': xAxis, 'yAxis': yAxis, 'is_date_time': isDateTime});
-			
+			else if (graphTypes[$scope.graphTab - 1] == "choropleth")
+				client.saveGraph({'chart_data': statesData , 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+			else					
+				client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
+						
 			setTimeout(removeLoader(), 0);
 			alert(title + " graph saved.");		
 		});
@@ -1390,9 +1376,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 800, 500);
 			image.src = canvas.toDataURL();
-			console.log(image.src);
-
-		
+			
+			sendGraphToRedis(title, canvas);
 			// var download = document.createElement('a');
 			// download.href = canvas.toDataURL();
 			// download.download = 'asdf';
@@ -1408,6 +1393,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 1050, 850);
 			image.src = canvas.toDataURL();
+
+			sendGraphToRedis(title, canvas);
 
 			// var download = document.createElement('a');
 			// download.href = canvas.toDataURL();
@@ -1426,6 +1413,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
 			image.src = canvas.toDataURL();
 
+			sendGraphToRedis(title, canvas);
+
 			// var download = document.createElement('a');
 			// download.href = canvas.toDataURL();
 			// download.download = 'asdf';
@@ -1443,7 +1432,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				image.src = canvas.toDataURL();
 
 				title = $('#titleChoroplethMap').val();
-				console.log(canvas.toDataURL());
 				sendGraphToRedis(title, canvas);
 			});
 		}		
@@ -1514,16 +1502,16 @@ $("#valueField, #titlePie").on({
 });
 
 // for map save button
-$("#locationField, #choroplethValueField").on({
+$("#locationField, #choroplethValueField, #titleChoroplethMap").on({
 	mouseenter: function() {
-		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '' || $("#titleChoroplethMap").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
 		}
 	},
 	keyup: function() {
-		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '') {
+		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '' || $("#titleChoroplethMap").val() == '') {
 			$(".saveBtn").attr("disabled", "disabled");
 		} else {
 			$(".saveBtn").removeAttr("disabled");
