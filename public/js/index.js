@@ -1348,10 +1348,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				title = $('#titleChoroplethMap').val();
 				sendGraphToRedis(title, canvas);
 			});
-		}		
-		
-		// send chart information to redis, for dashboard.js to use
-		
+		}				
 	};
 }]);
 

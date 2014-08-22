@@ -30,7 +30,8 @@ var mysql = require('mysql');
 
 // 	connection.release();
 // });
-
+	
+// MySQL connection
 var mysqlConnection = mysql.createConnection(
 {
 	host: 'ifloops.com',
@@ -107,13 +108,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 	}
 // }
 
-//graphing/dashboard creation page
+// Graphing/dashboard creation page
 app.get('/', function(req, res)
 {
 	res.render('./public/index.html');	
 });
 
-// accessing saved dashboard page
+// Accessing saved dashboard page
 app.get('/*', function(req, res)
 {
 	res.sendFile(__dirname + '/public/saved_dashboards/' + req.originalUrl.substring(1) + '.html');
@@ -138,6 +139,7 @@ var server = http.createServer(app).listen(app.get('port'), function () {
 // 	serveStatic(response, cache, absPath);
 // });
 
+// Reads a file and returns the contents
 function getFile(path, callback)
 {
 	fs.readFile(path,'utf-8', function (err, data)
@@ -186,12 +188,14 @@ var dl = require('delivery');
 	
 // });
 
+// When client connects
 io.on('connection', function(socket)
 {
 	console.log('Client connected');
 
 	var delivery = dl.listen(socket);
 
+	// For uploading files
 	delivery.on('receive.success', function(file)
 	{
 		fs.writeFile('./public/uploaded_files/' + file.name, file.buffer, function(err)
@@ -236,6 +240,7 @@ io.on('connection', function(socket)
 					for (var i = 0; i < sample_data.length; i++)
 						sample_data[i] = './public/sample_data/' + sample_data[i]					
 
+					// Retrieving all tables from MySQL database
 					mysqlConnection.query("select table_name from information_schema.tables where table_type = 'Base Table' and table_schema = 'test_source'", function(err, fields)
 					{
 						var mysqlTables = [];
@@ -325,7 +330,7 @@ io.on('connection', function(socket)
 		})
 	});
 
-	// accessing mysql table data
+	// Accessing mysql table data
 	socket.on('stored table requested', function(param)
 	{
 		mysqlConnection.query("select column_name from information_schema.columns where table_name = '" + param.table  + "'", function(err, fields)
@@ -347,7 +352,7 @@ io.on('connection', function(socket)
 		});		
 	});
 
-	// saving graph data to redis
+	// Saving graph data to redis
 	socket.on('save graph', function(graphObject)
 	{
 		// var base64Data = graphObject.png.replace(/^data:image\/png;base64,/, "");
@@ -361,7 +366,7 @@ io.on('connection', function(socket)
 		// console.log('finished saving');
 	});
 
-	// retrieving graph data from redis
+	// Retrieving graph data from redis
 	socket.on('get saved graphs', function()
 	{
 		client.hkeys("graphs", function (err, replies)
@@ -441,7 +446,7 @@ io.on('connection', function(socket)
 		});		
 	});
 
-	// save dashbaord data to redis
+	// Save dashbaord data to redis
 	socket.on('save dashboard', function(dashboardObject)
 	{
 		fs.writeFile('./public/saved_dashboards/' + dashboardObject.title + '.html', dashboardObject.html, function(err)
@@ -459,7 +464,7 @@ io.on('connection', function(socket)
 		});
 	});
 
-	// retrieving dashbaord data from redis
+	// Retrieving dashbaord data from redis
 	socket.on('get dashboard', function(title)
 	{
 		client.hget('dashboards', title, function(err, reply)
@@ -475,9 +480,3 @@ io.on('connection', function(socket)
 		});
 	});
 });
-
-
-
-
-//var chatServer = require('./public/javascripts/server_handler.js');
-//chatServer.listen(server);
