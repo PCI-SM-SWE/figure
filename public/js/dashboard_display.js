@@ -20,6 +20,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	function displayDashboard()
 	{
+		// Retrieves dashboard information
 		client.getDashboard($('title').html(), function(dashboardObject)
 		{
 			console.log(JSON.stringify(dashboardObject));
@@ -41,14 +42,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}	
 
 	function addLoader()
-	{
-		// setTimeout(function()
-		// {
-			$('#loader').show();
-			$('#darkLayer').show();
-			$('#darkLayer').css('height', $(document).height());
-			
-		// }, 0)
+	{		
+		$('#loader').show();
+		$('#darkLayer').show();
+		$('#darkLayer').css('height', $(document).height());	
 	}
 
 	function removeLoader()
@@ -344,41 +341,19 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}).addTo(map);	  
 
 		map.legendControl.addLegend(getLegendHTML());
-}
+	}
 
+	// plots each graph onto the dashboard
 	function graph(title, dashboardGrid, graphs)
 	{
 		var graphed = false;
 
 		for (var i = 0; i < dashboardGrid.length; i++)
 		{
-			for (var j = 0; j < dashboardGrid[i].length; j++)
-			{
-				var id = dashboardGrid[i][j];
-				var size;
-	
-				if (id != null && id != undefined)
-				{
-					if (id.charAt(id.length - 1) == 'S')
-						size = 'small';
-					else if (id.charAt(id.length - 1) == 'L')
-						size = 'large';
-
-					id = id.substr(0, id.length - 1);				
-
-					var graphObject;
-
-					for (var k = 0; k < graphs.length; k++)
-					{
-						if (id == graphs[k].title)
-						{
-							graphObject = graphs[k];
-							console.log(JSON.stringify(graphObject));
-							break;
-						}
+			for (var j = 0; j < dashboad
 					}		
 
-					console.log(i + " " + j);		
+					// console.log(i + " " + j);		
 
 					if(graphObject.type == "bar")
 					{			

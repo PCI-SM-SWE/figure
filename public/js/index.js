@@ -18,12 +18,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		setTimeout(addLoader(), 0);
 
-		populateFileList();
+		populateFileList();			// Loads the available data sources
 
 		jQuery.event.props.push('dataTransfer');
 		$('input[type=file]').bootstrapFileInput();
 
-		// copy and paste option for data input
+		// Copy and paste option for data input
 		$("#area").bind('paste', function(e)
 		{
 			var elem = $(this);
@@ -48,13 +48,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			}, 1000);
 		});
 
+		// Used for uploading files
 		$(document).on('change', '.btn-file :file', function() 
 		{
 			var input = $(this);
 			var numFiles = input.get(0).files ? input.get(0).files.length : 1
 			var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
 
-			input.trigger('fileselect', [numFiles, label]);		// calls the event below
+			input.trigger('fileselect', [numFiles, label]);		// Calls the event below
 		});
 
 		$('.btn-file :file').on('fileselect', function(event, numFiles, label)
@@ -68,7 +69,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				alert(log);
 		});
 
-		// uploading files
+		// Uploading files
 		socket.on('connect', function()
 		{
 			var delivery = new Delivery(socket);
@@ -91,7 +92,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			});
 		});
 
-		// calcaulte metric equation button enabled/disabled functionality
+		// Determines the metric equation button enabled/disabled functionality
 		var submitCheck = function() 
 		{
 			if($('#metricEquation').val() != '')
@@ -104,20 +105,16 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#metricEquation').mouseenter(submitCheck);	
 
 		setTimeout(removeLoader(), 0);
-	});	// end $(document).ready
+	});	// End $(document).ready
 
-	// shows laoding gif
+	// Shows laoding gif
 	function addLoader()
-	{
-		// setTimeout(function()
-		// {
-			$('#loader').show();
-			$('#darkLayer').show();
-			
-		// }, 0)
+	{	
+		$('#loader').show();
+		$('#darkLayer').show();
 	}
 
-	// hides loading gif
+	// Hides loading gif
 	function removeLoader()
 	{
 		setTimeout(function()
@@ -127,7 +124,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}, 1000);		
 	}
 
-	// uploading a file
+	// Uploading a file
 	$scope.fileUpload = function()
 	{
 		setTimeout(addLoader(), 0);
@@ -152,12 +149,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	};
 
-	// populates uploaded files, sample data, ifloops.com
+	// Populates uploaded files, sample data, ifloops.com
 	function populateFileList()
 	{
 		client.filesList(function(filesObject)
 		{
-			// gets uploaded files
+			// Gets uploaded files
 			$('#storedList').empty();
 
 			var uploaded_files = filesObject.uploaded_files;
@@ -181,7 +178,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#storedList').append(li);
 			}
 
-			// gets sample data
+			// Gets sample data
 			$('#sampleData').empty();
 
 			var sample_data = filesObject.sample_data;
@@ -205,7 +202,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#sampleData').append(li);
 			}
 
-			//gets tabels from ifloops.com
+			// Gets tabels from ifloops.com
 			$('#mysqlTables').empty();
 
 			var mysqlTables = filesObject.mysql_tables;
@@ -238,6 +235,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
+	// Generates draggable fields, the table, and operators
 	function finishedParsing(data)
 	{	
 		fields = Object.keys(dataObjectArray[0]);
@@ -252,7 +250,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		setTimeout(removeLoader(), 0);
 	}
 
-	// access uploaded file or sample data
+	// Access uploaded file or sample data and parses it
 	function storedData(name)
 	{	
 		setTimeout(addLoader(), 0);		
@@ -267,19 +265,18 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				worker: true,
 				step: function(row)
 				{
-					//console.log(JSON.stringify(row.data[0]));
 					dataObjectArray.push(row.data[0]);
 				},
 				complete: function()
 				{	
-					console.log(JSON.stringify(dataObjectArray));				
 					finishedParsing(data);
+					console.log(JSON.stringify(dataObjectArray));
 				}
 			});		
 		});
 	}
 
-	// access a table from ifloops.com
+	// Access a table from ifloops.com
 	function storedTable(table, numEntries)
 	{
 		setTimeout(addLoader(), 0);
@@ -302,7 +299,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	// generates the draggable fields and table header
+	// Generates the draggable fields and table header
 	function generateFields()
 	{
 		$('.fields').empty();
@@ -349,7 +346,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
-	// generates the draggable operators for stats option
+	// Generates the draggable operators for metrics option
 	function generateOperators()
 	{
 		$('.operators').empty();
@@ -376,7 +373,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
-	// displays the raw data in table format
+	// Displays the raw data in table format
 	function populateTable()
 	{
 		var tbody = document.createElement('tbody');
@@ -400,26 +397,23 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#dataTable').tablesorter();
 	}
 
-	// select sample data 
-	// $scope.sampleData = function(num)
-	// {
-	// 	client.sampleDataRequest(num, function(data)
-	// 	{
-	// 		console.log(data);
+	/* -------------------- Status after parsing ------------------------
 
-	// 		$('#area').val(data);
-	// 		var results = $.parse(data);	
-	// 		console.log(results.results.rows[0]);
-	// 		dataObjectArray = results.results.rows;
-	// 		fields = results.results.fields;
-			
-	// 		generateFields();
-	// 		generateOperators();
+	- dataObjectArray is an array of objects, where each object has keys that are fields and values that are the actual data
+	- Ex.
+		Raw Data: 				dataObjectArray:
+		Grades,count 			[{"Grades":"30","Count":"10"},{"Grades":"100","Count":"2"},
+		30,10 					{"Grades":"95","Count":"6"},{"Grades":"84","Count":"40"},{"Grades":"90","Count":"20"}] 
+		100,2
+		95,6
+		84,40
+		90,20
 
-	// 		console.log(JSON.stringify(dataObjectArray));
-	// 	});
-	// };
+	- draggable fields should be generated
+	- the table format of the data should be populated
+	- operators for metrics should be generated
 
+	----------------------------------------------------------------------*/
 
 	var xAxis;					// bar/line
 	var yAxis;					// bar/line
@@ -431,11 +425,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	var currentTab = 1;			// 1 = bar, 2 = line, 3 = pie, 4 = choropleth map
 	var temp;
 
-	// clears/resets all fields, labels, and charts,
+	// Clears/resets all fields, labels, and charts,
 	$scope.clearAll = function()
 	{
 		$(".saveBtn").attr("disabled", "disabled");		// to make save button unclickable
 		
+		// Bar 
 		if(currentTab == 1)
 		{
 			$('#xAxisBar').val('');
@@ -443,6 +438,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#barGraph').empty();
 			$('titleBar').val('');
 		}
+
+		// Line
 		else if(currentTab == 2)
 		{
 			$('#xAxisLine').val('');
@@ -452,11 +449,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#groupingLine').val('');
 			$('titleLine').val('');
 
+			// Used to remove the tooltip, there may be a better way already
+			// provided by nvd3
 			temp = setInterval(function()
 			{
 				$('.nvtooltip').hide();;
 			}, 0);
 		}
+
+		// Pie
 		else if(currentTab == 3)
 		{
 			$('#valueField').val('');
@@ -464,6 +465,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			$('#pieChart').empty();
 			$('#title').val('');
 		}
+
+		// Choropleth map
 		else if(currentTab == 4)
 		{
 			$('#locationField').val('');
@@ -481,14 +484,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		choroplethValueField = '';
 	};
 
-	// when user clicks a visualization type tab
+	// When user clicks a visualization type tab
 	$scope.selectVisualizationType = function()
 	{
 		$scope.clearAll();
 		currentTab = $scope.graphTab;
 	};
 
-	// drag and drop functionality for the fields of the visualization
+	// Drag and drop functionality for the fields of the visualization
 	$scope.dropped = function(dragEl, dropEl)
 	{
 		// console.log(dragEl);
@@ -502,7 +505,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		readyToGraph();
 	};
 
-	// drag and drop functionality for metric options
+	// Drag and drop functionality for metric options
 	$scope.droppedMetric = function(dragEl, dropEl)
 	{
 		console.log(dragEl);
@@ -545,7 +548,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	};
 
-	// drag and drop functionality for certain operators for the metric equation
+	// Drag and drop functionality for certain operators for the metric equation
 	$scope.droppedMetricField = function(dragEl, dropEl)
 	{
 		// console.log(dragEl);
@@ -601,7 +604,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('.inputMetricField').remove();
 	};
 
-	// clears the metric equation
+	// Clears the metric equation
 	$scope.clearMetric = function()
 	{
 		$('.inputMetricField').remove();
@@ -609,7 +612,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#statSubmit').attr('disabled', 'disabled');
 	};
 
-	// calcaultes the metric equation
+	// Evaluates the metric equation
 	$scope.calculateMetric = function()
 	{
 		if($('#metricEquation').val() != '')
@@ -628,9 +631,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}			
 	};
 
-	// graphs the specified visualization type if all necessary input is there
+	// Graphs the specified visualization type if all necessary input is there
 	function readyToGraph()
 	{
+		// Bar
 		if($scope.graphTab == 1)
 		{
 			xAxis = $('#xAxisBar').val();
@@ -642,13 +646,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotBar();
 			}
 		}
+
+		// Line
 		else if($scope.graphTab == 2)
 		{
 			xAxis = $('#xAxisLine').val();
 			yAxis = $('#yAxisLine').val();
 			grouping = $('#groupingLine').val();
 
-			clearInterval(temp);
+			clearInterval(temp);		// clears the hack used to remove tooltips
 
 			if(xAxis != '' && yAxis != '')
 			{
@@ -656,6 +662,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotLine();
 			}
 		}
+
+		// Pie
 		else if($scope.graphTab == 3)
 		{
 			valueField = $('#valueField').val();
@@ -667,6 +675,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotPie();
 			}
 		}
+
+		// Choropleth map
 		else if($scope.graphTab == 4)
 		{
 			locationField = $('#locationField').val();
@@ -678,9 +688,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				plotChoroplethMap();
 			}
 		}		
+
+		// Metrics
 		else if($scope.graphTab == 5)
 		{
-			// if stats tab is selected
+			// if metrics tab is selected
 		}
 
 		// console.log('xAxis: ' + xAxis);
@@ -693,7 +705,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 	var chartData;
 
-	//---------------------------------BAR-----------------------------------------
+	// ---------------------------------BAR-----------------------------------------
 	function plotBar()
 	{
 		// var svg = document.createElement("svg");
@@ -704,7 +716,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// $('#chart1').append(svg);
 
 		$('#barGraph').empty();
-		console.log(JSON.stringify(dataObjectArray));
+		//console.log(JSON.stringify(dataObjectArray));
 
 		var values = new Array();
 
@@ -716,7 +728,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		chartData = new Array();
 		chartData[0] = {key: yAxis, values: values};
 
-		console.log(JSON.stringify(chartData));
+		//console.log(JSON.stringify(chartData));
 
 		nv.addGraph(function()
 		{
@@ -738,7 +750,14 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	//----------------------------------------------Line------------------------------------------
+	// ----------------------------------------------Line------------------------------------------
+	// Converts a string to a date object
+	// List of date formats supported:
+	// MM/DD/YYYY
+	// MM-DD-YYYY 
+	// MM/DD/YYYY HH:mm:SS
+	// MM-DD-YYYY HH:mm:SS
+
 	function parseDateTime(value)
 	{
 		value = value.trim();
@@ -783,7 +802,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		//chartTitle = $('#chartTitle').val();
 		
 		var value;
-		var colors = ['#FF0000', '#0000FF', '#00FF00', '#6600FF', '#FF00FF', '#663300', '#666699'];
+		var colors = ['#FF0000', '#0000FF', '#00FF00', '#6600FF', '#FF00FF', '#663300', '#666699'];		// Different colors used for multiple series
 		var colorsIndex = 0;
 		var individualData;
 		var group;
@@ -792,17 +811,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var yValueString;
 		var xValue;
 		var yValue;
-		var limit = 65;
+		var limit = 65;				
 		isDateTime = false;
 		chartData = new Array();			
 		var temp;
 		var max = 0;
 
+		/*	Determines if x-values are date/time based on x-value field label
+			May need another way to determine that
+			Alternative method: try to create Date objects from all x values and use insstanceof or typeof to check 
+			Comment: this would not work for numbers, 0 would be come Jan 1, 1970	*/
 		if(xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time' || xAxis == 'Field1')
 			isDateTime = true;
 		else
 			isDateTime = false;
 
+		// If a grouping field exists
 		if (grouping != '')
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
@@ -811,13 +835,17 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				xValueString = dataObjectArray[i][xAxis];
 				yValueString = dataObjectArray[i][yAxis];
 
+				// If current element did not specify group or x-value, it will be skipped
 				if (group == '' || xValueString == '')
 					continue;
+				// Y-value is usually quantitative, so blank y-values will become 0
+				// Change this option if necessary 
 				else if (yValueString == '')
 					yValueString = '0';
 
 				// console.log(group);
 
+				// If x-value is date/time
 				if (isDateTime == true)
 				{
 					//xValue = parseDateTime(xValue.toString());
@@ -847,6 +875,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				//console.log(JSON.stringify(value));
 
+				// Adding first element
 				if (chartData.length == 0)
 				{
 					temp = new Array ();
@@ -858,6 +887,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 				else
 				{
+					// If group already exists, appends data
 					for (var j = 0; j < chartData.length; j++)
 					{
 						if (chartData[j].key.substr(0, limit) == group.substr(0, limit))
@@ -878,7 +908,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 							// 		break;
 							// 	}
 							// }
-
 			
 							//chartData[j].values = values;
 							groupExists = true;
@@ -886,6 +915,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 						}						
 					}
 
+					// If current element's group does not exist in chartData
 					if (groupExists == false)
 					{
 						temp = new Array ();
@@ -899,6 +929,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				}
 			}
 		}
+		
+		/*	If no grouping field is specified
+			A lot of this code looks similar to the block above 
+			when the grouping field is specified
+			Could maybe separate some blocks into functions for 
+			better orgnization/less condense*/		
 		else
 		{
 			for (var i = 0; i < dataObjectArray.length; i++)
@@ -949,141 +985,6 @@ app.controller('MainCtrl', ['$scope', function($scope)
 					chartData[0].values.push(value);					
 			}
 		}
-
-		console.log(JSON.stringify(chartData));
-		//return;
-
-
-		// if(grouping != '')
-		// 	group = dataObjectArray[0][grouping];			
-		// else
-		// 	group = false;	
-
-		// if(xAxis == 'date' || xAxis == 'time' || xAxis == 'Date' || xAxis == 'Time' || xAxis == 'Field1')
-		// {
-		// 	isDateTime = true;
-		// 	xValue = parseDateTime(dataObjectArray[0][xAxis].toString());
-
-		// 	if(xValue instanceof Date == true)
-		// 		values.push({x: xValue.getTime(), y: parseFloat(dataObjectArray[0][yAxis])});
-		// 	else
-		// 	{
-		// 		values.push({x: xValue, y: parseFloat(dataObjectArray[0][yAxis])});
-		// 		isDateTime = false;
-		// 	}
-		// }
-		// else
-		// {
-		// 	values.push({x: dataObjectArray[0][xAxis], y: parseFloat(dataObjectArray[0][yAxis])});	
-		// }
-	
-		// console.log('isDateTime: ' + isDateTime);		
-		
-		// for(var i = 1; i < dataObjectArray.length; i++)
-		// {				
-		// 	if(group != false && group != dataObjectArray[i][grouping] && group != '')
-		// 	{
-		// 		//console.log('group: ' + group);
-
-		// 		groupExists = false;
-
-		// 		for(var j = 0; j < chartData.length; j++)
-		// 		{
-		// 			if(chartData[j].key.substr(0, limit) == group.substr(0, limit))
-		// 			{
-		// 				var newValues = chartData[j].values;
-
-		// 				for(var k = 0; k < values.length; k++)
-		// 					newValues.push(values[k]);
-
-		// 				chartData[j].values = newValues;
-		// 				groupExists = true;
-		// 				break;
-		// 			}
-		// 		}
-
-		// 		if(groupExists == false)
-		// 		{
-		// 			console.log('group: ' + group.substr(0, limit));
-		// 			individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
-		// 			chartData.push(individualData);
-		// 			colorsIndex =(colorsIndex + 1) % colors.length;
-
-		// 			//console.log(JSON.stringify(individualData));
-		// 		}
-			
-		// 		group = dataObjectArray[i][grouping];
-		// 		values = new Array();
-
-		// 		// console.log('chartData: ' + JSON.stringify(chartData));
-		// 		// return;
-		// 	}// end if 
-
-		// 	xValue = dataObjectArray[i][xAxis];
-		// 	yValue = dataObjectArray[i][yAxis];
-
-
-		// 	if (yValue == '')
-		// 		yValue = '0';
-			
-		// 	if (xValue != '')
-		// 	{
-		// 		if(isDateTime == true)
-		// 		{				
-		// 			xValue = parseDateTime(xValue.toString());
-
-		// 			if(xValue instanceof Date == true)
-		// 				values.push({x: xValue.getTime(), y: parseFloat(yValue)});
-		// 			else
-		// 				values.push({x: xValue, y: parseFloat(yValue)});				
-		// 		}
-		// 		else
-		// 			values.push({x: xValue, y: parseFloat(yValue)});	
-		// 	}		
-		// }//end for
-
-		// //adding last element
-		// if(group == false)
-		// {
-		// 	console.log('group: ' + group.substr(0, limit));
-		// 	individualData = {values: values, key: yAxis, color: colors[colorsIndex]};
-		// 	chartData.push(individualData);
-		// }
-		// else
-		// {
-		// 	groupExists = false;
-
-		// 	for(var j = 0; j < chartData.length; j++)
-		// 	{
-		// 		if(chartData[j].key.substr(0, limit) == group.substr(0, limit))
-		// 		{
-		// 			var newValues = chartData[j].values;
-
-		// 			for(var k = 0; k < values.length; k++)
-		// 				newValues.push(values[k]);
-
-		// 			chartData[j].values = newValues;
-		// 			groupExists = true;
-		// 			break;
-		// 		}
-		// 	}
-
-		// 	if(groupExists == false)
-		// 	{
-		// 		console.log('group: ' + group.substr(0, limit));
-		// 		individualData = {values: values, key: group.substr(0, limit), color: colors[colorsIndex]};
-		// 		chartData.push(individualData);
-
-		// 		console.log(JSON.stringify(individualData));
-		// 	}
-		// }
-
-		//console.log(JSON.stringify(chartData));
-		//console.log(chartData.length);
-		//return;
-		
-	
-		//$('#chart').prepend('<div id = "title" style = "font-size: 30px; margin-top: 1%;">' + chartTitle + '</div>');
 		
 		nv.addGraph(function()
 		{
@@ -1091,8 +992,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			.useInteractiveGuideline(true)
 			.transitionDuration(350)
 			.showYAxis(true)
-			.showXAxis(true);
-			
+			.showXAxis(true);			
 
 			chart.xAxis.rotateLabels(-65);
 			chart.xAxis.showMaxMin(true);
@@ -1190,11 +1090,15 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});		
 	}
 
-	//-------------------------- MAP GRAPHING ----------------------------------
+	/*	-------------------------- MAP GRAPHING ----------------------------------
+		More functions/code than other types of visualization
+		There may be a way to condense all this	*/
 	var map;
 	var popup;
 	var closeTooltip;
 
+	/*	Determines the color based on population value 
+    	based on statesData	*/
     function getColor(d)
     {
 		return d > 1000 ? '#8c2d04' :
@@ -1218,6 +1122,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
     	};
  	}
   
+  	// Manages the tooltips
 	function mousemove(e)
 	{
 		var layer = e.target;
@@ -1230,7 +1135,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			popup.openOn(map);
 		window.clearTimeout(closeTooltip);
 
-		// highlight feature
+		// Highlight feature
 		layer.setStyle({
 			weight: 3,
 			opacity: 0.3,
@@ -1254,6 +1159,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		map.fitBounds(e.target.getBounds());
 	}
 
+	// Calls the previous three functions and adds them to the layer
 	function onEachFeature(feature, layer)
 	{
 		layer.on({
@@ -1263,6 +1169,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
+	// Legend
 	function getLegendHTML()
 	{
 		var grades = [0, 10, 20, 50, 100, 200, 500, 1000],
@@ -1307,6 +1214,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		$('#mapWell').css('height', ($('#mapWell').outerHeight(true) + $('#map').outerHeight()) + 'px');
 	}
 
+	/*	Sends visualization data to redis and
+		is retrieved and used in dashboard.js(dashboard creation)	*/
 	function sendGraphToRedis(title, canvas)
 	{
 		client.getSavedGraphs(function(graphObjects)
@@ -1355,7 +1264,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		});
 	}
 
-	// saving chart to local drive
+	// Saving chart to local drive/server
 	$scope.saveFigure = function()
 	{
 		var canvas;
@@ -1366,16 +1275,21 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		setTimeout(addLoader(), 0);
 
+		/*	To save <svg> elements, I first converted/placed it to a canvas
+			and then it can be loaded onto an <img> element and viewed	
+			Savings choropleth maps are a little different than saving 
+			nvd3 graphs		*/
+
 		if($scope.graphTab == 1)
 		{
 			graph = document.getElementById('barGraph');
 			canvas = document.getElementById('barCanvas');
-			image = document.getElementById('barImage');
+			// image = document.getElementById('barImage');
 			title = $('#titleBar').val();
 
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 800, 500);
-			image.src = canvas.toDataURL();
+			// image.src = canvas.toDataURL();
 			
 			sendGraphToRedis(title, canvas);
 			// var download = document.createElement('a');
@@ -1387,12 +1301,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{			
 			graph = document.getElementById('lineGraph');	
 			canvas = document.getElementById('lineCanvas');
-			image = document.getElementById('lineImage');
+			// image = document.getElementById('lineImage');
 			title = $('#titleLine').val();
 
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '</svg>', 0, 0, 1050, 850);
-			image.src = canvas.toDataURL();
+			// image.src = canvas.toDataURL();
 
 			sendGraphToRedis(title, canvas);
 
@@ -1406,12 +1320,12 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{
 			graph = document.getElementById('pieChart');
 			canvas = document.getElementById('pieCanvas');
-			image = document.getElementById('pieImage');
+			// image = document.getElementById('pieImage');
 			title = $('#titlePie').val();
 
 			ctx = canvas.getContext('2d');
 			ctx.drawSvg('<svg>' + graph.innerHTML + '/<svg>', 0, 0, 800, 470);
-			image.src = canvas.toDataURL();
+			// image.src = canvas.toDataURL();
 
 			sendGraphToRedis(title, canvas);
 
@@ -1425,11 +1339,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		{			
 			leafletImage(map, function(err, canvas)
 			{
-				image = document.getElementById('choroplethMapImage');
-				var dimensions = map.getSize();
-				image.width = dimensions.x;
-				image.height = dimensions.y;
-				image.src = canvas.toDataURL();
+				// image = document.getElementById('choroplethMapImage');
+				// var dimensions = map.getSize();
+				// image.width = dimensions.x;
+				// image.height = dimensions.y;
+				// image.src = canvas.toDataURL();
 
 				title = $('#titleChoroplethMap').val();
 				sendGraphToRedis(title, canvas);
@@ -1443,11 +1357,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 
 /*
- * makes save button unclickable if nothing is in field
+ * Makes save button unclickable if nothing is in field
  * Lot of repeating code, see if I can condense it somehow
  */
 
-// for bar graph save button
+// For bar graph save button
 $("#xAxisBar, #yAxisBar, #titleBar").on({
 	mouseenter: function() {
 		if($("#xAxisBar").val() == '' || $("#yAxisBar").val() == '' || $("#titleBar").val() == '' || $('#barGraph').children().length == 0) {
@@ -1465,7 +1379,7 @@ $("#xAxisBar, #yAxisBar, #titleBar").on({
 	}
 });
 
-// for line graph save button
+// For line graph save button
 $("#xAxisLine, #yAxisLine, #titleLine").on({
 	mouseenter: function() {
 		if($("#xAxisLine").val() == '' || $("#yAxisLine").val() == '' || $("#titleLine").val() == '' || $('#lineGraph').children().length == 0) {
@@ -1483,7 +1397,7 @@ $("#xAxisLine, #yAxisLine, #titleLine").on({
 	}
 });
 
-// for pie chart save button
+// For pie chart save button
 $("#valueField, #titlePie").on({
 	mouseenter: function() {
 		if($("#valueField").val() == '' || $("#titlePie").val() == '' || $('#pieChart').children().length == 0) {
@@ -1501,7 +1415,7 @@ $("#valueField, #titlePie").on({
 	}
 });
 
-// for map save button
+// For map save button
 $("#locationField, #choroplethValueField, #titleChoroplethMap").on({
 	mouseenter: function() {
 		if($("#locationField").val() == '' || $("#choroplethValueField").val() == '' || $("#titleChoroplethMap").val() == '') {

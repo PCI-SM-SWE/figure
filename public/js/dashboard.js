@@ -30,14 +30,10 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	});
 
 	function addLoader()
-	{
-		// setTimeout(function()
-		// {
-			$('#loader').show();
-			$('#darkLayer').show();
-			$('#darkLayer').css('height', $(document).height());
-			
-		// }, 0)
+	{		
+		$('#loader').show();
+		$('#darkLayer').show();
+		$('#darkLayer').css('height', $(document).height());
 	}
 
 	function removeLoader()
@@ -49,7 +45,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}, 1000);		
 	}
 
-
+	// Retrieves saved graphs from redis
 	function getSavedGraphs()
 	{
 		client.getSavedGraphs(function(graphObjects)
@@ -68,6 +64,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				
 				console.log(JSON.stringify(graphObject));
 
+				// Populating the cool dropdown
 				switch(graphObject.type) {
 				    case "bar":
 				        barCnt += 1;
@@ -96,6 +93,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 				// $('#' + graphObject.type + 'Graphs').append('<li><a href = "">' + graphObject.file_name + '</a></li>');
 
+				// Creating the link to the each graph's image
 				var li = document.createElement('li');
 				var a = document.createElement('a');
 				a.setAttribute('style', 'cursor: default;');
@@ -116,6 +114,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 					$('#thumbnails').append('<div class="btn-group" data-toggle="buttons"><label class="btn btn-default" name = "small"><input type="radio">Small</label><label class="btn btn-default" name = "large"><input type="radio">Large</label></div><br><br>');
 
+					// Small and large sizes
 					$("label[name = 'small']").click(function()
 					{
 						$('#thumbnails').children("img, p").remove();
@@ -170,6 +169,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$('#' + graphObject.type + 'Graphs').append(li);
 			}
 
+			// Cool dropdown 
 			$("#menu-bar").on({
 				mouseenter: function() {
 					$("#menu-bar ul").css("height", barCnt*31 + "px");
@@ -216,10 +216,11 @@ app.controller('MainCtrl', ['$scope', function($scope)
 	}
 
 	var rowBounds = 3;
-	var colBounds = 5;
-	var grid = [[], [], [], []];
-	var dashboardGrid = [[], [], [], []];
+	var colBounds = 5;	
+	var grid = [[], [], [], []];			// Used to keep track of graph locations
+	var dashboardGrid = [[], [], [], []];	// Contains graph locations as well as size data
 
+	// Resets a specific cell
 	function resetCell(row, col)
 	{
 		$('#row' + row + 'col' + col).empty();
@@ -235,6 +236,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		// });	
 	}
 
+	// Resets the whole dashboard
 	$scope.resetGrid = function()
 	{
 		for (var i = 0; i < grid.length; i++)
@@ -247,6 +249,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	}
 
+	// Checks if cell has been taken by another graph
 	function spaceTaken(graphRow, graphCol, usedRow, usedCol)
 	{
 		for (var i = 0; i < usedRow.length; i++)
@@ -258,6 +261,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return (true);
 	}
 
+	// Dragging graph image to the dashboard
 	function placeGraph (droppedRow, droppedCol, size, type, id)
 	{		
 		var graphRow;
@@ -272,6 +276,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		if (size == 'small')
 		{
+			// Determines the coordinates, so graph is not out of bounds
 			if (droppedRow + 1 <= rowBounds)
 			{
 				if (droppedCol + 1 <= colBounds)
@@ -304,6 +309,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			usedRow = [0, 0, 1, 1];
 			usedCol = [0, 1, 0, 1];
 
+			// Checks if any graphs are already in the spaces trying to be used
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				$('div.alert').remove();
@@ -335,6 +341,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
+			// Updates the grid with teh graph's id
 			grid[graphRow][graphCol] = id;
 			grid[graphRow][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol] = id;
@@ -344,6 +351,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 		else if (size == 'large')
 		{
+			// Determines the coordinates so graph is not out of bounds
 			if (droppedRow + 1 <= rowBounds)
 			{
 				if (droppedCol + 2 <= colBounds)
@@ -392,6 +400,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			usedRow = [0, 0, 0, 1, 1, 1];
 			usedCol = [0, 1, 2, 0, 1, 2];
 
+			// Checks if any graphs are already in the spaces trying to be used
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				$('div.alert').remove();
@@ -425,6 +434,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
+			// Updates grid
 			grid[graphRow][graphCol] = id;
 			grid[graphRow][graphCol + 1] = id;
 			grid[graphRow][graphCol + 2] = id;
@@ -435,20 +445,22 @@ app.controller('MainCtrl', ['$scope', function($scope)
 			dashboardGrid[graphRow][graphCol] = id + 'L';
 		}	
 		
-		var t = "";
-		for (var i = 0; i < grid.length; i++)
-		{
-			for (var j = 0; j < grid[i].length; j++)
-			{
-				t += grid[i][j] + " "
-			}
-			t += "\n";
-		}
-		console.log(t);
+		// var t = "";
+		// for (var i = 0; i < grid.length; i++)
+		// {
+		// 	for (var j = 0; j < grid[i].length; j++)
+		// 	{
+		// 		t += grid[i][j] + " "
+		// 	}
+		// 	t += "\n";
+		// }
+		// console.log(t);
 
 		return ({'graphRow': graphRow, 'graphCol': graphCol});
 	}
 
+	/*	Moving graph from one cell to another
+		Choropleth maps cannot be moved	*/
 	function moveGraph (dragRow, dragCol, droppedRow, droppedCol, size, id)
 	{		
 		var graphRow;
@@ -494,18 +506,20 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			var gridOld = [[], [], [], []];
 
-			//copy grid 
+			// Copies grid to gridOld
 			for (var i = 0; i < grid.length; i++)
 			{
 				for (var j = 0; j < grid[i].length; j++)
 					gridOld[i][j] = grid[i][j];
 			}
 
+			// Clears the grid of the old location
 			for (var i = 0; i < usedRow.length; i++)
 			{
 				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
 			}
 
+			// Determines if graph can be placed to new location
 			if (spaceTaken(graphRow, graphCol, usedRow, usedCol) == false)
 			{
 				$('div.alert').remove();
@@ -518,7 +532,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 			grid = gridOld;
 
-			//clear old location
+			// Clears old location
 			for (var i = 0; i < usedRow.length; i++)
 			{
 				grid[dragRow + usedRow[i]][dragCol + usedCol[i]] = undefined;
@@ -550,6 +564,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 				$compile($('#row' + graphRow + 'col' + graphCol))($scope);
 			});	
 
+			// Updates the grid at the new location
 			grid[graphRow][graphCol] = id;
 			grid[graphRow][graphCol + 1] = id;
 			grid[graphRow + 1][graphCol] = id;
@@ -686,6 +701,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return ({'graphRow': graphRow, 'graphCol': graphCol});
 	}
 
+	//	----------------------------- Map Graphing Functions ----------------------
 	var map;
 	var popup;
 	var closeTooltip;
@@ -778,6 +794,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		return '<span>People per square mile</span><ul>' + labels.join('') + '</ul>';
 	}
 
+	// When a graph is placed or moved
 	$scope.dropped = function(dragEl, dropEl)
 	{
 		console.log(dragEl);
@@ -797,6 +814,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var dragRow;
 		var dragCol;
 
+		// If graph is being moved
 		if (drag.attr('data-placed') == 'true')
 		{
 			drag = drag.children('svg');
@@ -808,6 +826,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		var id = drag.attr('data-id');		
 		var size = drag.attr('data-size');
 
+		// Find the specific object that belongs to the dragged graph
 		for(var i = 0; i < graphs.length; i++)
 		{
 			if(graphs[i].title == id)
@@ -1027,6 +1046,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 		}
 	};
 	
+	// Publish dashboard
 	$scope.publish = function()
 	{
 		var dashboardName = prompt('What would you like to name this dashboard?');
@@ -1036,6 +1056,8 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		dashboardName = dashboardName.split(' ').join('_');
 
+		/*	Long html for single dashboard page
+			Could be a better way to create a new pie-badge*/
 		var html = '<!DOCTYPE html>\n' +
 			'<html lang="en" ng-app = "Dashboard">\n' +
 			'<head>\n' +
@@ -1108,6 +1130,7 @@ app.controller('MainCtrl', ['$scope', function($scope)
 
 		
 		console.log("saving");
+		// Sending dashboard data to redis and opening a new window for that single page dashboard
 		client.saveDashboard({'title': dashboardName, 'html': html, 'grid': dashboardGrid}, function()
 		{
 			alert("You will now be redirected to your dashbaord.");
