@@ -34,29 +34,6 @@
 <script type="text/javascript" src="javascripts/client.js"></script>
 <script type="text/javascript" src="javascripts/app.js"></script>
 
-<style type="text/css">
-#map {
-    position: absolute;
-    top:0;
-    bottom:0;
-    width:100%;
-}
-
-.map-legend .swatch {
-    width: 20px;
-    height: 20px;
-    float: left;
-    margin-right:10px;
-}
-
-.leaflet-popup-close-button {
-    display: none;
-}
-
-.leaflet-popup-content-wrapper {
-    pointer-events: none;
-}
-</style>
 </head>
 
 <body ng-controller="mainCtrl">
@@ -66,8 +43,6 @@
     </div>
 </div>
 
-<br>
-<br>
 <br>
 <br>
 <br>
@@ -112,7 +87,8 @@
             <div class="panel-heading">
                 <h3>Description</h3>
             </div>
-            <textarea class="col-lg-12 col-md-12 col-sm-12 col-xs-12" rows="8" id="visualizationDescription" style="resize: none;"></textarea>
+            <textarea class="col-lg-12 col-md-12 col-sm-12 col-xs-12" rows="8"
+                      id="visualizationDescription" style="resize: none; border: none;"></textarea>
         </div>
     </div>
 
@@ -131,39 +107,56 @@
 <br>
 
 <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-        <div class="panel panel-primary row text-center">
-            <div class="panel-heading">
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-4">
+        <div class="panel panel-primary text-center">
+            <div id="draggable-fields-heading" class="panel-heading">
                 <h3>Draggable Fields</h3>
             </div>
-            <div style="overflow: scroll; height: 250px;">
-
+            <div style="overflow: scroll; height: 226px;">
                 <ul id="fields" class="nav nav-pills">
-
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7" style="margin-left: 20px; height: 247px;" >
-
-        <div class="panel panel-success row">
+    <div class="col-lg-9 col-md-9 col-sm-8 col-xs-8">
+        <div class="panel panel-success">
             <div class="panel-heading text-center">
                 <h3>Droppable Area</h3>
             </div>
-
-            <br>
             <div id="dropArea" style="padding: 5px;">
-
             </div>
         </div>
     </div>
+</div>
 
-    <div id="chart" class="panel panel-danger row text-center col-lg-9 col-md-9 col-sm-9 col-xs-9" style="margin-top: 1%; margin-left: 18%; height: 600px;">
-
-        <div id='map'></div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 id="title"></h3>
+            </div>
+            <div id="graph-result" class="panel-body">
+                <svg>
+                </svg>
+            </div>
+        </div>
     </div>
+</div>
 
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 style="text-align: right;"><i>I can show you the world...</i></h3>
+            </div>
+            <div class="panel-body">
+                <div id="chart" style="height: 600px;">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

@@ -6,3 +6,35 @@ body {
 a {
     color: #00B7FF;
 }
+
+label {
+    margin-right: 1em;
+}
+
+/* Map styles */
+#map {
+    position: absolute;
+    top: 84px;
+    bottom: 38px;
+    width: 95%;
+}
+
+.map-legend .swatch {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right:10px;
+}
+
+.leaflet-popup-close-button {
+    display: none;
+}
+
+.leaflet-popup-content-wrapper {
+    pointer-events: none;
+}
+
+/* Override for some weird Bootstrap things...*/
+h1, .h1, h2, .h2, h3, .h3 {
+    margin: 10px 0 !important;
+}
