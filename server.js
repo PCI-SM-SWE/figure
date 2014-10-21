@@ -33,7 +33,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', function (req, res)
 {
-	res.render ('index.html');	
+    res.render ('index.html');
 });
 app.get('/users', user.list);
 app.get('/upload', data.upload);
@@ -43,5 +43,5 @@ var server = http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-var server_handler = require ('./server_handler.js');
-server_handler.listen (server);
+var server_handler = require('./server_handler.js');
+server_handler.listen(server);

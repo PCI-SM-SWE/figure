@@ -4,7 +4,6 @@ module.directive('lvlDraggable', ['$rootScope', 'uuid', function($rootScope, uui
 	    return {
 	        restrict: 'A',
 	        link: function(scope, el, attrs, controller) {
-	        	console.log("linking draggable element");
 
 	            angular.element(el).attr("draggable", "true");
 	            var id = angular.element(el).attr("id");
@@ -66,8 +65,8 @@ module.directive('lvlDropTarget', ['$rootScope', 'uuid', function($rootScope, uu
 	                e.stopPropogation(); // Necessary. Allows us to drop.
 	              }
 	            	var data = e.dataTransfer.getData("text");
-	                var dest = document.getElementById(id);
-	                var src = document.getElementById(data);
+	                var dest = id; // fix for angular 1.3 support #document.getElementById(id);
+	                var src = data; // fix for angular 1.3 support #document.getElementById(data);
 	                
 	                scope.onDrop({dragEl: src, dropEl: dest});
 	            });

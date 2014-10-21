@@ -1,62 +1,69 @@
 <!DOCTYPE html>
 
-<html ng-app = "figure">
+<html ng-app="figure">
 
 <head>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-<link rel = "stylesheet" href = "stylesheets/style.css">
-<link rel = "stylesheet" href = "bower_components/bootstrap/dist/css/bootstrap.css">
-<link rel = "stylesheet" href = "bower_components/font-awesome/css/font-awesome.css">
+<link rel="stylesheet" href="stylesheets/style.css">
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
 
-<script type = "text/javascript" src = "bower_components/angular/angular.js"></script>
-<script type = "text/javascript" src = "bower_components/jquery/dist/jquery.js"></script>
-<script type = "text/javascript" src = "bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
-<script type = "text/javascript" src = "/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
-<script type = "text/javascript" src = "bower_components/d3/d3.js"></script>
-<script type = "text/javascript" src = "javascripts/lvl-uuid.js"></script>
-<script type = "text/javascript" src = "javascripts/lvl-drag-drop.js"></script>
+<script type="text/javascript" src="bower_components/d3/d3.js"></script>
+<script type="text/javascript" src="javascripts/lvl-uuid.js"></script>
+<script type="text/javascript" src="javascripts/lvl-drag-drop.js"></script>
 
-<script type = "text/javascript" src = "javascripts/jquery.csv-0.71.js"></script>
+<script type="text/javascript" src="javascripts/jquery.csv-0.71.js"></script>
 
-<script type = "text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-<script type = "text/javascript" src = "javascripts/nv.d3.js"></script>
-<link rel = "stylesheet" href = "stylesheets/nv.d3.css">
+<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="javascripts/nv.d3.js"></script>
+<link rel="stylesheet" href="stylesheets/nv.d3.css">
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
 <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 
-<script type = "text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
-<link rel = "stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'/>
-<script type = "text/javascript" src = "javascripts/us-states.js"></script>
+<script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+<link rel="stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'/>
+<script type="text/javascript" src="javascripts/us-states.js"></script>
 
-<script type = "text/javascript" src = "javascripts/client.js"></script>
-<script type = "text/javascript" src = "javascripts/app.js"></script>
+<script type="text/javascript" src="javascripts/client.js"></script>
+<script type="text/javascript" src="javascripts/app.js"></script>
 
-<style>
+<style type="text/css">
+#map {
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+}
 
-#map { position:absolute; top:0; bottom:0; width:100%; }
 .map-legend .swatch {
-  width:20px;
-  height:20px;
-  float:left;
-  margin-right:10px;
-  }
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right:10px;
+}
+
 .leaflet-popup-close-button {
-  display: none;
-  }
+    display: none;
+}
+
 .leaflet-popup-content-wrapper {
-  pointer-events: none;
-  }
+    pointer-events: none;
+}
 </style>
 </head>
 
-<body ng-controller = "mainCtrl">
-<div class = "panel panel-info row text-center col-md-12 col-xs-12" style = "position: fixed; z-index: 999999; opacity: 0.7; margin-top: -52px;">
-	<div class = "panel-heading" style = "margin-left: -70px;">
-		<h1>Data Visualization</h1>
-	</div>
+<body ng-controller="mainCtrl">
+<div class="panel panel-info row text-center col-md-12 col-xs-12" style="position: fixed; z-index: 999999; opacity: 0.7; margin-top: -52px;">
+    <div class="panel-heading" style="margin-left: -70px;">
+        <h1>Data Visualization</h1>
+    </div>
 </div>
 
 <br>
@@ -65,23 +72,23 @@
 <br>
 <br>
 
-<ul class = "nav nav-pills">
-	<li id = "tab1" class = "active" ng-click = "selectTab (1)">
-		<a data-toggle = "tab">Input Data or Choose</a>
-	</li>
-	<li id = "tab2" class = "dropdown" style = "-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
-		<a id = "sampleData" data-toggle = "dropdown" class = "dropdown-toggle" ng-click = "selectTab (2);">Sample Data<b class = "caret"></b></a> 
-		<ul class = "dropdown-menu">
-			<li><a ng-click = "selectSampleData (1)">Line Graph Sample Data</a></li>
-			<li><a ng-click = "selectSampleData (2)">Pie Chart Sample Data</a></li>	
-			<li><a ng-click = "selectSampleData (3)">Choropleth Map Sample Data</a></li>	
-		</ul>
-	</li>
+<ul class="nav nav-pills">
+    <li id="tab1" class="active" ng-click="selectTab (1)">
+        <a data-toggle="tab">Input Data or Choose</a>
+    </li>
+    <li id="tab2" class="dropdown" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
+        <a id="sampleData" data-toggle="dropdown" class="dropdown-toggle" ng-click="selectTab (2);">Sample Data<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a ng-click="selectSampleData (1)">Line Graph Sample Data</a></li>
+            <li><a ng-click="selectSampleData (2)">Pie Chart Sample Data</a></li>
+            <li><a ng-click="selectSampleData (3)">Choropleth Map Sample Data</a></li>
+        </ul>
+    </li>
 </ul>
 
-<div class = "row">	
-	<br>
-	<textarea id = "data" class = "col-md-12 col-xs-12" rows = "20" style = "resize: none;" placeholder = "Enter Data Here" spellcheck = "false"></textarea>	
+<div class="row">
+    <br>
+    <textarea id="data" class="col-md-12 col-xs-12" rows="20" style="resize: none;" placeholder="Enter Data Here" spellcheck="false"></textarea>
 </div>
 
 <br>
@@ -89,76 +96,75 @@
 <br>
 
 
-<div class = "row">
-	<div class = "col-lg-3 col-md-3 col-sm-4 col-xs-5">
-		<div id = "a" class="btn-group">
-		  <a id = "visualizationDropdown" class="btn btn-primary"><i class="fa"></i>Select Visualization</a>
-		  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-		    <span class="fa fa-caret-down"></span></a>
-		  <ul class="dropdown-menu">
-		  	<li><a ng-repeat = "v in visualizationList" ng-click = "selectVisualization (v)"><i class="fa"></i>{{v}}</a></li>
-		  </ul>
-		</div>
-	</div>
-	
-	<div class = "col-lg 4 col-md-4 col-sm-3 col-xs-3" style = "margin-right: 2%;">
-		<div class = "panel panel-warning row text-center">
-			<div class = "panel-heading">
-				<h3>Description</h3>
-			</div>
-			<textarea class = "col-lg-12 col-md-12 col-sm-12 col-xs-12" rows = "8" id = "visualizationDescription" style = "resize: none;"></textarea>
-		</div>
-	</div>
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-5">
+        <div id="a" class="btn-group">
+          <a id="visualizationDropdown" class="btn btn-primary"><i class="fa"></i>Select Visualization</a>
+          <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-caret-down"></span></a>
+          <ul class="dropdown-menu">
+            <li><a ng-repeat="v in visualizationList" ng-click="selectVisualization (v)"><i class="fa"></i>{{v}}</a></li>
+          </ul>
+        </div>
+    </div>
 
-	<div class = "col-lg-4 col-md-4 col-sm-4 col-xs-3">
-		<div class = "panel panel-danger row text-center">
-			<div class = "panel-heading">
-				<h3>Visualization Preview</h3>
-			</div>
-			<img id = "previewImage" class = "col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		</div>
-	</div>
+    <div class="col-lg 4 col-md-4 col-sm-3 col-xs-3" style="margin-right: 2%;">
+        <div class="panel panel-warning row text-center">
+            <div class="panel-heading">
+                <h3>Description</h3>
+            </div>
+            <textarea class="col-lg-12 col-md-12 col-sm-12 col-xs-12" rows="8" id="visualizationDescription" style="resize: none;"></textarea>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+        <div class="panel panel-danger row text-center">
+            <div class="panel-heading">
+                <h3>Visualization Preview</h3>
+            </div>
+            <img id="previewImage" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        </div>
+    </div>
 </div>
 
 <br>
 <br>
 <br>
 
+<div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+        <div class="panel panel-primary row text-center">
+            <div class="panel-heading">
+                <h3>Draggable Fields</h3>
+            </div>
+            <div style="overflow: scroll; height: 250px;">
 
-<div class = "row">
-	<div class = "col-lg-2 col-md-2 col-sm-4 col-xs-4">
-		<div class = "panel panel-primary row text-center">
-			<div class = "panel-heading">
-				<h3>Draggable Fields</h3>
-			</div>
-			<div style = "overflow: scroll; height: 250px;">
-			
-				<ul id = "fields" class = "nav nav-pills">
-					
-				</ul>
-			</div>			
-		</div>
-	</div>
-	
-	<div class = "col-lg-9 col-md-9 col-sm-7 col-xs-7" style = "margin-left: 20px; height: 247px;" >
-		
-		<div class = "panel panel-success row">
-			<div class = "panel-heading text-center">
-				<h3>Droppable Area</h3>
-			</div>			
-				
-			<br>
-			<div id = "dropArea" style = "display: inline;">			
-				
-			</div>					
-		</div>
-	</div>
-	
-	<div id = "chart" class = "panel panel-danger row text-center col-lg-9 col-md-9 col-sm-9 col-xs-9" style = "margin-top: 1%; margin-left: 18%; height: 600px;">
-		
-		<div id = 'map'></div>	
-	</div>
-	
+                <ul id="fields" class="nav nav-pills">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9 col-md-9 col-sm-7 col-xs-7" style="margin-left: 20px; height: 247px;" >
+
+        <div class="panel panel-success row">
+            <div class="panel-heading text-center">
+                <h3>Droppable Area</h3>
+            </div>
+
+            <br>
+            <div id="dropArea" style="padding: 5px;">
+
+            </div>
+        </div>
+    </div>
+
+    <div id="chart" class="panel panel-danger row text-center col-lg-9 col-md-9 col-sm-9 col-xs-9" style="margin-top: 1%; margin-left: 18%; height: 600px;">
+
+        <div id='map'></div>
+    </div>
+
 </div>
 
 </body>
