@@ -1,10 +1,8 @@
-rotund-pony
+something-something-something-project
 ===========
 
 ##Getting Started
-Install [Nodejs](http://nodejs.org/) (available as the 'MEAN Stack' application in
- Digital Ocean). Now navigate into your app directory (i.e.
- rotund-pony) and:
+Standard MEAN application. Assuming you have Node and NPM installed and working correctly...
 
 ```
 #Install deps
@@ -13,10 +11,7 @@ npm install -g bower
 #install client side packages
 bower install
 #Start the app
-node app.js
+npm start
 ```
 
 You can then view your app at http://hostname:3000
-
-JIRA - http://ifloops.com:8080/
-Confluence - http://ifloops.com:8090/
