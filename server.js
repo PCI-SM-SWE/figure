@@ -15,7 +15,7 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'jade');
-app.engine ('html', require('ejs').renderFile);
+app.engine('html', require('ejs').renderFile);
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
@@ -33,7 +33,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', function (req, res)
 {
-    res.render ('index.html');
+    res.render('index.html');
 });
 app.get('/users', user.list);
 app.get('/upload', data.upload);

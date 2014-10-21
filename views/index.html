@@ -73,15 +73,15 @@
 <br>
 
 <ul class="nav nav-pills">
-    <li id="tab1" class="active" ng-click="selectTab (1)">
+    <li id="tab1" class="active" style="cursor: pointer;" ng-click="selectTab(1)">
         <a data-toggle="tab">Input Data or Choose</a>
     </li>
-    <li id="tab2" class="dropdown" style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
-        <a id="sampleData" data-toggle="dropdown" class="dropdown-toggle" ng-click="selectTab (2);">Sample Data<b class="caret"></b></a>
+    <li id="tab2" class="dropdown" style="cursor: pointer; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;">
+        <a id="sampleData" data-toggle="dropdown" class="dropdown-toggle" ng-click="selectTab(2);">Sample Data<b class="caret"></b></a>
         <ul class="dropdown-menu">
-            <li><a ng-click="selectSampleData (1)">Line Graph Sample Data</a></li>
-            <li><a ng-click="selectSampleData (2)">Pie Chart Sample Data</a></li>
-            <li><a ng-click="selectSampleData (3)">Choropleth Map Sample Data</a></li>
+            <li><a ng-click="selectSampleData(1)">Line Graph Sample Data</a></li>
+            <li><a ng-click="selectSampleData(2)">Pie Chart Sample Data</a></li>
+            <li><a ng-click="selectSampleData(3)">Choropleth Map Sample Data</a></li>
         </ul>
     </li>
 </ul>
@@ -95,15 +95,14 @@
 <br>
 <br>
 
-
 <div class="row">
     <div class="col-lg-3 col-md-3 col-sm-4 col-xs-5">
         <div id="a" class="btn-group">
-          <a id="visualizationDropdown" class="btn btn-primary"><i class="fa"></i>Select Visualization</a>
+          <a id="visualizationDropdown" class="btn btn-primary" style="cursor: default;"><i class="fa"></i>Select Visualization</a>
           <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-caret-down"></span></a>
           <ul class="dropdown-menu">
-            <li><a ng-repeat="v in visualizationList" ng-click="selectVisualization (v)"><i class="fa"></i>{{v}}</a></li>
+            <li><a ng-repeat="v in visualizationList" ng-click="selectVisualization(v)"><i class="fa"></i>{{v}}</a></li>
           </ul>
         </div>
     </div>
@@ -122,7 +121,7 @@
             <div class="panel-heading">
                 <h3>Visualization Preview</h3>
             </div>
-            <img id="previewImage" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <img id="previewImage" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" src="images/unavailable.png">
         </div>
     </div>
 </div>
