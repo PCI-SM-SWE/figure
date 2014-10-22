@@ -37,7 +37,8 @@
 </head>
 
 <body ng-controller="mainCtrl">
-<div class="panel panel-info row text-center col-md-12 col-xs-12" style="position: fixed; z-index: 999999; opacity: 0.7; margin-top: -52px;">
+<div class="panel panel-info row text-center col-md-12 col-xs-12"
+     style="position: fixed; z-index: 999999; opacity: 0.7; margin-top: -52px;">
     <div class="panel-heading" style="margin-left: -70px;">
         <h1>Data Visualization</h1>
     </div>
@@ -112,7 +113,7 @@
             <div id="draggable-fields-heading" class="panel-heading">
                 <h3>Draggable Fields</h3>
             </div>
-            <div style="overflow: scroll; height: 226px;">
+            <div style="overflow: auto; height: 226px;">
                 <ul id="fields" class="nav nav-pills">
                 </ul>
             </div>
@@ -124,7 +125,7 @@
             <div class="panel-heading text-center">
                 <h3>Droppable Area</h3>
             </div>
-            <div id="dropArea" style="padding: 5px;">
+            <div id="dropArea" style="padding: 5px; height: 226px;">
             </div>
         </div>
     </div>

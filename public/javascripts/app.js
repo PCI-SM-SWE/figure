@@ -248,6 +248,7 @@ app.controller('mainCtrl', function($scope) {
 
         chartData = [{
             values: values,
+            key: yAxis,
             color: '#ff7f0e'
         }];
 
