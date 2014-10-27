@@ -8,7 +8,7 @@ app.controller('mainCtrl', function($scope) {
     $scope.fieldsArray = new Array();
 
     $scope.visualizationList = ['Line Graph', 'Pie Chart'];
-    $scope.visualizationDescriptions = {"Line Graph": 'A graph that uses points connected by lines to show how something changes in value(as time goes by, or as something else happens).',
+    $scope.visualizationDescriptions = {"Line Graph": 'A graph that uses points connected by lines to show how something changes in value (as time goes by, or as something else happens).',
                                         "Pie Chart": 'A type of graph in which a circle is divided into sectors that each represent a proportion of the whole.'};
     var vis;
     var chartTitle;
@@ -32,7 +32,7 @@ app.controller('mainCtrl', function($scope) {
         var popup = new L.Popup({ autoPan: false });
 
         // statesData comes from the 'us-states.js' script included above
-        var statesLayer = L.geoJson(statesData,  {
+        var statesLayer = L.geoJson(statesData, {
           style: getStyle,
           //onEachFeature: onEachFeature
         }).addTo(map);
