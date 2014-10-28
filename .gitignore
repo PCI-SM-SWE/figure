@@ -1,5 +1,8 @@
-.idea
 node_modules
-public/bower_components
-.project
-.metadata
+public
+.tmp
+.sass-cache
+.idea
+client/bower_components
+dist
+/server/config/local.env.js

@@ -1,24 +1,4 @@
-rotund-pony
-===========
+fullstack-gen
+=============
 
-##Getting Started
-Install [Nodejs](http://nodejs.org/) (available as the 'MEAN Stack' application in
- Digital Ocean). Now navigate into your app directory (i.e.
- rotund-pony) and:
-
-```
-#Install deps
-npm install
-npm install -g bower
-#install client side packages
-bower install
-#Start the app
-node app.js
-```
-
-You can then view your app at http://hostname:3000
-
-JIRA - http://ifloops.com/jira/
-Confluence - http://ifloops.com/confluence/
-
-Development Build Status [![Development Build Status](https://travis-ci.org/PCI-SM-SWE/rotund-pony.svg?branch=development)](https://travis-ci.org/PCI-SM-SWE/rotund-pony)
+Playing with new things.
