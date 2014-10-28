@@ -3,8 +3,8 @@
 angular.module('figureApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      'title': 'Data',
+      'link': '/figure/old'
     },{
       'title': 'React',
       'link': '/react'
