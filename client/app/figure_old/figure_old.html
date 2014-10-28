@@ -13,7 +13,7 @@
     <section ng-show="true"> <!-- Can be changed to page == 1 -->
         <div class="container">
             <div class="welcome-text">
-                <h1 ng-click="test()">Please Choose a Data Input Method</h1>
+                <h1 ng-click="test()">Choose a Data Input Method</h1>
             </div>
             <!-- Top three-button grouping -->
             <div class="btn-group btn-group-justified" ng-init="dataTab = 1">
@@ -72,7 +72,6 @@
                     </button>
                 </div>
 
-
             </div>
             <br>
             <div class="col-xs-6 col-sm-6 col-md-6" ng-show="dataTab == 2">
@@ -122,10 +121,9 @@
         </div>
     </section>
 
-
     <!-- 2nd Page -->
     <section ng-show="true"> <!-- Can be changed to page == 2 -->
-        <div class="container-fluid">
+        <div class="container">
             <div class="row-fluid">
             <!-- Back button -->
             <!--
@@ -142,12 +140,12 @@
                 </div>
              -->
                 <div class="welcome-text">
-                    <h1>Please Choose a Graphical Representation</h1>
+                    <h1>Choose a Graphical Representation</h1>
                 </div>
             </div>
             <br>
-            <div class="row-fluid">
-                <div class="col-xs-3 col-sm-3 col-md-3" ng-init="graphTab = 1">
+            <div class="row">
+                <div class="" ng-init="graphTab = 1">
                     <ul class="nav nav-tabs">
                         <li ng-class="{active:graphTab == 1}" ng-click="graphTab = 1; selectVisualizationType()">
                             <a href="">Bar</a>
@@ -166,7 +164,10 @@
                         </li>
                     </ul>
                 </div>
-                <div class="pics col-xs-8 col-sm-8 col-md-8">
+            </div>
+            <br>
+            <div class="row">
+                <div class="pics col-xs-6 col-sm-6 col-md-6">
                     <br>
                     <img src="assets/images/bargraph.png" class = "img-responsive" alt="Responsive image" ng-show="graphTab == 1">
                     <img src="assets/images/linechart.png" class="img-responsive" alt="Responsive image" ng-show="graphTab == 2">
@@ -175,56 +176,54 @@
                     <img src="assets/images/normal_distribution.png" class="img-responsive" alt="Responsive image" ng-show="graphTab == 5">
                 </div>
                 <br> <br> <br>
-                <div class="row-fluid">
-                    <div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 1">A
-                        bar graph displays data visually and is sometimes called a bar
-                        chart or a bar graph. Data is displayed either horizontally or
-                        vertically and allows viewers to compare items displayed. Data
-                        displayed will relate to things like amounts, characteristics,
-                        times and frequency etc. A bar graph displays information in a way
-                        that helps us to make generalizations and conclusions quickly and
-                        easily. A typical bar graph will have a label, axis, scales and
-                        bars. Bar graphs are used to display all kinds of information such
-                        as, numbers of females versus males in a school, sales of items
-                        during particular times of a year. Bar graphs are ideal for
-                        comparing two or more values.</div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 2">A
-                        line chart or line graph is a type of chart which displays
-                        information as a series of data points called 'markers' connected
-                        by straight line segments. It is a basic type of chart common in
-                        many fields. It is similar to a scatter plot except that the
-                        measurement points are ordered (typically by their x-axis value)
-                        and joined with straight line segments. Line Charts show how a
-                        particular data changes at equal intervals of time. A line chart
-                        is often used to visualize a trend in data over intervals of time
-                        – a time series – thus the line is often drawn chronologically.</div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 3">A
-                        pie chart is a circular chart divided into sectors, illustrating
-                        numerical proportion. In a pie chart, the arc length of each
-                        sector (and consequently its central angle and area), is
-                        proportional to the quantity it represents. While it is named for
-                        its resemblance to a pie which has been sliced, there are
-                        variations on the way it can be presented.</div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 well" ng-show="graphTab == 4">A
-                        choropleth map is a map that uses differences in shading, coloring,
-                        or the placing of symbols within predefined areas to indicate the
-                        average values of a property or quantity in those areas.</div>
-                    <div class="col-xs-3 col-sm-3 col-md-3 well"
-                        ng-show="graphTab == 5">This tab will show the statistical
-                        data analysis for the selected data. Utilizing data from some
-                        population, the stats tab will give you a deeper numerical and
-                        statistical understanding of the underlying data, allowing you to
-                        describe it meaningfully, to draw conclusions from it, and help
-                        you make informed decisions. The stats tab provides general
-                        statistical data, as well as giving you the option to make custom
-                        calculations, all from within the application.</div>
-                </div>
+                <div class="vis-description" ng-show="graphTab == 1">A
+                    bar graph displays data visually and is sometimes called a bar
+                    chart or a bar graph. Data is displayed either horizontally or
+                    vertically and allows viewers to compare items displayed. Data
+                    displayed will relate to things like amounts, characteristics,
+                    times and frequency etc. A bar graph displays information in a way
+                    that helps us to make generalizations and conclusions quickly and
+                    easily. A typical bar graph will have a label, axis, scales and
+                    bars. Bar graphs are used to display all kinds of information such
+                    as, numbers of females versus males in a school, sales of items
+                    during particular times of a year. Bar graphs are ideal for
+                    comparing two or more values.</div>
+                <div class="vis-description" ng-show="graphTab == 2">A
+                    line chart or line graph is a type of chart which displays
+                    information as a series of data points called 'markers' connected
+                    by straight line segments. It is a basic type of chart common in
+                    many fields. It is similar to a scatter plot except that the
+                    measurement points are ordered (typically by their x-axis value)
+                    and joined with straight line segments. Line Charts show how a
+                    particular data changes at equal intervals of time. A line chart
+                    is often used to visualize a trend in data over intervals of time
+                    – a time series – thus the line is often drawn chronologically.</div>
+                <div class="vis-description" ng-show="graphTab == 3">A
+                    pie chart is a circular chart divided into sectors, illustrating
+                    numerical proportion. In a pie chart, the arc length of each
+                    sector (and consequently its central angle and area), is
+                    proportional to the quantity it represents. While it is named for
+                    its resemblance to a pie which has been sliced, there are
+                    variations on the way it can be presented.</div>
+                <div class="vis-description" ng-show="graphTab == 4">A
+                    choropleth map is a map that uses differences in shading, coloring,
+                    or the placing of symbols within predefined areas to indicate the
+                    average values of a property or quantity in those areas.</div>
+                <div class="vis-description"
+                    ng-show="graphTab == 5">This tab will show the statistical
+                    data analysis for the selected data. Utilizing data from some
+                    population, the stats tab will give you a deeper numerical and
+                    statistical understanding of the underlying data, allowing you to
+                    describe it meaningfully, to draw conclusions from it, and help
+                    you make informed decisions. The stats tab provides general
+                    statistical data, as well as giving you the option to make custom
+                    calculations, all from within the application.</div>
             </div>
     </section>
 
     <!-- 3rd Page -->
     <section ng-show="true"> <!-- Can be changed to page == 3 -->
-        <div class="container-fluid">
+        <div class="container">
             <div class="row-fluid">
                 <!-- Back button -->
                 <!--
@@ -236,7 +235,7 @@
                  <br>
                  <br>
                 <div class="welcome-text">
-                    <h1>Please Finalize Visualization</h1>
+                    <h1>Finalize Visualization</h1>
                 </div>
                 <!-- Data field area to the left of screen for drag-and-drop -->
                 <div class="col-xs-3 col-sm-3 col-md-3 dataField">
