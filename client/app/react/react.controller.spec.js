@@ -3,7 +3,7 @@
 describe('Controller: ReactCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('fullstackGenApp'));
+  beforeEach(module('figureApp'));
 
   var ReactCtrl, scope;
 

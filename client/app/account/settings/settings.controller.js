@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('fullstackGenApp')
+angular.module('figureApp')
   .controller('SettingsCtrl', function ($scope, User, Auth) {
     $scope.errors = {};
 

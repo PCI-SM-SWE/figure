@@ -5,7 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/fullstackgen-dev'
+    uri: 'mongodb://localhost/figure-dev'
   },
 
   seedDB: true

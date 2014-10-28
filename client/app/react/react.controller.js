@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('fullstackGenApp')
+angular.module('figureApp')
   .controller('ReactCtrl', function ($scope, Auth) {
     $scope.message = 'Hello';
 

@@ -1,4 +1,4 @@
-angular.module('fullstackGenApp')
+angular.module('figureApp')
   .value('HelloComponent', React.createClass({
 
     render: function() {

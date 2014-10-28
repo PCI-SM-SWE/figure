@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('fullstackGenApp'));
+  beforeEach(module('figureApp'));
   beforeEach(module('socketMock'));
 
   var MainCtrl,
