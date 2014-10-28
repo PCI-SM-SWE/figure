@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('figureApp')
-  .controller('FigureOldCtrl', function ($scope, socket) {
-    $scope.message = 'Hello';
+  .controller('FigureOldCtrl', function ($scope, $compile, socket) {
+
     var socket = socket.socket;
     var client = new Handler(socket);
     var fields;
@@ -12,45 +12,15 @@ angular.module('figureApp')
 
     $(document).ready(function()
     {
-        $('#loader').css('top', ($(window).height() / 2) + 'px');
-        $('#loader').css('left', ($(window).width() / 2) + 'px');
-        $('#darkLayer').css('height', $(document).height());
+        addLoader();
 
-        setTimeout(addLoader(), 0);
-
-        populateFileList();         // Loads the available data sources
+        populateFileList();
 
         jQuery.event.props.push('dataTransfer');
         // $('input[type=file]').bootstrapFileInput();
 
-        // Copy and paste option for data input
-        $("#area").bind('paste', function(e)
-        {
-            var elem = $(this);
-
-            setTimeout(function()
-            {
-                setTimeout(addLoader(), 0);
-
-                var data = $('#area').val();
-                var results = $.parse(data);
-                //console.log(results.results.rows);
-                dataObjectArray = results.results.rows;
-                fields = results.results.fields;
-
-                $('#dataTable').empty();
-                generateFields();
-                generateOperators();
-
-                setTimeout(removeLoader(), 0);
-
-                //console.log(JSON.stringify(dataObjectArray));
-            }, 1000);
-        });
-
         // Used for uploading files
-        $(document).on('change', '.btn-file :file', function()
-        {
+        $(document).on('change', '.btn-file :file', function() {
             var input = $(this);
             var numFiles = input.get(0).files ? input.get(0).files.length : 1
             var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -58,8 +28,7 @@ angular.module('figureApp')
             input.trigger('fileselect', [numFiles, label]);     // Calls the event below
         });
 
-        $('.btn-file :file').on('fileselect', function(event, numFiles, label)
-        {
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
             var input = $(this).parents('.input-group').find(':text')
             var log = numFiles > 1 ? numFiles + ' files selected' : label;
 
@@ -70,15 +39,14 @@ angular.module('figureApp')
         });
 
         // Uploading files
-        socket.on('connect', function()
-        {
+        socket.on('connect', function() {
             var delivery = new Delivery(socket);
 
             delivery.on('delivery.connect',function(delivery)
             {
                 $("button[type=submit]").click(function(evt)
                 {
-                    setTimeout(addLoader(), 0);
+                    addLoader();
                     var file = $("input[type=file]")[0].files[0];
                     delivery.send(file);
                     evt.preventDefault();
@@ -104,12 +72,16 @@ angular.module('figureApp')
         $('#metricEquation').keyup(submitCheck);
         $('#metricEquation').mouseenter(submitCheck);
 
-        setTimeout(removeLoader(), 0);
+        removeLoader();
     }); // End $(document).ready
 
     // Shows laoding gif
     function addLoader()
     {
+        $('#loader').css('top', ($(window).height() / 2) + 'px');
+        $('#loader').css('left', ($(window).width() / 2) + 'px');
+        $('#darkLayer').css('height', $(document).height());
+
         $('#loader').show();
         $('#darkLayer').show();
     }
@@ -124,10 +96,32 @@ angular.module('figureApp')
         }, 1000);
     }
 
+    $scope.parseManualInput = function() {
+        addLoader();
+
+        var data = $('#area').val();
+        var results = Papa.parse(data, {
+            header: true,
+            complete: function(results) {
+
+                removeLoader();
+
+                if( results.errors.length > 0 ) {
+                    for( var error in results.errors ) {
+                        alert(results.errors[error].message);
+                    }
+                    return;
+                }
+                dataObjectArray = results.data;
+                finishedParsing(data);
+            }
+        });
+    };
+
     // Uploading a file
     $scope.fileUpload = function()
     {
-        setTimeout(addLoader(), 0);
+        addLoader();
 
         client.fileUploadRequest(function(data)
         {
@@ -247,13 +241,13 @@ angular.module('figureApp')
 
         $('#area').val(data);
 
-        setTimeout(removeLoader(), 0);
+        removeLoader();
     }
 
     // Access uploaded file or sample data and parses it
     function storedData(name)
     {
-        setTimeout(addLoader(), 0);
+        addLoader();
 
         client.storedDataRequest(name, function(data)
         {
@@ -279,7 +273,7 @@ angular.module('figureApp')
     // Access a table from ifloops.com
     function storedTable(table, numEntries)
     {
-        setTimeout(addLoader(), 0);
+        addLoader();
 
         client.storedTable(table, numEntries, function(tableObject)
         {
@@ -295,7 +289,7 @@ angular.module('figureApp')
 
             $('#area').val(rawData);
 
-            setTimeout(removeLoader(), 0);
+            removeLoader();
         });
     }
 
@@ -327,20 +321,12 @@ angular.module('figureApp')
 
             tr.appendChild(td);
 
-            angular.element(document).injector().invoke(function($compile) {
-                $compile(tr)($scope);
-            });
+            $compile(tr)($scope);
 
             $('.fields').append(tr);
 
             var th = document.createElement('th');
-            th.innerHTML = fields[i] + "&nbsp;&nbsp;&nbsp;";
-
-            th.onclick = function()
-            {
-                setTimeout(addLoader(), 0);
-                setTimeout(removeLoader(), 0);
-            };
+            th.innerHTML = fields[i];
 
             $('#header').append(th);
         }
@@ -365,9 +351,7 @@ angular.module('figureApp')
 
             tr.appendChild(td);
 
-            angular.element(document).injector().invoke(function($compile) {
-                $compile(tr)($scope);
-            });
+            $compile(tr)($scope);
 
             $('.operators').append(tr);
         }
@@ -1224,7 +1208,7 @@ angular.module('figureApp')
             {
                 if (graphObjects[i].title == title)
                 {
-                    setTimeout(removeLoader(), 0);
+                    removeLoader();
                     var r = window.confirm('A graph with title "' + title + '" already exists.  Do you still want to save?');
 
                     if (r == true)
@@ -1259,7 +1243,7 @@ angular.module('figureApp')
             else
                 client.saveGraph({'chart_data': chartData, 'title': title, 'type': graphTypes[$scope.graphTab - 1], 'png': canvas.toDataURL()});
 
-            setTimeout(removeLoader(), 0);
+            removeLoader();
             alert(title + " graph saved.");
         });
     }
@@ -1273,7 +1257,7 @@ angular.module('figureApp')
         var graph;
         var title;
 
-        setTimeout(addLoader(), 0);
+        addLoader();
 
         /*  To save <svg> elements, I first converted/placed it to a canvas
             and then it can be loaded onto an <img> element and viewed
