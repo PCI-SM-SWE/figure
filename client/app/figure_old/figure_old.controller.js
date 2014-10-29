@@ -1089,6 +1089,7 @@ angular.module('figureApp')
     var map;
     var popup;
     var closeTooltip;
+    var statesLayer;
 
     /*  Determines the color based on population value
         based on statesData */
