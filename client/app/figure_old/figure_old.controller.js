@@ -4,9 +4,11 @@ angular.module('figureApp')
   .controller('FigureOldCtrl', function ($scope, $compile, socket) {
 
     $scope.parseError = '';
+    $scope.dataChanged = false;
 
     var socket = socket.socket;
     var client = new Handler(socket);
+    var delivery = new Delivery(socket);
     var fields;
     var dataObjectArray;                // JSON format for the data
     var operators = ['+', '-', '*', '/', 'sum()', 'count()', 'avg()'];
@@ -19,7 +21,10 @@ angular.module('figureApp')
         populateFileList();
 
         jQuery.event.props.push('dataTransfer');
-        // $('input[type=file]').bootstrapFileInput();
+        $('input[type=file]').fileinput({
+            showPreview: false,
+            uploadLabel: 'Parse'
+        });
         $('#dataTable').tablesorter({
             sortReset: true,
             sortRestart: true,
@@ -46,26 +51,23 @@ angular.module('figureApp')
                 alert(log);
         });
 
-        // Uploading files
-        socket.on('connect', function() {
-            var delivery = new Delivery(socket);
+        $('.kv-fileinput-upload').off('click');
+        $('.kv-fileinput-upload').click( function(event) {
+            event.preventDefault();
 
-            delivery.on('delivery.connect',function(delivery)
-            {
-                $("button[type=submit]").click(function(evt)
-                {
-                    addLoader();
-                    var file = $("input[type=file]")[0].files[0];
-                    delivery.send(file);
-                    evt.preventDefault();
-                });
-            });
+            addLoader();
+            var file = $("input[type=file]")[0].files[0];
 
-            delivery.on('send.success', function(fileUID)
-            {
-                alert(fileUID.name  + " was successfully uploaded.");
-                $scope.fileUpload();
-            });
+            if (!file) {
+                removeLoader();
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              var contents = e.target.result;
+              $scope.fileUpload(contents);
+            };
+            reader.readAsText(file);
         });
 
         // Determines the metric equation button enabled/disabled functionality
@@ -84,8 +86,7 @@ angular.module('figureApp')
     }); // End $(document).ready
 
     // Shows laoding gif
-    function addLoader()
-    {
+    function addLoader() {
         $('#loader').css('top', ($(window).height() / 2) + 'px');
         $('#loader').css('left', ($(window).width() / 2) + 'px');
         $('#darkLayer').css('height', $(document).height());
@@ -95,8 +96,7 @@ angular.module('figureApp')
     }
 
     // Hides loading gif
-    function removeLoader()
-    {
+    function removeLoader() {
         setTimeout(function()
         {
             $('#loader').hide();
@@ -105,6 +105,11 @@ angular.module('figureApp')
     }
 
     $scope.parseManualInput = function() {
+
+        if (!$scope.dataChanged) {
+            return;
+        }
+
         addLoader();
 
         var data = $('#area').val();
@@ -131,27 +136,21 @@ angular.module('figureApp')
     };
 
     // Uploading a file
-    $scope.fileUpload = function()
-    {
+    $scope.fileUpload = function(data) {
         addLoader();
+        dataObjectArray = new Array();
 
-        client.fileUploadRequest(function(data)
-        {
-            dataObjectArray = new Array();
-
-            Papa.parse(data,
+        Papa.parse(data, {
+            header: true,
+            worker: true,
+            step: function(row)
             {
-                header: true,
-                worker: true,
-                step: function(row)
-                {
-                    dataObjectArray.push(row);
-                },
-                complete: function()
-                {
-                    finishedParsing(data);
-                }
-            });
+                dataObjectArray.push(row.data[0]);
+            },
+            complete: function(results)
+            {
+                finishedParsing(data);
+            }
         });
     };
 
@@ -254,6 +253,8 @@ angular.module('figureApp')
         $('#area').val(data);
 
         removeLoader();
+
+        $scope.dataChanged = false;
     }
 
     // Access uploaded file or sample data and parses it

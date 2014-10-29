@@ -94,7 +94,7 @@ var Handler = function(socket)
 // used for uploading a file to the server
 Handler.prototype.fileUploadRequest = function(callback)
 {
-    var response = socket.on('file data', function(data)
+    var response = this.socket.on('file data', function(data)
     {
         callback(data);
     });
@@ -103,20 +103,20 @@ Handler.prototype.fileUploadRequest = function(callback)
 // client requests the file names in uploaded_files and sample_data directories
 // client requests all tables names in ifloops.com
 Handler.prototype.filesList = function(callback)
-{/*
-    var response = socket.on('files', function(filesObject)
+{
+    var response = this.socket.on('files', function(filesObject)
     {
         callback(filesObject);
-    }); */
+    });
 };
 
 // request actual contents of a file
 Handler.prototype.storedDataRequest = function(name, callback)
 {
-    socket.emit('stored data requested', name);
+    this.socket.emit('stored data requested', name);
     // console.log(name);
 
-    socket.on(name + ' data', function(data)
+    this.socket.on(name + ' data', function(data)
     {
         socket.emit(name + ' received');
         callback(data);
@@ -126,9 +126,9 @@ Handler.prototype.storedDataRequest = function(name, callback)
 // request a specified number of rows from table
 Handler.prototype.storedTable = function(table, numEntries, callback)
 {
-    socket.emit('stored table requested', {'table': table, 'num_entries': numEntries});
+    this.socket.emit('stored table requested', {'table': table, 'num_entries': numEntries});
 
-    socket.on(table + ' data', function(data)
+    this.socket.on(table + ' data', function(data)
     {
         callback(data);
     });
@@ -137,15 +137,15 @@ Handler.prototype.storedTable = function(table, numEntries, callback)
 // save a graph image with its information
 Handler.prototype.saveGraph = function(graphObject)
 {
-    socket.emit('save graph', graphObject);
+    this.socket.emit('save graph', graphObject);
 };
 
 // retrieve all saved graphs
 Handler.prototype.getSavedGraphs = function(callback)
 {
-    socket.emit('get saved graphs');
+    this.socket.emit('get saved graphs');
 
-    socket.on('send saved graphs', function(graphObjects)
+    this.socket.on('send saved graphs', function(graphObjects)
     {
         callback(graphObjects);
     });
@@ -154,16 +154,16 @@ Handler.prototype.getSavedGraphs = function(callback)
 // save dashboard as (dashboardName).html
 Handler.prototype.saveDashboard = function(dashboardObject, callback)
 {
-    socket.emit('save dashboard', dashboardObject);
+    this.socket.emit('save dashboard', dashboardObject);
     callback();
 };
 
 // retrieve dashboard data
 Handler.prototype.getDashboard = function(title, callback)
 {
-    socket.emit('get dashboard', title);
+    this.socket.emit('get dashboard', title);
 
-    socket.on('dashboard data sent', function(dashboardObject)
+    this.socket.on('dashboard data sent', function(dashboardObject)
     {
         callback(dashboardObject);
     });
@@ -215,7 +215,7 @@ Handler.prototype.getDashboard = function(title, callback)
   /****        FilePackage    *****/
   /********************************/
   function FilePackage(file,receiving){
-    _this = this;
+    var _this = this;
     this.name = file.name;
     this.size = file.size;
 

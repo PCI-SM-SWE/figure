@@ -28,7 +28,7 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-default"
                         ng-class="{active:dataTab == 2}" ng-click="dataTab=2">
-                        Upload Data <span class="glyphicon glyphicon-folder-open"></span>
+                        From File <span class="glyphicon glyphicon-folder-open"></span>
                     </button>
                 </div>
 
@@ -74,23 +74,14 @@
 
             </div>
             <br>
-            <div class="col-xs-6 col-sm-6 col-md-6" ng-show="dataTab == 2">
-                <h4>Upload a CSV File</h4>
-                <div class="input-group">
+            <div ng-show="dataTab == 2">
+                <div class="input-group" style="width: 100%;">
                     <span class="input-group-btn">
                         <span class="btn-file">
-                            <input type="file" class="btn-file" multiple>
+                            <input type="file" class="btn-file">
                         </span>
                     </span>
-                    <input type="text" class="form-control" ng-model="uploadArea" readonly>
-                </div>
-
-                <br>
-
-                <!-- Submit button for upload -->
-                <div class="submit-button">
-                    <button class="btn btn-primary" type="submit"
-                        role="button">Submit</button>
+                    <input style="display:none;" type="text" class="form-control" ng-model="uploadArea" readonly>
                 </div>
 
                 <br>
@@ -103,8 +94,9 @@
             <!-- Text area for manual data input -->
             <div class="alert alert-danger" ng-hide="parseError.length == 0">{{parseError}}</div>
             <textarea class="form-control" id="area" rows="15"
-                placeholder="Enter Data Here (Please include data header!)"
+                placeholder="Enter Data Here..."
                 ng-blur="parseManualInput()"
+                ng-change="dataChanged = true"
                 ng-model="textAreaTop"
                 ng-show="dataTab == 1 || dataTab == 2 || dataTab == 3 || dataTab == 4 || dataTab == 5"
                 style="resize: none;">
