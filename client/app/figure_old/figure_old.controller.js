@@ -3,6 +3,8 @@
 angular.module('figureApp')
   .controller('FigureOldCtrl', function ($scope, $compile, socket) {
 
+    $scope.parseError = '';
+
     var socket = socket.socket;
     var client = new Handler(socket);
     var fields;
@@ -18,6 +20,10 @@ angular.module('figureApp')
 
         jQuery.event.props.push('dataTransfer');
         // $('input[type=file]').bootstrapFileInput();
+        $('#dataTable').tablesorter({
+            sortReset: true,
+            sortRestart: true
+        });
 
         // Used for uploading files
         $(document).on('change', '.btn-file :file', function() {
@@ -93,7 +99,7 @@ angular.module('figureApp')
         {
             $('#loader').hide();
             $('#darkLayer').hide();
-        }, 1000);
+        }, 300);
     }
 
     $scope.parseManualInput = function() {
@@ -105,10 +111,12 @@ angular.module('figureApp')
             complete: function(results) {
 
                 removeLoader();
+                $scope.parseError = '';
 
                 if( results.errors.length > 0 ) {
+
                     for( var error in results.errors ) {
-                        alert(results.errors[error].message);
+                        $scope.parseError += results.errors[error].message + '\n';
                     }
                     return;
                 }
@@ -301,14 +309,11 @@ angular.module('figureApp')
         var thead = document.createElement('thead');
         $('#dataTable').append(thead);
 
-        var tr;
-
-        tr = document.createElement('tr');
+        var tr = document.createElement('tr');
         tr.setAttribute('id', 'header');
         $('thead').append(tr);
 
-        for(var i = 0; i < fields.length; i++)
-        {
+        for(var i = 0; i < fields.length; i++) {
             tr = document.createElement('tr');
             tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
             tr.setAttribute('x-lvl-draggable', 'true');
@@ -358,10 +363,9 @@ angular.module('figureApp')
     }
 
     // Displays the raw data in table format
-    function populateTable()
-    {
+    function populateTable() {
         var tbody = document.createElement('tbody');
-        tbody.setAttribute('id', 'tableBody')
+        tbody.setAttribute('id', 'tableBody');
         $('#dataTable').append(tbody);
 
         for (var i = 0; i < dataObjectArray.length; i++)
@@ -378,7 +382,7 @@ angular.module('figureApp')
             }
         }
 
-        $('#dataTable').tablesorter();
+        $('#dataTable').trigger('updateAll', [true]);
     }
 
     /* -------------------- Status after parsing ------------------------

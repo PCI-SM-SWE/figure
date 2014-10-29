@@ -101,6 +101,7 @@
                  -->
             </div>
             <!-- Text area for manual data input -->
+            <div class="alert alert-danger" ng-hide="parseError.length == 0">{{parseError}}</div>
             <textarea class="form-control" id="area" rows="15"
                 placeholder="Enter Data Here (Please include data header!)"
                 ng-blur="parseManualInput()"
@@ -111,6 +112,8 @@
 
             <div class="well" ng-show="dataTab == 6" style="overflow:auto; height: 314px;">
                 <table class="table table-bordered tablesorter" id="dataTable" style="background-color: white;">
+                    <thead></thead>
+                    <tbody></tbody>
                 </table>
             </div>
 
