@@ -6,6 +6,7 @@ angular.module('figureApp', [
   'ngSanitize',
   'ngRoute',
   'btford.socket-io',
+  'lvl.directives.dragdrop',
   'react',
   'ui.bootstrap'
 ])

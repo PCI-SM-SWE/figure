@@ -331,7 +331,7 @@ angular.module('figureApp')
 
             tr.appendChild(td);
 
-            $compile(tr)($scope);
+            tr = $compile(tr)($scope);
 
             $('.fields').append(tr);
 
@@ -490,8 +490,8 @@ angular.module('figureApp')
         // console.log(dragEl);
         // console.log(dropEl);
 
-        var drag = angular.element(dragEl);
-        var drop = angular.element(dropEl);
+        var drag = angular.element( document.getElementById(dragEl) );
+        var drop = angular.element( document.getElementById(dropEl) );
 
         drop.val(drag.attr('id'));
 
