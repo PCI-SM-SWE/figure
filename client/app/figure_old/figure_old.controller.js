@@ -22,7 +22,9 @@ angular.module('figureApp')
         // $('input[type=file]').bootstrapFileInput();
         $('#dataTable').tablesorter({
             sortReset: true,
-            sortRestart: true
+            sortRestart: true,
+            widthFixed: true,
+            widgets: ['zebra']
         });
 
         // Used for uploading files
@@ -106,24 +108,26 @@ angular.module('figureApp')
         addLoader();
 
         var data = $('#area').val();
-        var results = Papa.parse(data, {
-            header: true,
-            complete: function(results) {
+        setTimeout( function() {
+            Papa.parse(data, {
+                header: true,
+                complete: function(results) {
 
-                removeLoader();
-                $scope.parseError = '';
+                    removeLoader();
+                    $scope.parseError = '';
 
-                if( results.errors.length > 0 ) {
+                    if( results.errors.length > 0 ) {
 
-                    for( var error in results.errors ) {
-                        $scope.parseError += results.errors[error].message + '\n';
+                        for( var error in results.errors ) {
+                            $scope.parseError += results.errors[error].message + '\n';
+                        }
+                        return;
                     }
-                    return;
+                    dataObjectArray = results.data;
+                    finishedParsing(data);
                 }
-                dataObjectArray = results.data;
-                finishedParsing(data);
-            }
-        });
+            });
+        }, 250);
     };
 
     // Uploading a file
