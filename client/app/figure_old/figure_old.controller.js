@@ -3,8 +3,22 @@
 angular.module('figureApp')
   .controller('FigureOldCtrl', function ($scope, $compile, socket) {
 
+    // Bringing this in as the large amount of jquery mixed with angular causes
+    // some unfortunate logic branches...
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
     $scope.parseError = '';
     $scope.dataChanged = false;
+    $scope.hasParsed = false;
 
     var socket = socket.socket;
     var client = new Handler(socket);
@@ -73,8 +87,10 @@ angular.module('figureApp')
         // Determines the metric equation button enabled/disabled functionality
         var submitCheck = function()
         {
-            if($('#metricEquation').val() != '')
-                $('#statSubmit').removeAttr('disabled');
+            if($('#metricEquation').val() != '') {
+                //Temporarily disabling
+                //$('#statSubmit').removeAttr('disabled');
+            }
             else
                 $('#statSubmit').attr('disabled', 'disabled');
         }
@@ -112,6 +128,10 @@ angular.module('figureApp')
         }, 300);
     }
 
+    $scope.hasData = function () {
+        return $scope.hasParsed;
+    }
+
     $scope.parseManualInput = function() {
 
         if (!$scope.dataChanged) {
@@ -121,32 +141,35 @@ angular.module('figureApp')
         addLoader();
 
         var data = $('#area').val();
-        setTimeout( function() {
-            Papa.parse(data, {
-                header: true,
-                complete: function(results) {
+        Papa.parse(data, {
+            header: true,
+            complete: function(results) {
 
-                    removeLoader();
-                    $scope.parseError = '';
+                removeLoader();
+                $scope.parseError = '';
 
-                    if( results.errors.length > 0 ) {
+                if( results.errors.length > 0 ) {
 
-                        for( var error in results.errors ) {
-                            $scope.parseError += results.errors[error].message + '\n';
-                        }
-                        return;
+                    for( var error in results.errors ) {
+                        $scope.parseError += results.errors[error].message + '\n';
                     }
-                    dataObjectArray = results.data;
-                    finishedParsing(data);
+
+                    $scope.dataChanged = false;
+                    $scope.hasParsed = false;
+                    return;
                 }
-            });
-        }, 250);
+                dataObjectArray = results.data;
+                finishedParsing(data);
+            }
+        });
     };
 
     // Uploading a file
     $scope.fileUpload = function(data) {
         addLoader();
         dataObjectArray = new Array();
+
+        $scope.parseError = '';
 
         Papa.parse(data, {
             header: true,
@@ -249,20 +272,24 @@ angular.module('figureApp')
     }
 
     // Generates draggable fields, the table, and operators
-    function finishedParsing(data)
-    {
+    function finishedParsing(data) {
         fields = Object.keys(dataObjectArray[0]);
 
         $('#dataTable').empty();
         generateFields();
         populateTable();
         generateOperators();
+        bindDropOperations();
 
         $('#area').val(data);
 
         removeLoader();
 
         $scope.dataChanged = false;
+        $scope.hasParsed = true;
+        $scope.parseError = '';
+
+        $scope.safeApply();
     }
 
     // Access uploaded file or sample data and parses it
@@ -315,8 +342,7 @@ angular.module('figureApp')
     }
 
     // Generates the draggable fields and table header
-    function generateFields()
-    {
+    function generateFields() {
         $('.fields').empty();
 
         var thead = document.createElement('thead');
@@ -327,54 +353,55 @@ angular.module('figureApp')
         $('thead').append(tr);
 
         for(var i = 0; i < fields.length; i++) {
-            tr = document.createElement('div');
-            tr.setAttribute('x-lvl-draggable', 'true');
-            tr.setAttribute('draggable', 'true');
-            tr.setAttribute('id', fields[i]);
-            tr.setAttribute('class', 'ui-draggable drop-pill');
+            var div = document.createElement('div');
+            div.setAttribute('x-lvl-draggable', 'true');
+            div.setAttribute('draggable', 'true');
+            div.setAttribute('id', fields[i]);
+            div.setAttribute('class', 'ui-draggable drop-pill');
 
-            var td = document.createElement('span');
-            td.innerHTML = fields[i];
+            var span = document.createElement('span');
+            span.innerHTML = fields[i];
 
-            tr.appendChild(td);
+            div.appendChild(span);
 
-            tr = $compile(tr)($scope);
+            $compile(div)($scope);
 
-            $('.fields').append(tr);
+            $('.fields').append(div);
 
             var th = document.createElement('th');
             th.innerHTML = fields[i];
 
             $('#header').append(th);
         }
-
-        $('.drop-pill').on('dragstart', handleDropPillDragStart);
-        $('.drop-pill').on('dragend', handleDropPillDragEnd);
     }
 
     // Generates the draggable operators for metrics option
-    function generateOperators()
-    {
+    function generateOperators() {
         $('.operators').empty();
 
         for(var i = 0; i < operators.length; i++)
         {
-            var tr = document.createElement('tr');
-            tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
-            tr.setAttribute('x-lvl-draggable', 'true');
-            tr.setAttribute('draggable', 'true');
-            tr.setAttribute('id', operators[i]);
-            tr.setAttribute('class', 'ui-draggable');
+            var div = document.createElement('div');
+            div.setAttribute('x-lvl-draggable', 'true');
+            div.setAttribute('draggable', 'true');
+            div.setAttribute('id', operators[i]);
+            div.setAttribute('class', 'ui-draggable drop-pill');
 
-            var td = document.createElement('td');
-            td.innerHTML = operators[i];
+            var span = document.createElement('span');
+            span.innerHTML = operators[i];
 
-            tr.appendChild(td);
+            div.appendChild(span);
 
-            $compile(tr)($scope);
+            div = $compile(div)($scope);
 
-            $('.operators').append(tr);
+            $('.operators').append(div);
         }
+    }
+
+    // Set up the drop handlers
+    function bindDropOperations() {
+        $('.drop-pill').on('dragstart', handleDropPillDragStart);
+        $('.drop-pill').on('dragend', handleDropPillDragEnd);
     }
 
     // Displays the raw data in table format
@@ -511,11 +538,8 @@ angular.module('figureApp')
     // Drag and drop functionality for metric options
     $scope.droppedMetric = function(dragEl, dropEl)
     {
-        console.log(dragEl);
-        console.log(dropEl);
-
-        var drag = angular.element(dragEl);
-        var drop = angular.element(dropEl);
+        var drag = angular.element( document.getElementById(dragEl) );
+        var drop = angular.element( document.getElementById(dropEl) );
         var operator;
 
         console.log($('#metricFields').children().length);
@@ -542,9 +566,7 @@ angular.module('figureApp')
             input.setAttribute('x-lvl-drop-target', 'true');
             input.setAttribute('x-on-drop', 'droppedMetricField(dragEl, dropEl)');
 
-            angular.element(document).injector().invoke(function($compile) {
-                $compile(input)($scope);
-            });
+            $compile(input)($scope);
 
             $('#metricFields').append(label);
             $('#metricFields').append(input);
@@ -622,7 +644,8 @@ angular.module('figureApp')
         {
             try
             {
-                var result = eval($('#metricEquation').val());
+                //Not sure the original point of this, but no. Bad!
+                //var result = eval($('#metricEquation').val());
 
                 if((typeof result) === 'number')
                     $('#metricEquation').val(result);
@@ -635,8 +658,8 @@ angular.module('figureApp')
     };
 
     // Graphs the specified visualization type if all necessary input is there
-    function readyToGraph()
-    {
+    function readyToGraph() {
+
         // Bar
         if($scope.graphTab == 1)
         {
@@ -645,7 +668,7 @@ angular.module('figureApp')
 
             if(xAxis != '' && yAxis != '')
             {
-                console.log('plotBar()');
+                addLoader();
                 plotBar();
             }
         }
@@ -661,7 +684,7 @@ angular.module('figureApp')
 
             if(xAxis != '' && yAxis != '')
             {
-                console.log('plotLine()');
+                addLoader();
                 plotLine();
             }
         }
@@ -674,7 +697,7 @@ angular.module('figureApp')
 
             if(valueField != '')
             {
-                console.log('plotPie()');
+                addLoader();
                 plotPie();
             }
         }
@@ -687,7 +710,7 @@ angular.module('figureApp')
 
             if(locationField != '' && choroplethValueField != '')
             {
-                console.log('plotChoroplethMap()');
+                addLoader();
                 plotChoroplethMap();
             }
         }
@@ -698,12 +721,7 @@ angular.module('figureApp')
             // if metrics tab is selected
         }
 
-        // console.log('xAxis: ' + xAxis);
-        // console.log('yAxis: ' + yAxis);
-        // console.log('valueField: ' + valueField);
-        // console.log('countField: ' + countField);
-        // console.log('locationField: ' + locationField);
-        // console.log('choroplethValueField: ' + choroplethValueField);
+        removeLoader();
     }
 
     var chartData;
