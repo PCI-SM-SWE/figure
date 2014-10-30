@@ -6,8 +6,8 @@ angular.module('figureApp')
       'title': 'Data',
       'link': '/figure/old'
     },{
-      'title': 'React',
-      'link': '/react'
+      'title': 'Visualize',
+      'link': '/figure'
     }];
 
     $scope.isCollapsed = true;

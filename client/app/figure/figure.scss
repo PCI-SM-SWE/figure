@@ -1,0 +1,21 @@
+/* Label elements */
+.tooltip-inner {
+    min-width: 75px;
+}
+
+/* Input elements */
+.raw-data {
+    margin: 20px 0;
+    resize: none;
+}
+
+/* Control elements */
+.glyph-btn {
+    margin: 8.5px 3px;
+    cursor: pointer;
+}
+
+.glyph-btn-selected {
+    @extend .glyph-btn;
+    opacity: 0.5;
+}

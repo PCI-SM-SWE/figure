@@ -1,0 +1,55 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+
+    <section class="data-input">
+        <h2>First, select a data source or skip ahead to manual entry...</h2>
+
+        <div class="row col-md-12">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default">File</button>
+                <button type="button" class="btn btn-default" disabled>URL</button>
+                <button type="button" class="btn btn-default" disabled>Database</button>
+            </div>
+            <span class="pull-right">
+                <i class="fa fa-list-ol glyph-btn-selected" tooltip-placement="top" tooltip="Raw View"></i>
+                <i class="fa fa-table glyph-btn" tooltip-placement="top" tooltip="Table View"></i>
+            </span>
+        </div>
+
+        <!-- TODO: placeholder for other sub-forms for the different sources. -->
+
+        <div class="row col-md-12">
+            <textarea class="raw-data form-control" rows='15'
+                placeholder="If you have raw data, you can enter it here. Include a header row with the columns!"/>
+        </div>
+    </section>
+
+    <section class="visualization-options">
+        <h2>Which visualization would you like to use?</h2>
+
+        <div class="row">
+
+            <div class="graph-descriptions col-md-3">
+                Graph descriptions.
+            </div>
+
+            <div class="graph-images col-md-9">
+                Sample images.
+            </div>
+        </div>
+    </section>
+
+    <section class="map-dimensions">
+        <h2>Connect your data.</h2>
+    </section>
+
+    <section class="analyze">
+        <h2>Your image is ready!</h2>
+    </section>
+</div>
+
+<footer style="text-align: center;">
+    <hr style="width: 50%" />
+    <p>Work in progress. Inspiration from <a href="http://app.raw.densitydesign.org/">RAW</a>.</p>
+</footer>
