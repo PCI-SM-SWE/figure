@@ -19,3 +19,18 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(61, 187, 96, 0.6);
     outline: 0 none;
 }
+
+.drop-pill {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 5px;
+    border: 1px solid lightgray;
+    margin: 3px 0;
+    cursor: move;
+}
+
+.drop-pill-drag {
+    background-color: beige;
+}

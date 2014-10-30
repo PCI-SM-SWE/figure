@@ -85,6 +85,14 @@ angular.module('figureApp')
         removeLoader();
     }); // End $(document).ready
 
+    function handleDropPillDragStart(e) {
+        $(this).addClass('drop-pill-drag');
+    }
+
+    function handleDropPillDragEnd(e) {
+        $(this).removeClass('drop-pill-drag');
+    }
+
     // Shows laoding gif
     function addLoader() {
         $('#loader').css('top', ($(window).height() / 2) + 'px');
@@ -319,14 +327,13 @@ angular.module('figureApp')
         $('thead').append(tr);
 
         for(var i = 0; i < fields.length; i++) {
-            tr = document.createElement('tr');
-            tr.setAttribute('style', '-moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; user-select: none;');
+            tr = document.createElement('div');
             tr.setAttribute('x-lvl-draggable', 'true');
             tr.setAttribute('draggable', 'true');
             tr.setAttribute('id', fields[i]);
-            tr.setAttribute('class', 'ui-draggable');
+            tr.setAttribute('class', 'ui-draggable drop-pill');
 
-            var td = document.createElement('td');
+            var td = document.createElement('span');
             td.innerHTML = fields[i];
 
             tr.appendChild(td);
@@ -340,6 +347,9 @@ angular.module('figureApp')
 
             $('#header').append(th);
         }
+
+        $('.drop-pill').on('dragstart', handleDropPillDragStart);
+        $('.drop-pill').on('dragend', handleDropPillDragEnd);
     }
 
     // Generates the draggable operators for metrics option
