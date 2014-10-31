@@ -8,7 +8,8 @@ angular.module('figureApp', [
   'btford.socket-io',
   'lvl.directives.dragdrop',
   'react',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.codemirror'
 ])
   .config(function ($routeProvider, $locationProvider, $httpProvider) {
     $routeProvider

@@ -12,16 +12,43 @@
                 <button type="button" class="btn btn-default" disabled>Database</button>
             </div>
             <span class="pull-right">
-                <i class="fa fa-list-ol glyph-btn-selected" tooltip-placement="top" tooltip="Raw View"></i>
-                <i class="fa fa-table glyph-btn" tooltip-placement="top" tooltip="Table View"></i>
+                <i ng-click="setRawView(true)"
+                    ng-class="{'glyph-btn-selected': rawView == true}"
+                    class="fa fa-list-ol glyph-btn" tooltip-placement="top" tooltip="Raw View"></i>
+                <i ng-click="setRawView(false)"
+                    ng-class="{'glyph-btn-selected': rawView == false}"
+                    class="fa fa-table glyph-btn" tooltip-placement="top" tooltip="Table View"></i>
             </span>
         </div>
 
         <!-- TODO: placeholder for other sub-forms for the different sources. -->
 
-        <div class="row col-md-12">
-            <textarea class="raw-data form-control" rows='15'
+        <div ng-show="rawView == true" class="row col-md-12">
+            <textarea ui-codemirror="editorOptions" class="raw-data form-control" rows='15'
                 placeholder="If you have raw data, you can enter it here. Include a header row with the columns!"/>
+        </div>
+
+        <div ng-show="rawView == false" class="row col-md-12 raw-data-table">
+            <table class="table table-bordered table-condensed table-hover raw-data col-md-12">
+                <thead>
+                    <th ng-repeat="field in fields"
+                        ng-class="{'info': columnSort.sortColumn == field}"
+                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse">
+                        {{field}}
+                        <span ng-class="{'sort-asc': columnSort.sortColumn == field && columnSort.reverse,
+                            'sort-desc': columnSort.sortColumn == field && !columnSort.reverse,
+                            'sort-none': columnSort.sortColumn != field}"
+                            class="pull-right"></span>
+                    </th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="datum in parsedData | orderBy:columnSort.sortColumn:columnSort.reverse">
+                        <td ng-repeat="field in fields" sortable="field">
+                            {{datum[field]}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 
@@ -29,7 +56,6 @@
         <h2>Which visualization would you like to use?</h2>
 
         <div class="row">
-
             <div class="graph-descriptions col-md-3">
                 Graph descriptions.
             </div>
@@ -45,7 +71,15 @@
     </section>
 
     <section class="analyze">
-        <h2>Your image is ready!</h2>
+        <div class="row">
+            <div class="fields col-md-3">
+                Draggable fields from data.
+            </div>
+
+            <div class="chart-config col-md-9">
+                Drop are for fields.
+            </div>
+        </div>
     </section>
 </div>
 

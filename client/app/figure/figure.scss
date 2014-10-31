@@ -7,15 +7,50 @@
 .raw-data {
     margin: 20px 0;
     resize: none;
+    background-color: white;
+}
+
+.CodeMirror {
+    @extend .raw-data;
+    border: 1px solid lightgray;
 }
 
 /* Control elements */
 .glyph-btn {
     margin: 8.5px 3px;
     cursor: pointer;
+    -webkit-user-select: none;
 }
 
 .glyph-btn-selected {
     @extend .glyph-btn;
     opacity: 0.5;
+}
+
+/* Table elements */
+.raw-data-table {
+    height: 340px;
+    overflow: auto;
+}
+
+table {
+    th {
+        -webkit-user-select: none;
+        min-width: 120px;
+    }
+}
+
+.sort-dir {
+    @extend .fa;
+    margin-top: 3px;
+}
+
+.sort-asc {
+    @extend .sort-dir;
+    @extend .fa-long-arrow-up;
+}
+
+.sort-desc {
+    @extend .sort-dir;
+    @extend .fa-long-arrow-down;
 }
