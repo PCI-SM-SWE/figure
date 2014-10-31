@@ -13,15 +13,25 @@
             </div>
             <span class="pull-right">
                 <i ng-click="setRawView(true)"
-                    ng-class="{'glyph-btn-selected': rawView == true}"
+                    ng-class="{'glyph-btn-selected': rawView == false}"
                     class="fa fa-list-ol glyph-btn" tooltip-placement="top" tooltip="Raw View"></i>
                 <i ng-click="setRawView(false)"
-                    ng-class="{'glyph-btn-selected': rawView == false}"
+                    ng-class="{'glyph-btn-selected': rawView == true}"
                     class="fa fa-table glyph-btn" tooltip-placement="top" tooltip="Table View"></i>
             </span>
         </div>
 
         <!-- TODO: placeholder for other sub-forms for the different sources. -->
+
+        <!-- Parse status messages. -->
+        <div class="row col-md-12">
+            <div class="alert-top-margin alert-danger" ng-show="parseError.length > 0">
+                <span class="fa fa-thumbs-down"></span> {{parseError}}
+            </div>
+            <div class="alert-top-margin alert-success" ng-show="parsedData.length > 0">
+                <span class="fa fa-thumbs-o-up"></span> {{parsedData.length}} record(s) successfully parsed!
+            </div>
+        </div>
 
         <div ng-show="rawView == true" class="row col-md-12">
             <textarea ui-codemirror="editorOptions" class="raw-data form-control" rows='15'
@@ -29,7 +39,10 @@
         </div>
 
         <div ng-show="rawView == false" class="row col-md-12 raw-data-table">
-            <table class="table table-bordered table-condensed table-hover raw-data col-md-12">
+            <div class="alert alert-warning" ng-show="parsedData.length == 0" style="margin-right: 15px;">
+                <b>Oops!</b> You have no parsed data.
+            </div>
+            <table class="table table-bordered table-condensed table-hover">
                 <thead>
                     <th ng-repeat="field in fields"
                         ng-class="{'info': columnSort.sortColumn == field}"
@@ -52,35 +65,37 @@
         </div>
     </section>
 
-    <section class="visualization-options">
-        <h2>Which visualization would you like to use?</h2>
+    <div ng-hide="parsedData.length == 0">
+        <section class="visualization-options">
+            <h2>Which visualization would you like to use?</h2>
 
-        <div class="row">
-            <div class="graph-descriptions col-md-3">
-                Graph descriptions.
+            <div class="row">
+                <div class="graph-descriptions col-md-3">
+                    Graph descriptions.
+                </div>
+
+                <div class="graph-images col-md-9">
+                    Sample images.
+                </div>
             </div>
+        </section>
 
-            <div class="graph-images col-md-9">
-                Sample images.
+        <section class="map-dimensions">
+            <h2>Connect your data.</h2>
+        </section>
+
+        <section class="analyze">
+            <div class="row">
+                <div class="fields col-md-3">
+                    Draggable fields from data.
+                </div>
+
+                <div class="chart-config col-md-9">
+                    Drop are for fields.
+                </div>
             </div>
-        </div>
-    </section>
-
-    <section class="map-dimensions">
-        <h2>Connect your data.</h2>
-    </section>
-
-    <section class="analyze">
-        <div class="row">
-            <div class="fields col-md-3">
-                Draggable fields from data.
-            </div>
-
-            <div class="chart-config col-md-9">
-                Drop are for fields.
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </div>
 
 <footer style="text-align: center;">

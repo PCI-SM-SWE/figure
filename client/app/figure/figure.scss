@@ -3,6 +3,12 @@
     min-width: 75px;
 }
 
+.alert-top-margin {
+    @extend .alert;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
 /* Input elements */
 .raw-data {
     margin: 20px 0;
@@ -29,8 +35,11 @@
 
 /* Table elements */
 .raw-data-table {
-    height: 340px;
+    height: 300px;
     overflow: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-right: 0px;
 }
 
 table {

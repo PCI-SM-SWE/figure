@@ -5,9 +5,8 @@ angular.module('figureApp')
 
     $scope.rawView = true;
 
-    // Test data until we get parsing in.
-    $scope.fields = ['test','column','another','more','longer','even','move','all','the','columns'];
-    $scope.parsedData = [{test: 1, column: 2},{test:3, column: 4}];
+    $scope.fields = [];
+    $scope.parsedData = [];
     $scope.columnSort = {};
 
     // Code mirror set-up.
@@ -15,10 +14,15 @@ angular.module('figureApp')
         lineNumbers: true,
         onLoad: function (_editor) {
             $scope.editor = _editor;
+
+            // Set-up listeners
+            $scope.editor.on('change', function(cm) {
+                $scope.dataChanged = true;
+            });
+            $scope.editor.on('blur', function(cm) {
+                parseCodemirrorInput( cm.getValue() );
+            });
         }
-    };
-    $scope.getCodemirrorText = function () {
-        return $scope.editor ? $scope.editor.getValue() : '';
     };
     $scope.setCodemirrorText = function (val) {
         if (!$scope.editor) {
@@ -36,4 +40,42 @@ angular.module('figureApp')
         }
     };
 
+    // Private helpers
+    function parseCodemirrorInput(input) {
+
+        // If there were no changes, don't do anything.
+        if (!$scope.dataChanged || input === '') {
+            return;
+        }
+
+        Papa.parse(input, {
+            header: true,
+            complete: finishParsing
+        });
+    }
+
+    function finishParsing(results) {
+        // Clean up state after parse.
+
+        // These reset regardless of success.
+        $scope.dataChanged = false;
+        $scope.parseError = '';
+        $scope.columns = [];
+        $scope.parsedData = [];
+
+        // Handle case when parsing errors.
+        if( results.errors.length > 0 ) {
+
+            for( var error in results.errors ) {
+                $scope.parseError += results.errors[error].message + '\n';
+            }
+        }
+        else {
+            $scope.parsedData = results.data;
+            $scope.fields = results.meta.fields;
+        }
+
+        // Tell angular to re-up.
+        $scope.$apply();
+    }
   });
