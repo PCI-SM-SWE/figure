@@ -8,18 +8,26 @@ angular.module('figureApp')
     $scope.fields = [];
     $scope.parsedData = [];
     $scope.columnSort = {};
+    $scope.inputMode = 'raw';
 
     // Code mirror set-up.
     $scope.editorOptions = {
         lineNumbers: true,
         onLoad: function (_editor) {
             $scope.editor = _editor;
+            $scope.changeTimeout = null;
 
             // Set-up listeners
             $scope.editor.on('change', function(cm) {
                 $scope.dataChanged = true;
+
+                clearTimeout($scope.changeTimeout);
+                $scope.changeTimeout = setTimeout( function() {
+                    parseCodemirrorInput( cm.getValue() );
+                }, 2000);
             });
             $scope.editor.on('blur', function(cm) {
+                clearTimeout($scope.changeTimeout);
                 parseCodemirrorInput( cm.getValue() );
             });
         }
@@ -40,18 +48,49 @@ angular.module('figureApp')
         }
     };
 
+    // Innate column sorting breaks with a key has a space in it. To avoid this,
+    // use a function for the orderBy instead of a property name.
+    $scope.formatColumnSort = function(val) {
+        return val[$scope.columnSort.sortColumn];
+    };
+
     // Private helpers
     function parseCodemirrorInput(input) {
-
         // If there were no changes, don't do anything.
         if (!$scope.dataChanged || input === '') {
             return;
         }
 
+        prepareParsing();
+
         Papa.parse(input, {
             header: true,
+            dynamicTyping: true,
+            step: function(row, handle) {
+                if (row.errors.length > 0) {
+                    for (var error in row.errors) {
+                        $scope.parseError += row.errors[error].message + '\n';
+                    }
+                    handle.abort();
+                }
+                else {
+                    $scope.parsedData.push(row.data[0]);
+                    $scope.fields = row.meta.fields;
+                }
+            },
             complete: finishParsing
         });
+    }
+
+    function prepareParsing() {
+        // Clean up state pre-parse.
+        $scope.parseError = '';
+        $scope.parsedData = [];
+        $scope.fields = [];
+        $scope.columnSort = {};
+
+        // Tell angular to re-up.
+        $scope.$apply();
     }
 
     function finishParsing(results) {
@@ -59,21 +98,6 @@ angular.module('figureApp')
 
         // These reset regardless of success.
         $scope.dataChanged = false;
-        $scope.parseError = '';
-        $scope.columns = [];
-        $scope.parsedData = [];
-
-        // Handle case when parsing errors.
-        if( results.errors.length > 0 ) {
-
-            for( var error in results.errors ) {
-                $scope.parseError += results.errors[error].message + '\n';
-            }
-        }
-        else {
-            $scope.parsedData = results.data;
-            $scope.fields = results.meta.fields;
-        }
 
         // Tell angular to re-up.
         $scope.$apply();

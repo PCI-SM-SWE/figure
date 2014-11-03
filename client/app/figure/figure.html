@@ -7,7 +7,10 @@
 
         <div class="row col-md-12">
             <div class="btn-group">
-                <button type="button" class="btn btn-default">File</button>
+                <!-- Handle the buttons like toggles. -->
+                <button type="button" class="btn btn-default"
+                    ng-click="inputMode === 'file' ? inputMode = 'raw' : inputMode = 'file'"
+                    ng-class="{'active': inputMode === 'file'}">File</button>
                 <button type="button" class="btn btn-default" disabled>URL</button>
                 <button type="button" class="btn btn-default" disabled>Database</button>
             </div>
@@ -21,7 +24,10 @@
             </span>
         </div>
 
-        <!-- TODO: placeholder for other sub-forms for the different sources. -->
+        <!-- File parse form -->
+        <div class="row col-md-12 fromFileForm" ng-show="inputMode === 'file'" style="margin-top: 20px;">
+            <input id="fromFileInput" type="file" class="file">
+        </div>
 
         <!-- Parse status messages. -->
         <div class="row col-md-12">
@@ -46,7 +52,7 @@
                 <thead>
                     <th ng-repeat="field in fields"
                         ng-class="{'info': columnSort.sortColumn == field}"
-                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse">
+                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse;console.log(columnSort.sortColumn);">
                         {{field}}
                         <span ng-class="{'sort-asc': columnSort.sortColumn == field && columnSort.reverse,
                             'sort-desc': columnSort.sortColumn == field && !columnSort.reverse,
@@ -55,7 +61,7 @@
                     </th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="datum in parsedData | orderBy:columnSort.sortColumn:columnSort.reverse">
+                    <tr ng-repeat="datum in parsedData | orderBy:formatColumnSort:columnSort.reverse">
                         <td ng-repeat="field in fields" sortable="field">
                             {{datum[field]}}
                         </td>
@@ -102,3 +108,35 @@
     <hr style="width: 50%" />
     <p>Work in progress. Inspiration from <a href="http://app.raw.densitydesign.org/">RAW</a>.</p>
 </footer>
+
+<script type="text/javascript">
+    $(document).ready( function() {
+        $('#fromFileInput').fileinput({
+            uploadLabel: 'Parse',
+            showPreview: false,
+            allowedFileExtensions: ['csv']
+        });
+
+        $('.kv-fileinput-upload').click( function() {
+            var file = $("input[type=file]")[0].files[0];
+
+            if (!file) {
+                return;
+            }
+
+            // Reset to raw view before parsing...
+            $('.fa-list-ol').click();
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var contents = e.target.result;
+
+                var _scope = angular.element($('#fromFileInput')).scope();
+                _scope.$apply( function() {
+                    _scope.setCodemirrorText(contents);
+                });
+            };
+            reader.readAsText(file);
+        });
+    })
+</script>
