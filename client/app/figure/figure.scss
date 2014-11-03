@@ -1,4 +1,12 @@
-/* Label elements */
+/* Label/display elements */
+.text-wrap {
+    display: inline-block;
+    max-width: 85%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .tooltip-inner {
     min-width: 75px;
 }
@@ -9,8 +17,48 @@
     margin-bottom: 0;
 }
 
+.fromFileInputError {
+    margin-top: 5px;
+}
+
 .graph-doc-link {
     font-size: 10px;
+}
+
+.drop-pill {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding: 5px;
+    border: 1px solid lightgray;
+    margin: 3px 0;
+    cursor: move;
+}
+
+.fields {
+    height: 300px;
+    overflow: auto;
+}
+
+.chart-config {
+    @extend .fields;
+}
+
+.field {
+    border: 2px solid lightblue;
+    margin: 5px auto 5px 0;
+    background-color: aliceblue;
+    padding: 5px;
+
+    &:hover {
+        cursor: -webkit-grab;
+    }
+
+    &:active {
+        cursor: -webkit-grabbing;
+        background-color: lightblue;
+    }
 }
 
 /* Input elements */

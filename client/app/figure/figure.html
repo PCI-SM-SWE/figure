@@ -27,6 +27,7 @@
         <!-- File parse form -->
         <div class="row col-md-12 fromFileForm" ng-show="inputMode === 'file'" style="margin-top: 20px;">
             <input id="fromFileInput" type="file" class="file">
+            <div class="fromFileInputError"></div>
         </div>
 
         <!-- Parse status messages. -->
@@ -110,11 +111,16 @@
         <section class="analyze">
             <div class="row">
                 <div class="fields col-md-3">
-                    Draggable fields from data.
+                    <div ng-repeat="field in fields" draggable="true" data-value="{{::field}}" class="field">
+                        <span class="text-wrap">{{::field}}</span>
+                        <span class="pull-right glyphicon glyphicon-plus-sign" style="margin-top: 2px;"></span>
+                    </div>
                 </div>
 
-                <div class="chart-config col-md-9">
-                    Drop are for fields.
+                <div class="chart-config col-md-9 panel panel-default">
+                    <div class="panel-body">
+                        Drop some stuff here!
+                    </div>
                 </div>
             </div>
         </section>
@@ -131,7 +137,8 @@
         $('#fromFileInput').fileinput({
             uploadLabel: 'Parse',
             showPreview: false,
-            allowedFileExtensions: ['csv']
+            allowedFileExtensions: ['csv'],
+            elErrorContainer: '.fromFileInputError'
         });
 
         $('.kv-fileinput-upload').click( function() {
