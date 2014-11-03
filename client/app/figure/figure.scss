@@ -9,6 +9,10 @@
     margin-bottom: 0;
 }
 
+.graph-doc-link {
+    font-size: 10px;
+}
+
 /* Input elements */
 .raw-data {
     margin: 20px 0;
@@ -61,4 +65,10 @@ table {
 .sort-desc {
     @extend .sort-dir;
     @extend .fa-long-arrow-down;
+}
+
+/* Images */
+.graph {
+    margin: 4px;
+    height: 150px;
 }

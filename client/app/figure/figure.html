@@ -52,8 +52,8 @@
                 <thead>
                     <th ng-repeat="field in fields"
                         ng-class="{'info': columnSort.sortColumn == field}"
-                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse;console.log(columnSort.sortColumn);">
-                        {{field}}
+                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse;">
+                        {{::field}}
                         <span ng-class="{'sort-asc': columnSort.sortColumn == field && columnSort.reverse,
                             'sort-desc': columnSort.sortColumn == field && !columnSort.reverse,
                             'sort-none': columnSort.sortColumn != field}"
@@ -63,7 +63,7 @@
                 <tbody>
                     <tr ng-repeat="datum in parsedData | orderBy:formatColumnSort:columnSort.reverse">
                         <td ng-repeat="field in fields" sortable="field">
-                            {{datum[field]}}
+                            {{::datum[field]}}
                         </td>
                     </tr>
                 </tbody>
@@ -77,11 +77,28 @@
 
             <div class="row">
                 <div class="graph-descriptions col-md-3">
-                    Graph descriptions.
+                    <div ng-show="activeGraph === ''">
+                        <h5>Chart Information</h5>
+                        <hr style="margin: 0 0 10px;" />
+                        Select a graph on the right to get more details about that chart type!
+                    </div>
+                    <div ng-repeat="graph in ::graphTypes" class="col-md-12" ng-show="activeGraph === graph.type">
+                        <h5>{{::graph.formalName}}</h5>
+                        <hr style="margin: 0 0 10px;" />
+                        {{::graph.description}}
+                        <br />
+                        <a href="http://nvd3.org/examples/{{::graph.type}}.html" target="_blank" class="graph-doc-link">View Example</a>
+                        <br />
+                        <a href="{{::graph.learnMore}}" target="_blank" class="graph-doc-link">Learn More</a>
+                    </div>
                 </div>
 
                 <div class="graph-images col-md-9">
-                    Sample images.
+                    <a ng-repeat="graph in ::graphTypes" class="graph thumbnail col-md-3"
+                        ng-class="{'active': activeGraph == graph.type}">
+                        <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph.type)"
+                            title="{{::graph.formalName}}" />
+                    </a>
                 </div>
             </div>
         </section>
