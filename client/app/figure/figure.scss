@@ -50,6 +50,7 @@
     margin: 5px auto 5px 0;
     background-color: aliceblue;
     padding: 5px;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.5);
 
     &:hover {
         cursor: -webkit-grab;
@@ -119,4 +120,5 @@ table {
 .graph {
     margin: 4px;
     height: 150px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
 }
