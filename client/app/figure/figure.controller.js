@@ -58,15 +58,17 @@ angular.module('figureApp')
     // Control methods
     $scope.setRawView = function(rawView) {
         $scope.rawView = rawView;
-
-        // When it's table view tell tablesorter to update.
-        if (false) {
-            $('#raw-data-table').trigger('updateAll', [true]);
-        }
     };
 
     $scope.changeActiveGraph = function(graph) {
         $scope.activeGraph = graph;
+    };
+
+    $scope.dropParam = function(dragEl, dropEl) {
+        var drag = angular.element( document.getElementById(dragEl) );
+        var drop = angular.element( document.getElementById(dropEl) );
+
+        drop.val(drag.data().value);
     };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,

@@ -83,7 +83,7 @@
                         <hr style="margin: 0 0 10px;" />
                         Select a graph on the right to get more details about that chart type!
                     </div>
-                    <div ng-repeat="graph in ::graphtypes" class="col-md-12" ng-show="activeGraph === graph.type">
+                    <div ng-repeat="graph in ::graphtypes" class="col-md-12" ng-show="activeGraph.type === graph.type">
                         <h5>{{::graph.formalName}}</h5>
                         <hr style="margin: 0 0 10px;" />
                         {{::graph.description}}
@@ -96,22 +96,20 @@
 
                 <div class="graph-images col-md-9">
                     <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
-                        ng-class="{'active': activeGraph == graph.type}">
-                        <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph.type)"
+                        ng-class="{'active': activeGraph.type === graph.type}">
+                        <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph)"
                             title="{{::graph.formalName}}" />
                     </a>
                 </div>
             </div>
         </section>
 
-        <section class="map-dimensions">
-            <h2>Connect your data.</h2>
-        </section>
+        <section class="map-dimensions" ng-hide="activeGraph === ''">
+            <h2>Now, connect your data.</h2>
 
-        <section class="analyze">
             <div class="row">
                 <div class="fields col-md-3">
-                    <div ng-repeat="field in fields" draggable="true" data-value="{{::field}}" class="field">
+                    <div ng-repeat="field in fields" draggable="true" x-lvl-draggable="true" data-value="{{::field}}" class="field">
                         <span class="text-wrap">{{::field}}</span>
                         <span class="pull-right glyphicon glyphicon-plus-sign" style="margin-top: 2px;"></span>
                     </div>
@@ -120,17 +118,24 @@
                 <div class="chart-config col-md-9 panel panel-default">
                     <div class="panel-body">
                         <form class="form-horizontal">
-                            <div class="form-group" ng-repeat="param in ::paramtypes">
+                            <div class="form-group" ng-repeat="param in ::paramtypes" ng-show="activeGraph.params.indexOf(param.name) !== -1">
                                 <label for="param.name" class="col-sm-2 control-label">{{::param.display}}</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="{{::param.name}}" placeholder="Suitable for {{::param.type}} type values...">
+                                    <input type="text" class="form-control droppable" name="{{::param.name}}"
+                                        placeholder="Suitable for {{::param.type}} type values..."
+                                        x-lvl-drop-target="true"
+                                        x-on-drop="dropParam(dragEl, dropEl)">
                                 </div>
                             </div>
+                        <button class="btn btn-danger pull-right" onclick="$('input.droppable').val('');">Clear</button>
                         </form>
-                        <button class="btn btn-danger pull-right">Clear</button>
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section class="analyze" ng-hide>
+            <svg id="generated-chart"></svg>
         </section>
     </div>
 </div>
@@ -139,36 +144,3 @@
     <hr style="width: 50%" />
     <p>Work in progress. Inspiration from <a href="http://app.raw.densitydesign.org/">RAW</a>.</p>
 </footer>
-
-<script type="text/javascript">
-    $(document).ready( function() {
-        $('#fromFileInput').fileinput({
-            uploadLabel: 'Parse',
-            showPreview: false,
-            allowedFileExtensions: ['csv'],
-            elErrorContainer: '.fromFileInputError'
-        });
-
-        $('.kv-fileinput-upload').click( function() {
-            var file = $("input[type=file]")[0].files[0];
-
-            if (!file) {
-                return;
-            }
-
-            // Reset to raw view before parsing...
-            $('.fa-list-ol').click();
-
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var contents = e.target.result;
-
-                var _scope = angular.element($('#fromFileInput')).scope();
-                _scope.$apply( function() {
-                    _scope.setCodemirrorText(contents);
-                });
-            };
-            reader.readAsText(file);
-        });
-    })
-</script>
