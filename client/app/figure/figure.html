@@ -83,7 +83,7 @@
                         <hr style="margin: 0 0 10px;" />
                         Select a graph on the right to get more details about that chart type!
                     </div>
-                    <div ng-repeat="graph in ::graphTypes" class="col-md-12" ng-show="activeGraph === graph.type">
+                    <div ng-repeat="graph in ::graphtypes" class="col-md-12" ng-show="activeGraph === graph.type">
                         <h5>{{::graph.formalName}}</h5>
                         <hr style="margin: 0 0 10px;" />
                         {{::graph.description}}
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="graph-images col-md-9">
-                    <a ng-repeat="graph in ::graphTypes" class="graph thumbnail col-md-3"
+                    <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
                         ng-class="{'active': activeGraph == graph.type}">
                         <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph.type)"
                             title="{{::graph.formalName}}" />

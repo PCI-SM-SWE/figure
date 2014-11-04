@@ -18,6 +18,8 @@ function onConnect(socket) {
   });
 
   // Insert sockets below
+  require('../api/paramtype/paramtype.socket').register(socket);
+  require('../api/graphtype/graphtype.socket').register(socket);
   require('../api/thing/thing.socket').register(socket);
 }
 
