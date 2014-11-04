@@ -48,7 +48,7 @@ function plot_discreteBar(data) {
   nv.addGraph(function() {
 
     var chart = nv.models.discreteBarChart()
-      .x(function(d) { return d.label })    //Specify the data accessors.
+      .x(function(d) { return d.label })
       .y(function(d) { return d.value })
       .staggerLabels(true)
       .tooltips(false)

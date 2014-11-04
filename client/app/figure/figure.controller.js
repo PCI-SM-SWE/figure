@@ -159,6 +159,6 @@ angular.module('figureApp')
 
         // Draw the graph
         $('#generated-chart').empty();
-        window['plot_' + $scope.activeGraph.type](data);
+        window['plot_' + $scope.activeGraph.type]([{key: 'graph', values: data}]);
     }
   });
