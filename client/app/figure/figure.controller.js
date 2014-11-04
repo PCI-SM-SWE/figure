@@ -69,6 +69,8 @@ angular.module('figureApp')
         var drop = angular.element( document.getElementById(dropEl) );
 
         drop.val(drag.data().value);
+
+        graph();
     };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,
@@ -124,5 +126,39 @@ angular.module('figureApp')
 
         // Tell angular to re-up.
         $scope.$apply();
+    }
+
+    function graph() {
+
+        // Make sure all required fields have values
+        var fields = $('.required:visible');
+        var nvFields = [];
+        for (var i = 0; i < fields.length; i++) {
+            if ($(fields[i]).val() === ''){
+                return;
+            }
+
+            var datum = {};
+            datum[fields[i].name] = $(fields[i]).val();
+            nvFields.push(datum);
+        }
+
+        // Format the data for NVD3
+        var data = [];
+        for (var i = 0; i < $scope.parsedData.length; i++ ) {
+
+            var datum = {};
+
+            for (var j = 0; j < nvFields.length; j++) {
+                var record = $scope.parsedData[i];
+                var key = Object.keys(nvFields[j])[0];
+                datum[key] = record[nvFields[j][key]];
+            }
+            data.push(datum);
+        }
+
+        // Draw the graph
+        $('#generated-chart').empty();
+        window['plot_' + $scope.activeGraph.type](data);
     }
   });

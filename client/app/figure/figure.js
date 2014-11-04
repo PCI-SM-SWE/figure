@@ -43,3 +43,37 @@ $(document).ready( function() {
     reader.readAsText(file);
   });
 });
+
+function plot_discreteBar(data) {
+  nv.addGraph(function() {
+
+    var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })    //Specify the data accessors.
+      .y(function(d) { return d.value })
+      .staggerLabels(true)
+      .tooltips(false)
+      .showValues(true)
+      .transitionDuration(350)
+      ;
+
+    d3.select('#generated-chart')
+      .datum(data)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+}
+
+function plot_scatter() {
+
+}
+
+function plot_line() {
+
+}
+
+function plot_pie() {
+
+}

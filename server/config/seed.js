@@ -51,7 +51,7 @@ Graphtype.find({}).remove(function() {
   Graphtype.create({
     type: 'discreteBar',
     formalName: 'Bar Chart',
-    params: ['title', 'x', 'y'],
+    params: ['title', 'label', 'value'],
     learnMore: 'https://en.wikipedia.org/wiki/Bar_chart',
     description: 'A bar chart or bar graph is a chart with rectangular bars with lengths proportional to the values that they represent. The bars can be plotted vertically or horizontally. A vertical bar chart is sometimes called a column bar chart.'
   }, {
@@ -82,6 +82,11 @@ Paramtype.find({}).remove(function() {
     display: 'Title',
     required: false
   }, {
+    name: 'label',
+    type: 'string',
+    display: 'Label',
+    required: true
+  }, {
     name: 'x',
     type: 'mixed',
     display: 'X Axis',
@@ -94,7 +99,7 @@ Paramtype.find({}).remove(function() {
   }, {
     name: 'value',
     type: 'number',
-    display: 'Value Field',
+    display: 'Value',
     required: true
   }, {
     name: 'count',

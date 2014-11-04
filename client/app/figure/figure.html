@@ -98,7 +98,7 @@
                     <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
                         ng-class="{'active': activeGraph.type === graph.type}">
                         <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph)"
-                            title="{{::graph.formalName}}" />
+                            title="{{::graph.formalName}}" draggable="false" />
                     </a>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                 <div class="fields col-md-3">
                     <div ng-repeat="field in fields" draggable="true" x-lvl-draggable="true" data-value="{{::field}}" class="field">
                         <span class="text-wrap">{{::field}}</span>
-                        <span class="pull-right glyphicon glyphicon-plus-sign" style="margin-top: 2px;"></span>
+                        <span class="pull-right glyphicon glyphicon-plus-sign" style="margin-top: 4px;"></span>
                     </div>
                 </div>
 
@@ -119,15 +119,18 @@
                     <div class="panel-body">
                         <form class="form-horizontal">
                             <div class="form-group" ng-repeat="param in ::paramtypes" ng-show="activeGraph.params.indexOf(param.name) !== -1">
-                                <label for="param.name" class="col-sm-2 control-label">{{::param.display}}</label>
+                                <label for="param.name" class="col-sm-2 control-label">
+                                    {{::param.display}}<span ng-show="{{::param.required}}">*</span>
+                                </label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control droppable" name="{{::param.name}}"
                                         placeholder="Suitable for {{::param.type}} type values..."
+                                        ng-class="{'required': param.required}"
                                         x-lvl-drop-target="true"
                                         x-on-drop="dropParam(dragEl, dropEl)">
                                 </div>
                             </div>
-                        <button class="btn btn-danger pull-right" onclick="$('input.droppable').val('');">Clear</button>
+                        <button class="btn btn-danger pull-right" onclick="$('input.droppable').val(''); $('#generated-chart').empty()">Clear</button>
                         </form>
                     </div>
                 </div>
