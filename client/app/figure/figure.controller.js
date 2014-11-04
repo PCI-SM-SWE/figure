@@ -55,7 +55,6 @@ angular.module('figureApp')
         $scope.editor.setValue(val);
     };
 
-
     // Control methods
     $scope.setRawView = function(rawView) {
         $scope.rawView = rawView;
