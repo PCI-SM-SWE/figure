@@ -63,7 +63,7 @@ Graphtype.find({}).remove(function() {
   }, {
     type: 'pie',
     formalName: 'Pie Chart',
-    params: ['title', 'value', 'count'],
+    params: ['title', 'label', 'value'],
     learnMore: 'https://en.wikipedia.org/wiki/Pie_chart',
     description: 'A pie chart is divided into sectors, illustrating numerical proportion. In a pie chart, the arc length of each sector (and consequently its central angle and area), is proportional to the quantity it represents.'
   }, {
@@ -106,11 +106,6 @@ Paramtype.find({}).remove(function() {
     type: 'number',
     display: 'Value',
     required: true
-  }, {
-    name: 'count',
-    type: 'number',
-    display: 'Count',
-    required: false
   }, {
     name: 'markersize',
     type: 'number',

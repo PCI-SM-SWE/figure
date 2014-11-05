@@ -157,6 +157,9 @@
         // Needed for lvl-drag-drop
         $.event.props.push('dataTransfer');
 
+        // Set the default view of the graph since we're not properly using ng-show/hide
+        $('.analyze').hide();
+
         // Set up Bootstrap file input plugin
         $('#fromFileInput').fileinput({
             uploadLabel: 'Parse',

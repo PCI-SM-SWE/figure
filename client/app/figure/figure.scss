@@ -44,7 +44,7 @@ $section_height: 300px;
 }
 
 .chart-config {
-    @extend .fields;
+    overflow: auto;
 }
 
 .chart-title {

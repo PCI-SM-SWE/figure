@@ -63,6 +63,7 @@ angular.module('figureApp')
 
     $scope.changeActiveGraph = function(graph) {
         $scope.activeGraph = graph;
+        $scope.clearChartConfig();
     };
 
     $scope.dropParam = function(dragEl, dropEl) {
@@ -76,7 +77,7 @@ angular.module('figureApp')
 
     $scope.clearChartConfig = function() {
         $('input.droppable').val('');
-        $('#generated-chart').empty().hide();
+        $('.analyze').hide().empty().append('<svg id="generated-chart"></svg>');
 
         $scope.paramModel = {};
     };
@@ -146,11 +147,14 @@ angular.module('figureApp')
     function graph() {
 
         // Make sure all required fields have values
-        var fields = $('.required:visible');
+        var fields = $('.form-chart-config input:visible');
         var nvFields = [];
         for (var i = 0; i < fields.length; i++) {
             if ($(fields[i]).val() === ''){
-                return;
+                if ($(fields[i]).hasClass('required')) {
+                    return;
+                }
+                continue;
             }
 
             var datum = {};
@@ -173,7 +177,7 @@ angular.module('figureApp')
         }
 
         // Draw the graph
-        $('#generated-chart').empty().show();
+        $('.analyze').empty().append('<svg id="generated-chart"></svg>').show();
         window['plot_' + $scope.activeGraph.type]([{key: $('input[name="seriesname"]').val(), values: data}]);
     }
   });
