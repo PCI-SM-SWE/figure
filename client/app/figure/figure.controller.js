@@ -76,7 +76,7 @@ angular.module('figureApp')
 
     $scope.clearChartConfig = function() {
         $('input.droppable').val('');
-        $('#generated-chart').empty();
+        $('#generated-chart').empty().hide();
 
         $scope.paramModel = {};
     };
@@ -137,6 +137,7 @@ angular.module('figureApp')
 
         // These reset regardless of success.
         $scope.dataChanged = false;
+        $scope.clearChartConfig();
 
         // Tell angular to re-up.
         $scope.$apply();
@@ -172,7 +173,7 @@ angular.module('figureApp')
         }
 
         // Draw the graph
-        $('#generated-chart').empty();
+        $('#generated-chart').empty().show();
         window['plot_' + $scope.activeGraph.type]([{key: $('input[name="seriesname"]').val(), values: data}]);
     }
   });
