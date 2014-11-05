@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('figureApp')
-  .controller('FigureCtrl', function ($scope, $http, socket) {
+  .controller('FigureCtrl', function ($scope, $http, socket, Auth) {
 
     $scope.rawView = true;
 
@@ -11,6 +11,10 @@ angular.module('figureApp')
     $scope.inputMode = 'raw';
     $scope.activeGraph = '';
     $scope.paramModel = {};
+
+    $scope.isLoggedIn = function() {
+        return Auth.isLoggedIn();
+    }
 
     // Initialization via socketio
     $http.get('/api/graphtypes').success(function(graphtypes) {

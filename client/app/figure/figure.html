@@ -144,6 +144,18 @@
             <h4 class="chart-title">{{paramModel.title}}</h4>
             <svg id="generated-chart"></svg>
         </section>
+
+        <section class="persist">
+            <div>
+                <h5 class="pull-right">
+                    Like what you see?
+                    <button class="btn btn-success" ng-show="isLoggedIn()">Save</button>
+                    <span ng-hide="isLoggedIn()">
+                        <a href="/login">Sign in</a> to save it to your account!</label>
+                    </span>
+                </h5>
+            </div>
+        </section>
     </div>
 </div>
 
