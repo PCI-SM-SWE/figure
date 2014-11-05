@@ -97,7 +97,7 @@
                 <div class="graph-images col-md-9">
                     <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
                         ng-class="{'active': activeGraph.type === graph.type}">
-                        <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph)"
+                        <img ng-src="assets/images/graphs/{{::graph.type}}-hover.png" ng-click="changeActiveGraph(graph)"
                             title="{{::graph.formalName}}" draggable="false" />
                     </a>
                 </div>
@@ -127,17 +127,19 @@
                                         placeholder="Suitable for {{::param.type}} type values..."
                                         ng-class="{'required': param.required}"
                                         x-lvl-drop-target="true"
-                                        x-on-drop="dropParam(dragEl, dropEl)">
+                                        x-on-drop="dropParam(dragEl, dropEl)"
+                                        ng-model="paramModel[param.name]">
                                 </div>
                             </div>
-                        <button class="btn btn-danger pull-right" onclick="$('input.droppable').val(''); $('#generated-chart').empty()">Clear</button>
+                        <button class="btn btn-danger pull-right" ng-click="clearChartConfig()">Clear</button>
                         </form>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="analyze" ng-hide>
+        <section class="analyze">
+            <h4 class="chart-title">{{paramModel.title}}</h4>
             <svg id="generated-chart"></svg>
         </section>
     </div>
@@ -147,3 +149,40 @@
     <hr style="width: 50%" />
     <p>Work in progress. Inspiration from <a href="http://app.raw.densitydesign.org/">RAW</a>.</p>
 </footer>
+
+<script type="text/javascript">
+    $(document).ready( function() {
+        // Needed for lvl-drag-drop
+        $.event.props.push('dataTransfer');
+
+        // Set up Bootstrap file input plugin
+        $('#fromFileInput').fileinput({
+            uploadLabel: 'Parse',
+            showPreview: false,
+            allowedFileExtensions: ['csv'],
+            elErrorContainer: '.fromFileInputError'
+        });
+
+        $('.kv-fileinput-upload').click( function() {
+            var file = $("input[type=file]")[0].files[0];
+
+            if (!file) {
+                return;
+            }
+
+            // Reset to raw view before parsing...
+            $('.fa-list-ol').click();
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var contents = e.target.result;
+
+                var _scope = angular.element($('#fromFileInput')).scope();
+                _scope.$apply( function() {
+                    _scope.setCodemirrorText(contents);
+                });
+            };
+            reader.readAsText(file);
+        });
+    });
+</script>

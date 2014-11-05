@@ -10,6 +10,7 @@ angular.module('figureApp')
     $scope.columnSort = {};
     $scope.inputMode = 'raw';
     $scope.activeGraph = '';
+    $scope.paramModel = {};
 
     // Initialization via socketio
     $http.get('/api/graphtypes').success(function(graphtypes) {
@@ -71,6 +72,13 @@ angular.module('figureApp')
         drop.val(drag.data().value);
 
         graph();
+    };
+
+    $scope.clearChartConfig = function() {
+        $('input.droppable').val('');
+        $('#generated-chart').empty();
+
+        $scope.paramModel = {};
     };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,
