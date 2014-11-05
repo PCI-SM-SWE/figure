@@ -35,8 +35,31 @@ function plot_scatter() {
 
 }
 
-function plot_line() {
+function plot_line(data) {
+  nv.addGraph(function() {
+    var chart = nv.models.lineChart()
+      .margin({left: 100})
+      .useInteractiveGuideline(true)
+      .transitionDuration(350)
+      .showLegend(true)
+      .showYAxis(true)
+      .showXAxis(true)
+      ;
 
+    chart.xAxis
+      .axisLabel($('input[name="x"]').val());
+
+    chart.yAxis
+      .axisLabel($('input[name="y"]').val());
+
+    d3.select('#generated-chart')
+      .datum(data)
+      .call(chart);
+
+    //Update the chart when window resizes.
+    nv.utils.windowResize(chart.update);
+    return chart;
+  });
 }
 
 function plot_pie() {

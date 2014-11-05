@@ -81,6 +81,12 @@ angular.module('figureApp')
         $scope.paramModel = {};
     };
 
+    $scope.submitChartConfig = function(event) {
+        event.preventDefault();
+
+        graph();
+    }
+
     // Innate column sorting breaks with a key has a space in it. To avoid this,
     // use a function for the orderBy instead of a property name.
     $scope.formatColumnSort = function(val) {
@@ -167,6 +173,6 @@ angular.module('figureApp')
 
         // Draw the graph
         $('#generated-chart').empty();
-        window['plot_' + $scope.activeGraph.type]([{key: 'graph', values: data}]);
+        window['plot_' + $scope.activeGraph.type]([{key: $('input[name="seriesname"]').val(), values: data}]);
     }
   });

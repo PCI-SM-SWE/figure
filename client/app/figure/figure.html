@@ -117,7 +117,7 @@
 
                 <div class="chart-config col-md-9 panel panel-default">
                     <div class="panel-body">
-                        <form class="form-horizontal">
+                        <form class="form-horizontal form-chart-config" ng-submit="submitChartConfig($event)">
                             <div class="form-group" ng-repeat="param in ::paramtypes" ng-show="activeGraph.params.indexOf(param.name) !== -1">
                                 <label for="param.name" class="col-sm-2 control-label">
                                     {{::param.display}}<span ng-show="{{::param.required}}">*</span>
@@ -128,7 +128,9 @@
                                         ng-class="{'required': param.required}"
                                         x-lvl-drop-target="true"
                                         x-on-drop="dropParam(dragEl, dropEl)"
-                                        ng-model="paramModel[param.name]">
+                                        ng-model="paramModel[param.name]"
+                                        typeahead="field for field in fields | filter:$viewValue | limitTo:4"
+                                        ng-keypress="$event.which == 13 && submitChartConfig($event)">
                                 </div>
                             </div>
                         <button class="btn btn-danger pull-right" ng-click="clearChartConfig()">Clear</button>
@@ -138,7 +140,7 @@
             </div>
         </section>
 
-        <section class="analyze">
+        <section class="analyze" ng-hide="activeGraph === ''">
             <h4 class="chart-title">{{paramModel.title}}</h4>
             <svg id="generated-chart"></svg>
         </section>
@@ -184,5 +186,15 @@
             };
             reader.readAsText(file);
         });
+
+        $('.form-chart-config')
+            .submit( function(ev) {
+                ev.preventDefault();
+            })
+            .keydown( function(ev) {
+                if (ev.which == 13) {
+                    //ev.preventDefault();
+                }
+            });
     });
 </script>

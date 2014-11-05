@@ -57,7 +57,7 @@ Graphtype.find({}).remove(function() {
   }, {
     type: 'line',
     formalName: 'Line Chart',
-    params: ['title', 'x', 'y', 'group'],
+    params: ['title', 'seriesname', 'x', 'y', 'group'],
     learnMore: 'https://en.wikipedia.org/wiki/Line_chart',
     description: 'A line chart or line graph is a type of chart which displays information as a series of data points called "markers" connected by straight line segments. Line Charts show how a particular data changes at equal intervals of time. '
   }, {
@@ -80,6 +80,11 @@ Paramtype.find({}).remove(function() {
     name: 'title',
     type: 'string',
     display: 'Title',
+    required: false
+  }, {
+    name: 'seriesname',
+    type: 'string',
+    display: 'Series Name',
     required: false
   }, {
     name: 'label',
