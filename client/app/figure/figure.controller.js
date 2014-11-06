@@ -75,6 +75,10 @@ angular.module('figureApp')
         var drag = angular.element( document.getElementById(dragEl) );
         var drop = angular.element( document.getElementById(dropEl) );
 
+        if ( drop.val() != drag.data().value) {
+            $('.save-graph').text('Save').removeClass('disabled');
+        }
+
         drop.val(drag.data().value);
 
         $scope.graph();
@@ -83,6 +87,7 @@ angular.module('figureApp')
     $scope.clearChartConfig = function() {
         $('input.droppable').val('');
         $('.analyze').hide().empty().append('<svg id="generated-chart"></svg>');
+        $('.save-graph').text('Save').removeClass('disabled');
 
         $scope.paramModel = {};
         $scope.hasGraph = false;
@@ -134,13 +139,16 @@ angular.module('figureApp')
         window['plot_' + $scope.activeGraph.type]($scope.chartDataArray);
     };
 
-    $scope.saveGraph = function() {
+    $scope.saveGraph = function(event) {
         // Save the graph
         $http.post('/api/graphs', {
             title: $scope.paramModel.title,
             data: $scope.chartDataArray,
             owner: Auth.getCurrentUser().name,
             type: $scope.activeGraph.type
+        })
+        .success( function() {
+            $(event.currentTarget).text('Saved').addClass('disabled');
         });
     };
 

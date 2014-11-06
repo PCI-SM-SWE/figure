@@ -151,10 +151,8 @@
             <div>
                 <h5 class="pull-right">
                     Like what you see?
-                    <button class="btn btn-success" ng-click="saveGraph()"
-                      ng-show="isLoggedIn() && paramModel.title && paramModel.title != ''">
-                        Save
-                    </button>
+                    <button class="btn btn-success save-graph" ng-click="saveGraph($event)"
+                      ng-show="isLoggedIn() && paramModel.title && paramModel.title != ''">Save</button>
                     <span ng-show="isLoggedIn() && (!paramModel.title || paramModel.title == '')">
                         Your graph needs a title before you can save!
                     </span>
