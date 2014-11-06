@@ -140,16 +140,24 @@
             </div>
         </section>
 
-        <section class="analyze">
+        <section class="chart-area">
             <h4 class="chart-title">{{paramModel.title}}</h4>
-            <svg id="generated-chart"></svg>
+            <div class="analyze">
+                <svg id="generated-chart"></svg>
+            </div>
         </section>
 
-        <section class="persist">
+        <section class="persist" ng-show="hasGraph">
             <div>
                 <h5 class="pull-right">
                     Like what you see?
-                    <button class="btn btn-success" ng-show="isLoggedIn()">Save</button>
+                    <button class="btn btn-success" ng-click="saveGraph()"
+                      ng-show="isLoggedIn() && paramModel.title && paramModel.title != ''">
+                        Save
+                    </button>
+                    <span ng-show="isLoggedIn() && (!paramModel.title || paramModel.title == '')">
+                        Your graph needs a title before you can save!
+                    </span>
                     <span ng-hide="isLoggedIn()">
                         <a href="/login">Sign in</a> to save it to your account!</label>
                     </span>

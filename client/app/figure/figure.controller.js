@@ -11,6 +11,7 @@ angular.module('figureApp')
     $scope.inputMode = 'raw';
     $scope.activeGraph = '';
     $scope.paramModel = {};
+    $scope.hasGraph = false;
 
     $scope.isLoggedIn = function() {
         return Auth.isLoggedIn();
@@ -76,7 +77,7 @@ angular.module('figureApp')
 
         drop.val(drag.data().value);
 
-        graph();
+        $scope.graph();
     };
 
     $scope.clearChartConfig = function() {
@@ -84,18 +85,82 @@ angular.module('figureApp')
         $('.analyze').hide().empty().append('<svg id="generated-chart"></svg>');
 
         $scope.paramModel = {};
+        $scope.hasGraph = false;
     };
 
     $scope.submitChartConfig = function(event) {
         event.preventDefault();
 
-        graph();
-    }
+        $scope.graph();
+    };
+
+    $scope.graph = function() {
+
+        // Make sure all required fields have values
+        var fields = $('.form-chart-config input:visible');
+        var nvFields = [];
+        for (var i = 0; i < fields.length; i++) {
+            if ($(fields[i]).val() === ''){
+                if ($(fields[i]).hasClass('required')) {
+                    return;
+                }
+                continue;
+            }
+
+            var datum = {};
+            datum[fields[i].name] = $(fields[i]).val();
+            nvFields.push(datum);
+        }
+
+        // Format the data for NVD3
+        var data = [];
+        for (var i = 0; i < $scope.parsedData.length; i++ ) {
+
+            var datum = {};
+
+            for (var j = 0; j < nvFields.length; j++) {
+                var record = $scope.parsedData[i];
+                var key = Object.keys(nvFields[j])[0];
+                datum[key] = record[nvFields[j][key]];
+            }
+            data.push(datum);
+        }
+
+        // Draw the graph
+        $('.analyze').empty().append('<svg id="generated-chart"></svg>').show();
+        $scope.hasGraph = true;
+        $scope.chartDataArray = [{key: $('input[name="seriesname"]').val(), values: data}];
+        $scope.safeApply();
+        window['plot_' + $scope.activeGraph.type]($scope.chartDataArray);
+    };
+
+    $scope.saveGraph = function() {
+        // Save the graph
+        $http.post('/api/graphs', {
+            title: $scope.paramModel.title,
+            data: $scope.chartDataArray,
+            owner: Auth.getCurrentUser().name,
+            type: $scope.activeGraph.type
+        });
+    };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,
     // use a function for the orderBy instead of a property name.
     $scope.formatColumnSort = function(val) {
         return val[$scope.columnSort.sortColumn];
+    };
+
+    // The drag and drop screws with apply...
+    $scope.safeApply = function(fn) {
+        var phase = this.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        }
+        else {
+            this.$apply(fn);
+        }
     };
 
     // Private helpers
@@ -146,42 +211,5 @@ angular.module('figureApp')
 
         // Tell angular to re-up.
         $scope.$apply();
-    }
-
-    function graph() {
-
-        // Make sure all required fields have values
-        var fields = $('.form-chart-config input:visible');
-        var nvFields = [];
-        for (var i = 0; i < fields.length; i++) {
-            if ($(fields[i]).val() === ''){
-                if ($(fields[i]).hasClass('required')) {
-                    return;
-                }
-                continue;
-            }
-
-            var datum = {};
-            datum[fields[i].name] = $(fields[i]).val();
-            nvFields.push(datum);
-        }
-
-        // Format the data for NVD3
-        var data = [];
-        for (var i = 0; i < $scope.parsedData.length; i++ ) {
-
-            var datum = {};
-
-            for (var j = 0; j < nvFields.length; j++) {
-                var record = $scope.parsedData[i];
-                var key = Object.keys(nvFields[j])[0];
-                datum[key] = record[nvFields[j][key]];
-            }
-            data.push(datum);
-        }
-
-        // Draw the graph
-        $('.analyze').empty().append('<svg id="generated-chart"></svg>').show();
-        window['plot_' + $scope.activeGraph.type]([{key: $('input[name="seriesname"]').val(), values: data}]);
     }
   });

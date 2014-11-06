@@ -1,5 +1,11 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="col-md-12">
-This is the dashboard view.
+<div class="container">
+
+    <section class="graphs col-md-12">
+        <h4>Saved Graphs</h4>
+        <ul>
+            <li ng-repeat="graph in graphs">{{graph}}</li>
+        </ul>
+    </section>
 </div>
