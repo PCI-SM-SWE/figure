@@ -52,11 +52,7 @@ $section_height: 300px;
 }
 
 .field {
-    border: 2px solid lightblue;
-    margin: 5px auto 5px 0;
-    background-color: aliceblue;
-    padding: 5px;
-    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.5);
+    @extend .drag-pill;
 
     &:hover {
         cursor: -webkit-grab;

@@ -9,7 +9,7 @@ angular.module('figureApp')
       });
 });
 
-function plot_discreteBar(data) {
+function plot_discreteBar(elId, data) {
   nv.addGraph(function() {
 
     var chart = nv.models.discreteBarChart()
@@ -21,7 +21,7 @@ function plot_discreteBar(data) {
       .transitionDuration(350)
       ;
 
-    d3.select('#generated-chart')
+    d3.select('#' + elId)
       .datum(data)
       .call(chart);
 
@@ -31,7 +31,7 @@ function plot_discreteBar(data) {
   });
 }
 
-function plot_scatter(data) {
+function plot_scatter(elId, data) {
 
   nv.addGraph(function() {
     var chart = nv.models.scatterChart()
@@ -48,7 +48,7 @@ function plot_scatter(data) {
     //We want to show shapes other than circles.
     chart.scatter.onlyCircles(false);
 
-    d3.select('#generated-chart')
+    d3.select('#' + elId)
       .datum(data)
       .call(chart);
 
@@ -58,7 +58,7 @@ function plot_scatter(data) {
   });
 }
 
-function plot_line(data) {
+function plot_line(elId, data) {
   nv.addGraph(function() {
     var chart = nv.models.lineChart()
       .margin({left: 100})
@@ -75,7 +75,7 @@ function plot_line(data) {
     chart.yAxis
       .axisLabel($('input[name="y"]').val());
 
-    d3.select('#generated-chart')
+    d3.select('#' + elId)
       .datum(data)
       .call(chart);
 
@@ -85,14 +85,14 @@ function plot_line(data) {
   });
 }
 
-function plot_pie(data) {
+function plot_pie(elId, data) {
   nv.addGraph(function() {
     var chart = nv.models.pieChart()
       .x(function(d) { return d.label })
       .y(function(d) { return d.value })
       .showLabels(true);
 
-      d3.select("#generated-chart")
+      d3.select('#' + elId)
         .datum(data[0].values)
         .transition().duration(350)
         .call(chart);

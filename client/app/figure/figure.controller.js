@@ -14,17 +14,17 @@ angular.module('figureApp')
     $scope.hasGraph = false;
 
     $scope.isLoggedIn = function() {
-        return Auth.isLoggedIn();
+      return Auth.isLoggedIn();
     }
 
     // Initialization via socketio
     $http.get('/api/graphtypes').success(function(graphtypes) {
-        $scope.graphtypes = graphtypes;
-        socket.syncUpdates('graphtypes', $scope.graphtypes);
+      $scope.graphtypes = graphtypes;
+      socket.syncUpdates('graphtypes', $scope.graphtypes);
     });
     $http.get('/api/paramtypes').success(function(paramtypes) {
-        $scope.paramtypes = paramtypes;
-        socket.syncUpdates('paramtypes', $scope.paramtypes);
+      $scope.paramtypes = paramtypes;
+      socket.syncUpdates('paramtypes', $scope.paramtypes);
     });
     // Unhook things!
     $scope.$on('$destroy', function () {
@@ -34,190 +34,191 @@ angular.module('figureApp')
 
     // Code mirror set-up.
     $scope.editorOptions = {
-        lineNumbers: true,
-        onLoad: function (_editor) {
-            $scope.editor = _editor;
-            $scope.changeTimeout = null;
+      lineNumbers: true,
+      onLoad: function (_editor) {
+        $scope.editor = _editor;
+        $scope.changeTimeout = null;
 
-            // Set-up listeners
-            $scope.editor.on('change', function(cm) {
-                $scope.dataChanged = true;
+        // Set-up listeners
+        $scope.editor.on('change', function(cm) {
+          $scope.dataChanged = true;
 
-                clearTimeout($scope.changeTimeout);
-                $scope.changeTimeout = setTimeout( function() {
-                    parseCodemirrorInput( cm.getValue() );
-                }, 2000);
-            });
-            $scope.editor.on('blur', function(cm) {
-                clearTimeout($scope.changeTimeout);
-                parseCodemirrorInput( cm.getValue() );
-            });
-        }
+          clearTimeout($scope.changeTimeout);
+          $scope.changeTimeout = setTimeout( function() {
+            parseCodemirrorInput( cm.getValue() );
+          }, 2000);
+        });
+        $scope.editor.on('blur', function(cm) {
+          clearTimeout($scope.changeTimeout);
+          parseCodemirrorInput( cm.getValue() );
+        });
+      }
     };
     $scope.setCodemirrorText = function (val) {
-        if (!$scope.editor) {
-            throw 'Codemirror editor does not exist!'
-        }
-        $scope.editor.setValue(val);
+      if (!$scope.editor) {
+        throw 'Codemirror editor does not exist!'
+      }
+      $scope.editor.setValue(val);
     };
 
     // Control methods
     $scope.setRawView = function(rawView) {
-        $scope.rawView = rawView;
+      $scope.rawView = rawView;
     };
 
     $scope.changeActiveGraph = function(graph) {
-        $scope.activeGraph = graph;
-        $scope.clearChartConfig();
+      $scope.activeGraph = graph;
+      $scope.clearChartConfig();
     };
 
     $scope.dropParam = function(dragEl, dropEl) {
-        var drag = angular.element( document.getElementById(dragEl) );
-        var drop = angular.element( document.getElementById(dropEl) );
+      var drag = angular.element( document.getElementById(dragEl) );
+      var drop = angular.element( document.getElementById(dropEl) );
 
-        if ( drop.val() != drag.data().value) {
-            $('.save-graph').text('Save').removeClass('disabled');
-        }
+      if ( drop.val() != drag.data().value) {
+        $('.save-graph').text('Save').removeClass('disabled');
+      }
 
-        drop.val(drag.data().value);
+      drop.val(drag.data().value);
 
-        $scope.graph();
+      $scope.graph();
     };
 
     $scope.clearChartConfig = function() {
-        $('input.droppable').val('');
-        $('.analyze').hide().empty().append('<svg id="generated-chart"></svg>');
-        $('.save-graph').text('Save').removeClass('disabled');
+      $('input.droppable').val('');
+      $('.analyze').hide().empty();
+      $('.save-graph').text('Save').removeClass('disabled');
 
-        $scope.paramModel = {};
-        $scope.hasGraph = false;
+      $scope.paramModel = {};
+      $scope.hasGraph = false;
     };
 
     $scope.submitChartConfig = function(event) {
-        event.preventDefault();
+      event.preventDefault();
 
-        $scope.graph();
+      $scope.graph();
     };
 
     $scope.graph = function() {
 
-        // Make sure all required fields have values
-        var fields = $('.form-chart-config input:visible');
-        var nvFields = [];
-        for (var i = 0; i < fields.length; i++) {
-            if ($(fields[i]).val() === ''){
-                if ($(fields[i]).hasClass('required')) {
-                    return;
-                }
-                continue;
-            }
-
-            var datum = {};
-            datum[fields[i].name] = $(fields[i]).val();
-            nvFields.push(datum);
+      // Make sure all required fields have values
+      var fields = $('.form-chart-config input:visible');
+      var nvFields = [];
+      for (var i = 0; i < fields.length; i++) {
+        if ($(fields[i]).val() === ''){
+          if ($(fields[i]).hasClass('required')) {
+            return;
+          }
+          continue;
         }
 
-        // Format the data for NVD3
-        var data = [];
-        for (var i = 0; i < $scope.parsedData.length; i++ ) {
+        var datum = {};
+        datum[fields[i].name] = $(fields[i]).val();
+        nvFields.push(datum);
+      }
 
-            var datum = {};
+      // Format the data for NVD3
+      var data = [];
+      for (var i = 0; i < $scope.parsedData.length; i++ ) {
 
-            for (var j = 0; j < nvFields.length; j++) {
-                var record = $scope.parsedData[i];
-                var key = Object.keys(nvFields[j])[0];
-                datum[key] = record[nvFields[j][key]];
-            }
-            data.push(datum);
+        var datum = {};
+
+        for (var j = 0; j < nvFields.length; j++) {
+          var record = $scope.parsedData[i];
+          var key = Object.keys(nvFields[j])[0];
+          datum[key] = record[nvFields[j][key]];
         }
+        data.push(datum);
+      }
 
-        // Draw the graph
-        $('.analyze').empty().append('<svg id="generated-chart"></svg>').show();
-        $scope.hasGraph = true;
-        $scope.chartDataArray = [{key: $('input[name="seriesname"]').val(), values: data}];
-        $scope.safeApply();
-        window['plot_' + $scope.activeGraph.type]($scope.chartDataArray);
+      // Draw the graph
+      var elId = $scope.activeGraph.type;
+      $('.analyze').empty().append('<svg id="' + elId + '"></svg>').show();
+      $scope.hasGraph = true;
+      $scope.chartDataArray = [{key: $('input[name="seriesname"]').val(), values: data}];
+      $scope.safeApply();
+      window['plot_' + $scope.activeGraph.type](elId, $scope.chartDataArray);
     };
 
     $scope.saveGraph = function(event) {
-        // Save the graph
-        $http.post('/api/graphs', {
-            title: $scope.paramModel.title,
-            data: $scope.chartDataArray,
-            owner: Auth.getCurrentUser().name,
-            type: $scope.activeGraph.type
-        })
-        .success( function() {
-            $(event.currentTarget).text('Saved').addClass('disabled');
-        });
+      // Save the graph
+      $http.post('/api/graphs', {
+        title: $scope.paramModel.title,
+        data: $scope.chartDataArray,
+        owner: Auth.getCurrentUser().name,
+        type: $scope.activeGraph.type
+      })
+      .success( function() {
+        $(event.currentTarget).text('Saved').addClass('disabled');
+      });
     };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,
     // use a function for the orderBy instead of a property name.
     $scope.formatColumnSort = function(val) {
-        return val[$scope.columnSort.sortColumn];
+      return val[$scope.columnSort.sortColumn];
     };
 
     // The drag and drop screws with apply...
     $scope.safeApply = function(fn) {
-        var phase = this.$root.$$phase;
-        if(phase == '$apply' || phase == '$digest') {
-            if(fn && (typeof(fn) === 'function')) {
-                fn();
-            }
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
         }
-        else {
-            this.$apply(fn);
-        }
+      }
+      else {
+        this.$apply(fn);
+      }
     };
 
     // Private helpers
     function parseCodemirrorInput(input) {
-        // If there were no changes, don't do anything.
-        if (!$scope.dataChanged || input === '') {
-            return;
-        }
+      // If there were no changes, don't do anything.
+      if (!$scope.dataChanged || input === '') {
+        return;
+      }
 
-        prepareParsing();
+      prepareParsing();
 
-        Papa.parse(input, {
-            header: true,
-            dynamicTyping: true,
-            worker: true,
-            step: function(row) {
-                if (row.errors.length > 0) {
-                    for (var error in row.errors) {
-                        $scope.parseError += row.errors[error].message + '\n';
-                    }
-                }
-                else {
-                    $scope.parsedData.push(row.data[0]);
-                    $scope.fields = row.meta.fields;
-                }
-            },
-            complete: finishParsing
-        });
+      Papa.parse(input, {
+        header: true,
+        dynamicTyping: true,
+        worker: true,
+        step: function(row) {
+          if (row.errors.length > 0) {
+            for (var error in row.errors) {
+              $scope.parseError += row.errors[error].message + '\n';
+            }
+          }
+          else {
+            $scope.parsedData.push(row.data[0]);
+            $scope.fields = row.meta.fields;
+          }
+        },
+        complete: finishParsing
+      });
     }
 
     function prepareParsing() {
-        // Clean up state pre-parse.
-        $scope.parseError = '';
-        $scope.parsedData = [];
-        $scope.fields = [];
-        $scope.columnSort = {};
+      // Clean up state pre-parse.
+      $scope.parseError = '';
+      $scope.parsedData = [];
+      $scope.fields = [];
+      $scope.columnSort = {};
 
-        // Tell angular to re-up.
-        $scope.$apply();
+      // Tell angular to re-up.
+      $scope.$apply();
     }
 
     function finishParsing(results) {
-        // Clean up state after parse.
+      // Clean up state after parse.
 
-        // These reset regardless of success.
-        $scope.dataChanged = false;
-        $scope.clearChartConfig();
+      // These reset regardless of success.
+      $scope.dataChanged = false;
+      $scope.clearChartConfig();
 
-        // Tell angular to re-up.
-        $scope.$apply();
+      // Tell angular to re-up.
+      $scope.$apply();
     }
   });

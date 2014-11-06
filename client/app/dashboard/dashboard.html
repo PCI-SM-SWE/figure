@@ -2,10 +2,26 @@
 
 <div class="container">
 
-    <section class="graphs col-md-12">
-        <h4>Saved Graphs</h4>
-        <ul>
-            <li ng-repeat="graph in graphs">{{graph}}</li>
-        </ul>
+    <section class="graph-list col-md-2">
+        <div ng-repeat="graph in graphs" class="graph-list-graph">
+            {{graph.title}}
+            <span class="pull-right">
+                <span class="fa fa-remove fa-btn-cursor" style="color: red;"
+                    title="Delete {{graph.title}}" ng-click="remove(graph)"></span>
+                <span class="fa fa-pie-chart fa-btn-cursor" style="color: green;"
+                    title="Draw {{graph.title}}" ng-click="plot(graph)"></span>
+            </span>
+        </div>
+    </section>
+
+    <section class="graph-canvas col-md-10">
+        <div ng-repeat="graph in graphs" class="graph-canvas-graph" ng-show="graph.drawn">
+            <h4 class="chart-title">{{graph.title}}
+                <span class="fa fa-trash fa-btn-cursor pull-right" ng-click="trash(graph)" title="Remove {{graph.title}}"></span>
+            </h4>
+            <svg id="graph_{{graph._id}}"></svg>
+        </div>
     </section>
 </div>
+
+<div ng-include="'components/navbar/footer.html'"></div>

@@ -15,6 +15,20 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
     padding: 0.2em 0;
 }
 
+.drag-pill {
+    border: 2px solid lightblue;
+    margin: 5px auto 5px 0;
+    background-color: aliceblue;
+    padding: 5px;
+    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.5);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.fa-btn-cursor {
+    cursor: pointer;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'account/login/login.scss';
