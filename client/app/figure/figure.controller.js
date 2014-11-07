@@ -132,8 +132,8 @@ angular.module('figureApp')
           // Auto-detect date and convert to int
           // YYYY/....
           // YYYY-....
-          if (key == 'x' && (moment(value, 'YYYY MM DD HH:MM:SS').isValid() ||
-                             moment(value, 'YYYY MM DD').isValid()) ) {
+          if (key == 'x' && typeof value == 'string' &&
+              (moment(value, 'YYYY MM DD HH:MM:SS').isValid() || moment(value, 'YYYY MM DD').isValid())) {
             var time = Date.parse(value);
 
             if ( !isNaN(time) ) {

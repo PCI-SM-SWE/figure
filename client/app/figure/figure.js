@@ -31,18 +31,31 @@ function plot_discreteBar(elId, data) {
   });
 }
 
-function plot_scatter(elId, data) {
+function plot_scatter(elId, data, xAxisDate) {
 
   nv.addGraph(function() {
     var chart = nv.models.scatterChart()
-      .showDistX(true)
-      .showDistY(true)
+      //.showDistX(true)
+      //.showDistY(true)
       .transitionDuration(350)
       .color(d3.scale.category10().range())
       ;
 
+    chart.tooltipContent(function(key, x, y) {
+      var retStr = x + ', ' + y;
+      return key == '' ? retStr : key + ': ' + retStr;
+    });
+
     //Axis settings
     chart.xAxis.tickFormat(d3.format('.02f'));
+    if (xAxisDate) {
+      chart.xAxis
+        .tickFormat(function(d)
+          {
+            return d3.time.format('%c')(new Date(d));
+          });
+    }
+
     chart.yAxis.tickFormat(d3.format('.02f'));
 
     //We want to show shapes other than circles.
