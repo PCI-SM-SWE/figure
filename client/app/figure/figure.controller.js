@@ -119,6 +119,7 @@ angular.module('figureApp')
 
       // Format the data for NVD3
       var data = [];
+      var xAxisDate = false;
       for (var i = 0; i < $scope.parsedData.length; i++ ) {
 
         var datum = {};
@@ -126,7 +127,22 @@ angular.module('figureApp')
         for (var j = 0; j < nvFields.length; j++) {
           var record = $scope.parsedData[i];
           var key = Object.keys(nvFields[j])[0];
-          datum[key] = record[nvFields[j][key]];
+          var value = record[nvFields[j][key]];
+
+          // Auto-detect date and convert to int
+          // YYYY/....
+          // YYYY-....
+          if (key == 'x' && (moment(value, 'YYYY MM DD HH:MM:SS').isValid() ||
+                             moment(value, 'YYYY MM DD').isValid()) ) {
+            var time = Date.parse(value);
+
+            if ( !isNaN(time) ) {
+              value = time;
+              xAxisDate = true;
+            }
+          }
+
+          datum[key] = value;
         }
         data.push(datum);
       }
@@ -137,7 +153,7 @@ angular.module('figureApp')
       $scope.hasGraph = true;
       $scope.chartDataArray = [{key: $('input[name="seriesname"]').val(), values: data}];
       $scope.safeApply();
-      window['plot_' + $scope.activeGraph.type](elId, $scope.chartDataArray);
+      window['plot_' + $scope.activeGraph.type](elId, $scope.chartDataArray, xAxisDate);
     };
 
     $scope.saveGraph = function(event) {

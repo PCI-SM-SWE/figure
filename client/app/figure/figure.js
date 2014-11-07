@@ -58,7 +58,7 @@ function plot_scatter(elId, data) {
   });
 }
 
-function plot_line(elId, data) {
+function plot_line(elId, data, xAxisDate) {
   nv.addGraph(function() {
     var chart = nv.models.lineChart()
       .margin({left: 100})
@@ -71,6 +71,15 @@ function plot_line(elId, data) {
 
     chart.xAxis
       .axisLabel($('input[name="x"]').val());
+
+    chart.xAxis
+      .tickFormat(function(d)
+        {
+          if (xAxisDate) {
+            return d3.time.format('%c')(new Date(d));
+          }
+          return d;
+        });
 
     chart.yAxis
       .axisLabel($('input[name="y"]').val());
