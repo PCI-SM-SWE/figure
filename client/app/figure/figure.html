@@ -1,6 +1,9 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <div class="container">
+    <div class="load-mask" ng-show="loadMask">
+        <span class="fa fa-spinner fa-spin load-mask-spinner"></span>
+    </div>
 
     <section class="data-input">
         <h2>First, select a data source or skip ahead to manual entry...</h2>

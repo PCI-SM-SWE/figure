@@ -223,6 +223,11 @@ angular.module('figureApp')
       $scope.fields = [];
       $scope.columnSort = {};
 
+      $('.load-mask')
+        .height($(document).height())
+        .width($(document).width());
+      $scope.loadMask = true;
+
       // Tell angular to re-up.
       $scope.$apply();
     }
@@ -233,6 +238,7 @@ angular.module('figureApp')
       // These reset regardless of success.
       $scope.dataChanged = false;
       $scope.clearChartConfig();
+      $scope.loadMask = false;
 
       // Tell angular to re-up.
       $scope.$apply();
