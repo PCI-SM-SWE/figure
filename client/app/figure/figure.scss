@@ -43,10 +43,7 @@ $section_height: 300px;
 }
 
 .drop-pill {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+    @extend .no-select;
     padding: 5px;
     border: 1px solid lightgray;
     margin: 3px 0;
@@ -70,11 +67,13 @@ $section_height: 300px;
     @extend .drag-pill;
 
     &:hover {
+        cursor: -moz-grab;
         cursor: -webkit-grab;
     }
 
     &:active {
         cursor: -webkit-grabbing;
+        cursor: -moz-grabbing;
         background-color: lightblue;
     }
 }
@@ -93,9 +92,9 @@ $section_height: 300px;
 
 /* Control elements */
 .glyph-btn {
+    @extend .no-select;
     margin: 8.5px 3px;
     cursor: pointer;
-    -webkit-user-select: none;
 }
 
 .glyph-btn-selected {
@@ -113,7 +112,7 @@ $section_height: 300px;
 
 table {
     th {
-        -webkit-user-select: none;
+        @extend .no-select;
         min-width: 120px;
     }
 }
@@ -135,6 +134,7 @@ table {
 
 /* Images */
 .graph {
+    @extend .no-select;
     margin: 10px;
     height: 150px;
     box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);

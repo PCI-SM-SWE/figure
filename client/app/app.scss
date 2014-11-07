@@ -29,6 +29,12 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
     cursor: pointer;
 }
 
+.no-select {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'account/login/login.scss';
