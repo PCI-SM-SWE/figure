@@ -3,9 +3,6 @@
 angular.module('figureApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
-      'title': 'Data',
-      'link': '/figure/old'
-    },{
       'title': 'Visualize',
       'link': '/figure'
     }];
