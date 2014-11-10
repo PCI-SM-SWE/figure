@@ -35,8 +35,6 @@ function plot_scatter(elId, data, xAxisDate) {
 
   nv.addGraph(function() {
     var chart = nv.models.scatterChart()
-      //.showDistX(true)
-      //.showDistY(true)
       .transitionDuration(350)
       .color(d3.scale.category10().range())
       ;
@@ -49,11 +47,7 @@ function plot_scatter(elId, data, xAxisDate) {
     //Axis settings
     chart.xAxis.tickFormat(d3.format('.02f'));
     if (xAxisDate) {
-      chart.xAxis
-        .tickFormat(function(d)
-          {
-            return d3.time.format('%c')(new Date(d));
-          });
+      formatXAxisForTime(chart);
     }
 
     chart.yAxis.tickFormat(d3.format('.02f'));
@@ -83,16 +77,12 @@ function plot_line(elId, data, xAxisDate) {
       ;
 
     chart.xAxis
-      .axisLabel($('input[name="x"]').val());
+      .axisLabel($('input[name="x"]').val())
+      .tickFormat(d3.format('.02f'));
 
-    chart.xAxis
-      .tickFormat(function(d)
-        {
-          if (xAxisDate) {
-            return d3.time.format('%c')(new Date(d));
-          }
-          return d;
-        });
+    if (xAxisDate) {
+      formatXAxisForTime(chart);
+    }
 
     chart.yAxis
       .axisLabel($('input[name="y"]').val());
@@ -121,5 +111,12 @@ function plot_pie(elId, data) {
 
     return chart;
   });
+}
 
+function formatXAxisForTime(chart) {
+  chart.xAxis
+    .tickFormat(function(d)
+      {
+        return d3.time.format('%x')(new Date(d));
+      });
 }
