@@ -15,7 +15,7 @@ angular.module('figureApp')
 
     $scope.isLoggedIn = function() {
       return Auth.isLoggedIn();
-    }
+    };
 
     // Initialization via socketio
     $http.get('/api/graphtypes').success(function(graphtypes) {
