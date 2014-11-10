@@ -125,7 +125,7 @@
                                 <label for="param.name" class="col-sm-2 control-label">
                                     {{::param.display}}<span ng-show="{{::param.required}}">*</span>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-sm-10 has-feedback">
                                     <input type="text" class="form-control droppable" name="{{::param.name}}"
                                         placeholder="Suitable for {{::param.type}} type values..."
                                         ng-class="{'required': param.required}"
@@ -134,6 +134,9 @@
                                         ng-model="paramModel[param.name]"
                                         typeahead="field for field in fields | filter:$viewValue | limitTo:4"
                                         ng-keypress="$event.which == 13 && submitChartConfig($event)">
+                                    <span ng-if="param.name == 'x'" style="top: 9px"
+                                        class="fa fa-question-circle form-control-feedback"
+                                        title="Values in the form YYYY-MM-DD [HH:mm:ss] will be treated as time."></span>
                                 </div>
                             </div>
                         <button class="btn btn-danger pull-right" ng-click="clearChartConfig()">Clear</button>

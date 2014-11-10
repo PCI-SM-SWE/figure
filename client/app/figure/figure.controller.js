@@ -133,7 +133,7 @@ angular.module('figureApp')
           // YYYY/....
           // YYYY-....
           if (key == 'x' && typeof value == 'string' &&
-              moment(value, ['YYYY-MM-DD HH:mm:SS', 'YYYY-mm-DD']).isValid()) {
+              moment(value, ['YYYY-MM-DD HH:mm:ss', 'YYYY-mm-DD']).isValid()) {
             var time = Date.parse(value);
 
             if ( !isNaN(time) ) {
