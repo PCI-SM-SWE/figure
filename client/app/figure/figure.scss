@@ -1,0 +1,145 @@
+$section_height: 300px;
+
+/* Label/display elements */
+.load-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.load-mask-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: 200%;
+}
+
+.text-wrap {
+    display: inline-block;
+    max-width: 85%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tooltip-inner {
+    min-width: 75px;
+}
+
+.alert-top-margin {
+    @extend .alert;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.fromFileInputError {
+    margin-top: 5px;
+}
+
+.graph-doc-link {
+    font-size: 10px;
+}
+
+.drop-pill {
+    @extend .no-select;
+    padding: 5px;
+    border: 1px solid lightgray;
+    margin: 3px 0;
+    cursor: move;
+}
+
+.fields {
+    height: $section_height;
+    overflow: auto;
+}
+
+.chart-config {
+    overflow: auto;
+}
+
+.chart-title {
+    text-align: center;
+}
+
+.field {
+    @extend .drag-pill;
+
+    &:hover {
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+    }
+
+    &:active {
+        cursor: -webkit-grabbing;
+        cursor: -moz-grabbing;
+        background-color: lightblue;
+    }
+}
+
+/* Input elements */
+.raw-data {
+    margin: 20px 0;
+    resize: none;
+    background-color: white;
+}
+
+.CodeMirror {
+    @extend .raw-data;
+    border: 1px solid lightgray;
+}
+
+/* Control elements */
+.glyph-btn {
+    @extend .no-select;
+    margin: 8.5px 3px;
+    cursor: pointer;
+}
+
+.glyph-btn-selected {
+    @extend .glyph-btn;
+    opacity: 0.5;
+}
+
+/* Table elements */
+.raw-data-table {
+    height: $section_height;
+    overflow: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+table {
+    th {
+        @extend .no-select;
+        min-width: 120px;
+    }
+}
+
+.sort-dir {
+    @extend .fa;
+    margin-top: 3px;
+}
+
+.sort-asc {
+    @extend .sort-dir;
+    @extend .fa-long-arrow-up;
+}
+
+.sort-desc {
+    @extend .sort-dir;
+    @extend .fa-long-arrow-down;
+}
+
+/* Images */
+.graph {
+    @extend .no-select;
+    margin: 10px;
+    height: 150px;
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
+}
+
+.analyze {
+    height: $section_height;
+}

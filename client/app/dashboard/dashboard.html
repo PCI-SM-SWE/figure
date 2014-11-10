@@ -1,0 +1,45 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+
+    <div ng-show="!graphs || graphs.length == 0" style="min-height: 300px">
+        <div class="alert alert-warning">
+            Uh oh... You have no saved graphs! Go <a class="alert-link" href="/figure">Visualize</a> some data.
+        </div>
+    </div>
+
+    <section class="graph-list col-md-2">
+        <div ng-repeat="graph in graphs" class="graph-list-graph">
+            {{graph.title}}
+            <span class="pull-right">
+                <span class="fa fa-remove fa-btn-cursor" style="color: red;"
+                    title="Delete {{graph.title}}" ng-click="remove(graph)"></span>
+                <span class="fa fa-pencil fa-btn-cursor"
+                    title="Edit {{graph.title}}" ng-click="edit(graph)"></span>
+                <span class="fa fa-btn-cursor" ng-class="{'fa-pie-chart': !graph.drawn, 'fa-trash-o': graph.drawn}"
+                    title="Toggle {{graph.title}}" ng-click="plot(graph)"></span>
+            </span>
+        </div>
+    </section>
+
+    <section class="graph-canvas col-md-10">
+        <div class="alert alert-warning" ng-show="noGraphsDrawn()">
+            Graphs will be drawn here when you select their <span class="fa fa-pie-chart"></span>.
+            <br />
+            Revise graph data when you select their <span class="fa fa-pencil" style="color: black;"></span>.
+        </div>
+        <div ng-repeat="graph in graphs" class="graph-canvas-graph" ng-show="graph.drawn">
+            <h4 class="chart-title">{{graph.title}}
+                <span class="pull-right">
+                    <span class="fa fa-pencil fa-btn-cursor"
+                        title="Edit {{graph.title}}" ng-click="edit(graph)"></span>
+                    <span class="fa fa-trash-o fa-btn-cursor"
+                        ng-click="trash(graph)" title="Hide {{graph.title}}"></span>
+                </span>
+            </h4>
+            <svg id="graph_{{graph._id}}"></svg>
+        </div>
+    </section>
+</div>
+
+<div ng-include="'components/navbar/footer.html'"></div>

@@ -1,0 +1,224 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container">
+    <div class="load-mask" ng-show="loadMask">
+        <span class="fa fa-spinner fa-spin load-mask-spinner"></span>
+    </div>
+
+    <section class="data-input">
+        <h2>First, select a data source or skip ahead to manual entry...</h2>
+
+        <div class="row col-md-12">
+            <div class="btn-group">
+                <!-- Handle the buttons like toggles. -->
+                <button type="button" class="btn btn-default"
+                    ng-click="inputMode === 'file' ? inputMode = 'raw' : inputMode = 'file'"
+                    ng-class="{'active': inputMode === 'file'}">File</button>
+                <button type="button" class="btn btn-default" disabled>URL</button>
+                <button type="button" class="btn btn-default" disabled>Database</button>
+            </div>
+            <span class="pull-right">
+                <i ng-click="setRawView(true)"
+                    ng-class="{'glyph-btn-selected': rawView == false}"
+                    class="fa fa-list-ol glyph-btn" tooltip-placement="top" tooltip="Raw View"></i>
+                <i ng-click="setRawView(false)"
+                    ng-class="{'glyph-btn-selected': rawView == true}"
+                    class="fa fa-table glyph-btn" tooltip-placement="top" tooltip="Table View"></i>
+            </span>
+        </div>
+
+        <!-- File parse form -->
+        <div class="row col-md-12 fromFileForm" ng-show="inputMode === 'file'" style="margin-top: 20px;">
+            <input id="fromFileInput" type="file" class="file">
+            <div class="fromFileInputError"></div>
+        </div>
+
+        <!-- Parse status messages. -->
+        <div class="row col-md-12">
+            <div class="alert-top-margin alert-danger" ng-show="parseError.length > 0">
+                <span class="fa fa-thumbs-down"></span> {{parseError}}
+            </div>
+            <div class="alert-top-margin alert-success" ng-show="parsedData.length > 0">
+                <span class="fa fa-thumbs-o-up"></span> {{parsedData.length}} record(s) successfully parsed!
+            </div>
+        </div>
+
+        <div ng-show="rawView == true" class="row col-md-12">
+            <textarea ui-codemirror="editorOptions" class="raw-data form-control" rows='15'
+                placeholder="If you have raw data, you can enter it here. Include a header row with the columns!"/>
+        </div>
+
+        <div ng-show="rawView == false" class="row col-md-12 raw-data-table">
+            <div class="alert alert-warning" ng-show="parsedData.length == 0" style="margin-right: 15px;">
+                <b>Oops!</b> You have no parsed data.
+            </div>
+            <table class="table table-bordered table-condensed table-hover">
+                <thead>
+                    <th ng-repeat="field in fields"
+                        ng-class="{'info': columnSort.sortColumn == field}"
+                        ng-click="columnSort.sortColumn=field;columnSort.reverse=!columnSort.reverse;">
+                        {{::field}}
+                        <span ng-class="{'sort-asc': columnSort.sortColumn == field && columnSort.reverse,
+                            'sort-desc': columnSort.sortColumn == field && !columnSort.reverse,
+                            'sort-none': columnSort.sortColumn != field}"
+                            class="pull-right"></span>
+                    </th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="datum in parsedData | orderBy:formatColumnSort:columnSort.reverse">
+                        <td ng-repeat="field in fields" sortable="field">
+                            {{::datum[field]}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div ng-hide="parsedData.length == 0">
+        <section class="visualization-options">
+            <h2>Which visualization would you like to use?</h2>
+
+            <div class="row">
+                <div class="graph-descriptions col-md-3">
+                    <div ng-show="activeGraph === ''">
+                        <h5>Chart Information</h5>
+                        <hr style="margin: 0 0 10px;" />
+                        Select a graph on the right to get more details about that chart type!
+                    </div>
+                    <div ng-repeat="graph in ::graphtypes" class="col-md-12" ng-show="activeGraph.type === graph.type">
+                        <h5>{{::graph.formalName}}</h5>
+                        <hr style="margin: 0 0 10px;" />
+                        {{::graph.description}}
+                        <br />
+                        <a href="http://nvd3.org/examples/{{::graph.type}}.html" target="_blank" class="graph-doc-link">View Example</a>
+                        <br />
+                        <a href="{{::graph.learnMore}}" target="_blank" class="graph-doc-link">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="graph-images col-md-9">
+                    <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
+                        ng-class="{'active': activeGraph.type === graph.type}">
+                        <img ng-src="assets/images/graphs/{{::graph.type}}-hover.png" ng-click="changeActiveGraph(graph)"
+                            title="{{::graph.formalName}}" draggable="false" class="{{::graph.type}}" />
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="map-dimensions" ng-hide="activeGraph === ''">
+            <h2>Now, connect your data.</h2>
+
+            <div class="row">
+                <div class="fields col-md-3">
+                    <div ng-repeat="field in fields" draggable="true" x-lvl-draggable="true" data-value="{{::field}}" class="field">
+                        <span class="text-wrap">{{::field}}</span>
+                        <span class="pull-right glyphicon glyphicon-plus-sign" style="margin-top: 4px;"></span>
+                    </div>
+                </div>
+
+                <div class="chart-config col-md-9 panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-horizontal form-chart-config" ng-submit="submitChartConfig($event)">
+                            <div class="form-group" ng-repeat="param in ::paramtypes" ng-show="activeGraph.params.indexOf(param.name) !== -1">
+                                <label for="param.name" class="col-sm-2 control-label">
+                                    {{::param.display}}<span ng-show="{{::param.required}}">*</span>
+                                </label>
+                                <div class="col-sm-10 has-feedback">
+                                    <input type="text" class="form-control droppable" name="{{::param.name}}"
+                                        placeholder="Suitable for {{::param.type}} type values..."
+                                        ng-class="{'required': param.required}"
+                                        x-lvl-drop-target="true"
+                                        x-on-drop="dropParam(dragEl, dropEl)"
+                                        ng-model="paramModel[param.name]"
+                                        typeahead="field for field in fields | filter:$viewValue | limitTo:4"
+                                        ng-keypress="$event.which == 13 && submitChartConfig($event)">
+                                    <span ng-if="param.name == 'x'" style="top: 9px"
+                                        class="fa fa-question-circle form-control-feedback"
+                                        title="Values in the form YYYY-MM-DD [HH:mm:ss] will be treated as time."></span>
+                                </div>
+                            </div>
+                        <button class="btn btn-danger pull-right" ng-click="clearChartConfig()">Clear</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="chart-area">
+            <h4 class="chart-title">{{paramModel.title}}</h4>
+            <div class="analyze">
+                <svg id="generated-chart"></svg>
+            </div>
+        </section>
+
+        <section class="persist" ng-show="hasGraph">
+            <div>
+                <h5 class="pull-right">
+                    Like what you see?
+                    <button class="btn btn-success save-graph" ng-click="saveGraph($event)"
+                      ng-show="isLoggedIn() && paramModel.title && paramModel.title != ''">Save</button>
+                    <span ng-show="isLoggedIn() && (!paramModel.title || paramModel.title == '')">
+                        Your graph needs a title before you can save!
+                    </span>
+                    <span ng-hide="isLoggedIn()">
+                        <a href="/login">Sign in</a> to save it to your account!</label>
+                    </span>
+                </h5>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div ng-include="'components/navbar/footer.html'"></div>
+
+<script type="text/javascript">
+    $(document).ready( function() {
+        // Needed for lvl-drag-drop
+        $.event.props.push('dataTransfer');
+
+        // Set the default view of the graph since we're not properly using ng-show/hide
+        $('.analyze').hide();
+
+        // Set up Bootstrap file input plugin
+        $('#fromFileInput').fileinput({
+            uploadLabel: 'Parse',
+            showPreview: false,
+            allowedFileExtensions: ['csv'],
+            elErrorContainer: '.fromFileInputError'
+        });
+
+        $('.kv-fileinput-upload').click( function() {
+            var file = $("input[type=file]")[0].files[0];
+
+            if (!file) {
+                return;
+            }
+
+            // Reset to raw view before parsing...
+            $('.fa-list-ol').click();
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var contents = e.target.result;
+
+                var _scope = angular.element($('#fromFileInput')).scope();
+                _scope.$apply( function() {
+                    _scope.setCodemirrorText(contents);
+                });
+            };
+            reader.readAsText(file);
+        });
+
+        $('.form-chart-config')
+            .submit( function(ev) {
+                ev.preventDefault();
+            })
+            .keydown( function(ev) {
+                if (ev.which == 13) {
+                    //ev.preventDefault();
+                }
+            });
+    });
+</script>

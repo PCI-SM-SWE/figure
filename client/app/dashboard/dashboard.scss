@@ -1,0 +1,13 @@
+.graph-list-graph {
+    @extend .drag-pill;
+}
+
+.graph-canvas-graph {
+    @extend .col-md-6;
+    height: 300px;
+    margin-bottom: 50px;
+}
+
+.fa-pie-chart {
+    color: green;
+}

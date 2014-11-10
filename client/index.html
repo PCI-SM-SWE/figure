@@ -1,0 +1,108 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <base href="/">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" href="assets/images/flavicon.ico">
+    <!-- build:css(client) app/vendor.css -->
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/nvd3/src/nv.d3.css" />
+      <link rel="stylesheet" href="bower_components/bootstrap-fileinput/css/fileinput.min.css" />
+      <!-- endbower -->
+      <link rel="stylesheet" href="assets/styles/blue/style.css">
+      <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
+      <link rel="stylesheet" href='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.css'/>
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <!-- endbuild -->
+    <!-- build:css({.tmp,client}) app/app.css -->
+    <link rel="stylesheet" href="app/app.css">
+      <!-- injector:css -->
+      <!-- endinjector -->
+    <!-- endbuild -->
+  </head>
+  <body ng-app="figureApp">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <div ng-view=""></div>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/jquery/dist/jquery.js"></script>
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/angular-resource/angular-resource.js"></script>
+      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/angular-route/angular-route.js"></script>
+      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+      <script src="bower_components/angular-socket-io/socket.js"></script>
+      <script src="bower_components/react/react.js"></script>
+      <script src="bower_components/ngReact/ngReact.js"></script>
+      <script src="bower_components/d3/d3.js"></script>
+      <script src="bower_components/nvd3/nv.d3.js"></script>
+      <script src="bower_components/StackBlur/StackBlur.js"></script>
+      <script src="bower_components/rgb-color/rgb-color.js"></script>
+      <script src="bower_components/canvg/dist/canvg.bundle.js"></script>
+      <script src="bower_components/canvg/dist/canvg.bundle.min.js"></script>
+      <script src="bower_components/bootstrap-fileinput/js/fileinput.min.js"></script>
+      <script src="bower_components/papa-parse/papaparse.js"></script>
+      <script src="bower_components/jquery.tablesorter/js/jquery.tablesorter.js"></script>
+      <script src="bower_components/lvlDragDrop/script/lvl-drag-drop.js"></script>
+      <script src="bower_components/codemirror/lib/codemirror.js"></script>
+      <script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <!-- endbower -->
+      <script src="socket.io-client/socket.io.js"></script>
+      <script src="bower_components/lvlDragDrop/script/lvl-uuid.js"></script>
+
+      <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/4.7.0/addon/display/placeholder.min.js'></script>
+
+      <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+      <script type="text/javascript" src='https://api.tiles.mapbox.com/mapbox.js/v1.6.4/mapbox.js'></script>
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,client}) app/app.js -->
+        <script src="app/app.js"></script>
+          <!-- injector:js -->
+          <script src="app/account/account.js"></script>
+          <script src="app/account/login/login.controller.js"></script>
+          <script src="app/account/settings/settings.controller.js"></script>
+          <script src="app/account/signup/signup.controller.js"></script>
+          <script src="app/admin/admin.controller.js"></script>
+          <script src="app/admin/admin.js"></script>
+          <script src="app/dashboard/dashboard.controller.js"></script>
+          <script src="app/dashboard/dashboard.js"></script>
+          <script src="app/figure/figure.controller.js"></script>
+          <script src="app/figure/figure.js"></script>
+          <script src="app/figure_old/figure_old.controller.js"></script>
+          <script src="app/figure_old/figure_old.js"></script>
+          <script src="app/graph/graph.service.js"></script>
+          <script src="app/main/main.controller.js"></script>
+          <script src="app/main/main.js"></script>
+          <script src="app/react/react.component.js"></script>
+          <script src="app/react/react.controller.js"></script>
+          <script src="app/react/react.js"></script>
+          <script src="components/auth/auth.service.js"></script>
+          <script src="components/auth/user.service.js"></script>
+          <script src="components/modal/modal.service.js"></script>
+          <script src="components/mongoose-error/mongoose-error.directive.js"></script>
+          <script src="components/navbar/navbar.controller.js"></script>
+          <script src="components/socket/socket.service.js"></script>
+          <!-- endinjector -->
+        <!-- endbuild -->
+</body>
+</html>
