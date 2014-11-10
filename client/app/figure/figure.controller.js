@@ -208,6 +208,8 @@ angular.module('figureApp')
             }
           }
           else {
+            // The following line is responsible for browser lock-ups on large datasets... Sadly, I think this is a fault
+            // of angular and unavoidable.
             $scope.parsedData.push(row.data[0]);
             $scope.fields = row.meta.fields;
           }
