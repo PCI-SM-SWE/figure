@@ -172,7 +172,7 @@ angular.module('figureApp')
       if ($scope.editGraph) {
         $http.put('/api/graphs/' + $scope.editGraph._id, graphObj)
           .success( function() {
-            $(event.currentTarget).text('Saved').addClass('disabled');
+            $(event.currentTarget).text('Updated').addClass('disabled');
             $scope.editGraph = null;
           });
       }
@@ -285,6 +285,6 @@ angular.module('figureApp')
       $scope.paramModel.title = $scope.editGraph.title;
 
       // Clear the service's graph.
-      graph.set({});
+      graph.set(null);
     }
   });

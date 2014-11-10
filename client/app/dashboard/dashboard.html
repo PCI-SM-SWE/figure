@@ -16,15 +16,15 @@
                     title="Delete {{graph.title}}" ng-click="remove(graph)"></span>
                 <span class="fa fa-pencil fa-btn-cursor"
                     title="Edit {{graph.title}}" ng-click="edit(graph)"></span>
-                <span class="fa fa-pie-chart fa-btn-cursor" style="color: green;"
-                    title="Draw {{graph.title}}" ng-click="plot(graph)"></span>
+                <span class="fa fa-btn-cursor" ng-class="{'fa-pie-chart': !graph.drawn, 'fa-trash-o': graph.drawn}"
+                    title="Toggle {{graph.title}}" ng-click="plot(graph)"></span>
             </span>
         </div>
     </section>
 
     <section class="graph-canvas col-md-10">
         <div class="alert alert-warning" ng-show="noGraphsDrawn()">
-            Graphs will be drawn here when you select their <span class="fa fa-pie-chart" style="color: green;"></span>.
+            Graphs will be drawn here when you select their <span class="fa fa-pie-chart"></span>.
             <br />
             Revise graph data when you select their <span class="fa fa-pencil" style="color: black;"></span>.
         </div>
@@ -34,7 +34,7 @@
                     <span class="fa fa-pencil fa-btn-cursor"
                         title="Edit {{graph.title}}" ng-click="edit(graph)"></span>
                     <span class="fa fa-trash-o fa-btn-cursor"
-                        ng-click="trash(graph)" title="Remove {{graph.title}}"></span>
+                        ng-click="trash(graph)" title="Hide {{graph.title}}"></span>
                 </span>
             </h4>
             <svg id="graph_{{graph._id}}"></svg>

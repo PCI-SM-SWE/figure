@@ -17,8 +17,9 @@ angular.module('figureApp')
 
     $scope.plot = function(graph) {
 
-      // Don't regraph if it's already drawn.
+      // Toggle
       if (graph.drawn) {
+        $scope.trash(graph);
         return;
       }
 
@@ -42,6 +43,7 @@ angular.module('figureApp')
     };
 
     $scope.edit = function(graphObj) {
+      delete graph.drawn;
       graph.set(graphObj);
       $location.path('/figure');
     };
