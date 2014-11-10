@@ -101,7 +101,7 @@
                     <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
                         ng-class="{'active': activeGraph.type === graph.type}">
                         <img ng-src="assets/images/graphs/{{::graph.type}}-hover.png" ng-click="changeActiveGraph(graph)"
-                            title="{{::graph.formalName}}" draggable="false" />
+                            title="{{::graph.formalName}}" draggable="false" class="{{::graph.type}}" />
                     </a>
                 </div>
             </div>

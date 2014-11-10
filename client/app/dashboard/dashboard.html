@@ -25,11 +25,17 @@
     <section class="graph-canvas col-md-10">
         <div class="alert alert-warning" ng-show="noGraphsDrawn()">
             Graphs will be drawn here when you select their <span class="fa fa-pie-chart" style="color: green;"></span>.
+            <br />
+            Revise graph data when you select their <span class="fa fa-pencil" style="color: black;"></span>.
         </div>
         <div ng-repeat="graph in graphs" class="graph-canvas-graph" ng-show="graph.drawn">
             <h4 class="chart-title">{{graph.title}}
-                <span class="fa fa-trash-o fa-btn-cursor pull-right"
-                    ng-click="trash(graph)" title="Remove {{graph.title}}"></span>
+                <span class="pull-right">
+                    <span class="fa fa-pencil fa-btn-cursor"
+                        title="Edit {{graph.title}}" ng-click="edit(graph)"></span>
+                    <span class="fa fa-trash-o fa-btn-cursor"
+                        ng-click="trash(graph)" title="Remove {{graph.title}}"></span>
+                </span>
             </h4>
             <svg id="graph_{{graph._id}}"></svg>
         </div>

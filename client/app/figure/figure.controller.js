@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('figureApp')
-  .controller('FigureCtrl', function ($scope, $http, socket, Auth) {
+  .controller('FigureCtrl', function ($scope, $http, graph, socket, Auth) {
 
     $scope.rawView = true;
 
@@ -12,6 +12,7 @@ angular.module('figureApp')
     $scope.activeGraph = '';
     $scope.paramModel = {};
     $scope.hasGraph = false;
+    $scope.editGraph = graph.get();
 
     $scope.isLoggedIn = function() {
       return Auth.isLoggedIn();
@@ -52,6 +53,8 @@ angular.module('figureApp')
           clearTimeout($scope.changeTimeout);
           parseCodemirrorInput( cm.getValue() );
         });
+
+        initializeEditMode();
       }
     };
     $scope.setCodemirrorText = function (val) {
@@ -158,15 +161,27 @@ angular.module('figureApp')
 
     $scope.saveGraph = function(event) {
       // Save the graph
-      $http.post('/api/graphs', {
+      var graphObj = {
         title: $scope.paramModel.title,
         data: $scope.chartDataArray,
         owner: Auth.getCurrentUser().name,
-        type: $scope.activeGraph.type
-      })
-      .success( function() {
-        $(event.currentTarget).text('Saved').addClass('disabled');
-      });
+        type: $scope.activeGraph.type,
+        params: $scope.activeGraph.params
+      };
+
+      if ($scope.editGraph) {
+        $http.put('/api/graphs/' + $scope.editGraph._id, graphObj)
+          .success( function() {
+            $(event.currentTarget).text('Saved').addClass('disabled');
+            $scope.editGraph = null;
+          });
+      }
+      else {
+        $http.post('/api/graphs', graphObj )
+          .success( function() {
+            $(event.currentTarget).text('Saved').addClass('disabled');
+          });
+      }
     };
 
     // Innate column sorting breaks with a key has a space in it. To avoid this,
@@ -189,7 +204,7 @@ angular.module('figureApp')
     };
 
     // Private helpers
-    function parseCodemirrorInput(input) {
+    function parseCodemirrorInput(input, callback) {
       // If there were no changes, don't do anything.
       if (!$scope.dataChanged || input === '') {
         return;
@@ -214,7 +229,9 @@ angular.module('figureApp')
             $scope.fields = row.meta.fields;
           }
         },
-        complete: finishParsing
+        complete: function() {
+          finishParsing(callback);
+        }
       });
     }
 
@@ -231,10 +248,10 @@ angular.module('figureApp')
       $scope.loadMask = true;
 
       // Tell angular to re-up.
-      $scope.$apply();
+      $scope.safeApply();
     }
 
-    function finishParsing(results) {
+    function finishParsing(callback) {
       // Clean up state after parse.
 
       // These reset regardless of success.
@@ -242,7 +259,32 @@ angular.module('figureApp')
       $scope.clearChartConfig();
       $scope.loadMask = false;
 
+      if (callback) {
+        callback();
+      }
       // Tell angular to re-up.
-      $scope.$apply();
+      $scope.safeApply();
+    }
+
+    function initializeEditMode() {
+      // See if the graph service has a graph. Because that means we're coming from an edit
+      // and need to pull that in.
+      if (!$scope.editGraph) {
+        return;
+      }
+
+      var data = Papa.unparse($scope.editGraph.data[0].values);
+      $scope.setCodemirrorText(data);
+
+      clearTimeout($scope.changeTimeout);
+      parseCodemirrorInput(data, setEditModeState);
+    }
+
+    function setEditModeState() {
+      $scope.activeGraph = $scope.editGraph;
+      $scope.paramModel.title = $scope.editGraph.title;
+
+      // Clear the service's graph.
+      graph.set({});
     }
   });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('figureApp')
-  .controller('DashboardCtrl', function ($scope, $http, Auth, socket) {
+  .controller('DashboardCtrl', function ($scope, $http, $location, Auth, socket, graph) {
 
     $scope.graphs = [];
 
@@ -41,8 +41,9 @@ angular.module('figureApp')
       return true;
     };
 
-    $scope.edit = function() {
-      //Todo
+    $scope.edit = function(graphObj) {
+      graph.set(graphObj);
+      $location.path('/figure');
     };
 
     $scope.remove = function(graph) {
