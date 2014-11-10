@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var GraphSchema = new Schema({
   title: String,
-  data: Array,
+  data: Schema.Types.Mixed,
   owner: String,
   type: String,
   params: Array

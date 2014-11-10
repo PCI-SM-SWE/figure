@@ -33,6 +33,10 @@ angular.module('figureApp')
     };
 
     $scope.noGraphsDrawn = function() {
+      if ($scope.graphs.length == 0) {
+        return false;
+      }
+
       for (var i = 0; i < $scope.graphs.length; i++) {
         if ($scope.graphs[i].drawn) {
           return false;
