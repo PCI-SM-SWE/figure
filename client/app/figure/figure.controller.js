@@ -65,6 +65,11 @@ angular.module('figureApp')
     };
 
     // Control methods
+    $scope.parseURL = function() {
+      $scope.dataChanged = 'url';
+      parseCodemirrorInput($scope.dataURL);
+    };
+
     $scope.setRawView = function(rawView) {
       $scope.rawView = rawView;
     };
@@ -217,6 +222,7 @@ angular.module('figureApp')
         header: true,
         dynamicTyping: true,
         worker: true,
+        download: $scope.dataChanged == 'url',
         step: function(row) {
           if (row.errors.length > 0) {
             for (var error in row.errors) {
@@ -232,6 +238,9 @@ angular.module('figureApp')
         },
         complete: function() {
           finishParsing(callback);
+        },
+        error: function(err) {
+          $scope.parseError = err;
         }
       });
     }

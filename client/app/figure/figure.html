@@ -14,7 +14,9 @@
                 <button type="button" class="btn btn-default"
                     ng-click="inputMode === 'file' ? inputMode = 'raw' : inputMode = 'file'"
                     ng-class="{'active': inputMode === 'file'}">File</button>
-                <button type="button" class="btn btn-default" disabled>URL</button>
+                <button type="button" class="btn btn-default"
+                    ng-click="inputMode === 'url' ? inputMode = 'raw' : inputMode = 'url'"
+                    ng-class="{'active': inputMode === 'url'}">URL</button>
                 <button type="button" class="btn btn-default" disabled>Database</button>
             </div>
             <span class="pull-right">
@@ -31,6 +33,21 @@
         <div class="row col-md-12 fromFileForm" ng-show="inputMode === 'file'" style="margin-top: 20px;">
             <input id="fromFileInput" type="file" class="file">
             <div class="fromFileInputError"></div>
+        </div>
+
+        <!-- URL parse form -->
+        <div class="row col-md-12 fromUrlForm" ng-show="inputMode === 'url'" style="margin-top: 20px;">
+            <form name="urlForm" ng-submit="urlForm.$valid && parseURL()">
+                <div class="input-group" ng-class="{'has-error': urlForm.dataURL.$error.pattern}">
+                    <input type="text" class="form-control" name="dataURL" ng-model="dataURL" required
+                        ng-pattern='/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi'
+                        placeholder="(cross-origin requests must receive Access-Control-Allow-Origin header)">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <span class="glyphicon glyphicon-globe"></span>Parse</button>
+                    </span>
+                </div>
+            </form>
         </div>
 
         <!-- Parse status messages. -->
