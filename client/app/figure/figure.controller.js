@@ -108,15 +108,17 @@ angular.module('figureApp')
       var fields = $('.form-chart-config input:visible');
       var nvFields = [];
       for (var i = 0; i < fields.length; i++) {
-        if ($(fields[i]).val() === ''){
-          if ($(fields[i]).hasClass('required')) {
+        var el = $(fields[i]);
+        if (_.contains(['seriesname', 'title'], el.attr('name'))) { continue; }
+        if (el.val() === ''){
+          if (el.hasClass('required')) {
             return;
           }
           continue;
         }
 
         var datum = {};
-        datum[fields[i].name] = $(fields[i]).val();
+        datum[fields[i].name] = el.val();
         nvFields.push(datum);
       }
 
@@ -165,8 +167,7 @@ angular.module('figureApp')
         title: $scope.paramModel.title,
         data: $scope.chartDataArray,
         owner: Auth.getCurrentUser().name,
-        type: $scope.activeGraph.type,
-        params: $scope.activeGraph.params
+        type: $scope.activeGraph.type
       };
 
       if ($scope.editGraph) {
@@ -281,7 +282,12 @@ angular.module('figureApp')
     }
 
     function setEditModeState() {
-      $scope.activeGraph = $scope.editGraph;
+      for (var i = 0; i < $scope.graphtypes.length; i++) {
+        if ($scope.graphtypes[i].type == $scope.editGraph.type) {
+          $scope.activeGraph = $scope.graphtypes[i];
+          break;
+        }
+      }
       $scope.paramModel.title = $scope.editGraph.title;
 
       // Clear the service's graph.

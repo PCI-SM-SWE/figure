@@ -7,8 +7,7 @@ var GraphSchema = new Schema({
   title: String,
   data: Schema.Types.Mixed,
   owner: String,
-  type: String,
-  params: Array
+  type: String
 });
 
 module.exports = mongoose.model('Graph', GraphSchema);
