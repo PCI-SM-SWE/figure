@@ -26,11 +26,17 @@ exports.update = function(req, res) {
   Graph.findById(req.params.id, function (err, graph) {
     if (err) { return handleError(res, err); }
     if(!graph) { return res.send(404); }
-    var updated = _.merge(graph, req.body);
-    updated.markModified('data');
-    updated.save(function (err) {
+    // Zero out the data array since it doesn't get markModified
+    // correctly because of its complex structure.
+    graph.data = [];
+    graph.save( function (err) {
       if (err) { return handleError(res, err); }
-      return res.json(200, graph);
+      var updated = _.merge(graph, req.body);
+      updated.markModified('data');
+      updated.save(function (err) {
+        if (err) { return handleError(res, err); }
+        return res.json(200, graph);
+      });
     });
   });
 };
