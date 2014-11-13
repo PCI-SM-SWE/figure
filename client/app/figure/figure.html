@@ -44,7 +44,7 @@
                         placeholder="(cross-origin requests must receive Access-Control-Allow-Origin header)">
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="submit">
-                            <span class="glyphicon glyphicon-globe"></span>Parse</button>
+                            <span class="glyphicon glyphicon-globe"></span> Parse</button>
                     </span>
                 </div>
             </form>
@@ -137,25 +137,38 @@
 
                 <div class="chart-config col-md-9 panel panel-default">
                     <div class="panel-body">
-                        <form class="form-horizontal form-chart-config" ng-submit="submitChartConfig($event)">
-                            <div class="form-group" ng-repeat="param in ::paramtypes" ng-show="activeGraph.params.indexOf(param.name) !== -1">
+                        <form class="form-horizontal form-chart-config" name="chartConfForm"
+                          ng-submit="chartConfForm.$valid && submitChartConfig($event)">
+                            <!-- Common ones for all graphs. -->
+                            <div class="form-group">
+                                <label for="title" class="col-sm-2 control-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control droppable" name="title"
+                                        placeholder="Title of the chart"
+                                        x-lvl-drop-target="true" x-on-drop="dropParam(dragEl, dropEl)"
+                                        ng-model="paramModel.title">
+                                </div>
+                            </div>
+                            <!-- Loop over the known param types. -->
+                            <div class="form-group" ng-repeat="param in ::paramtypes"
+                              ng-show="activeGraph.params.indexOf(param.name) !== -1">
                                 <label for="param.name" class="col-sm-2 control-label">
                                     {{::param.display}}<span ng-show="{{::param.required}}">*</span>
                                 </label>
                                 <div class="col-sm-10 has-feedback">
                                     <input type="text" class="form-control droppable" name="{{::param.name}}"
-                                        placeholder="Suitable for {{::param.type}} type values..."
-                                        ng-class="{'required': param.required}"
+                                        placeholder="{{::param.help}}"
                                         x-lvl-drop-target="true"
                                         x-on-drop="dropParam(dragEl, dropEl)"
                                         ng-model="paramModel[param.name]"
-                                        typeahead="field for field in fields | filter:$viewValue | limitTo:4"
-                                        ng-keypress="$event.which == 13 && submitChartConfig($event)">
+                                        ng-required="param.required && activeGraph.params.indexOf(param.name) !== -1"
+                                        typeahead="field for field in fields | filter:$viewValue | limitTo:4">
                                     <span ng-if="param.name == 'x'" style="top: 9px"
                                         class="fa fa-question-circle form-control-feedback"
                                         title="Values in the form YYYY-MM-DD [HH:mm:ss] will be treated as time."></span>
                                 </div>
                             </div>
+                        <button class="btn btn-success hide" type="submit">Graph</button>
                         <button class="btn btn-danger pull-right" ng-click="clearChartConfig()">Clear</button>
                         </form>
                     </div>
@@ -227,15 +240,5 @@
             };
             reader.readAsText(file);
         });
-
-        $('.form-chart-config')
-            .submit( function(ev) {
-                ev.preventDefault();
-            })
-            .keydown( function(ev) {
-                if (ev.which == 13) {
-                    //ev.preventDefault();
-                }
-            });
     });
 </script>

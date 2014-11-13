@@ -87,9 +87,10 @@ angular.module('figureApp')
         $('.save-graph').text('Save').removeClass('disabled');
       }
 
-      drop.val(drag.data().value);
+      $scope.paramModel[drop.attr('name')] = drag.data().value;
+      $scope.safeApply();
 
-      $scope.graph();
+      if (angular.element(chartConfForm).hasClass('ng-valid')) { $scope.graph(); }
     };
 
     $scope.clearChartConfig = function() {
@@ -112,18 +113,13 @@ angular.module('figureApp')
       // Make sure all required fields have values
       var fields = $('.form-chart-config input:visible');
       var nvFields = [];
+      var series = '';
       for (var i = 0; i < fields.length; i++) {
         var el = $(fields[i]);
-        if (_.contains(['seriesname', 'title'], el.attr('name'))) { continue; }
-        if (el.val() === ''){
-          if (el.hasClass('required')) {
-            return;
-          }
-          continue;
-        }
-
         var datum = {};
         datum[fields[i].name] = el.val();
+
+        if (fields[i].name === 'y') { series = el.val(); }
         nvFields.push(datum);
       }
 
@@ -161,7 +157,7 @@ angular.module('figureApp')
       var elId = $scope.activeGraph.type;
       $('.analyze').empty().append('<svg id="' + elId + '"></svg>').show();
       $scope.hasGraph = true;
-      $scope.chartDataArray = [{key: $('input[name="seriesname"]').val(), values: data}];
+      $scope.chartDataArray = [{key: series, values: data}];
       $scope.safeApply();
       window['plot_' + $scope.activeGraph.type](elId, $scope.chartDataArray, xAxisDate);
     };
