@@ -35,6 +35,12 @@ $fa-font-path: "/bower_components/font-awesome/fonts";
     user-select: none;
 }
 
+.lvl-over {
+    border-color: rgba(61, 187, 96, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(61, 187, 96, 0.6);
+    outline: 0 none;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'account/login/login.scss';
