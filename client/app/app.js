@@ -7,7 +7,6 @@ angular.module('figureApp', [
   'ngRoute',
   'btford.socket-io',
   'lvl.directives.dragdrop',
-  'react',
   'ui.bootstrap',
   'ui.codemirror'
 ])

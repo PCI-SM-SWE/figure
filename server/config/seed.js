@@ -19,7 +19,7 @@ Thing.find({}).remove(function() {
     info: 'Filter large data sets to see what really matters!'
   }, {
     name: 'Elegant Visualizations',
-    info: 'Beatiful graphs guide analysis!'
+    info: 'Beautiful graphs guide analysis!'
   }, {
     name: 'Scalability',
     info: 'One-click network set-up!'
