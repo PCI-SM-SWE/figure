@@ -23,7 +23,7 @@
     </section>
 
     <section class="graph-canvas col-md-10">
-        <div class="alert alert-warning" ng-show="noGraphsDrawn()">
+        <div class="alert alert-warning" ng-show="noGraphsDrawn() && graphs.length > 0">
             Graphs will be drawn here when you select their <span class="fa fa-pie-chart"></span>.
             <br />
             Revise graph data when you select their <span class="fa fa-pencil" style="color: black;"></span>.

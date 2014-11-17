@@ -1,3 +1,4 @@
+/*jshint unused: false*/
 'use strict';
 
 angular.module('figureApp')
@@ -8,6 +9,14 @@ angular.module('figureApp')
         controller: 'FigureCtrl'
       });
 });
+
+function formatXAxisForTime(chart) {
+  chart.xAxis
+    .tickFormat(function(d)
+      {
+        return d3.time.format('%x')(new Date(d));
+      });
+}
 
 function plot_discreteBar(elId, data) {
   nv.addGraph(function() {
@@ -41,7 +50,7 @@ function plot_scatter(elId, data, xAxisDate) {
 
     chart.tooltipContent(function(key, x, y) {
       var retStr = x + ', ' + y;
-      return key == '' ? retStr : key + ': ' + retStr;
+      return key === '' ? retStr : key + ': ' + retStr;
     });
 
     //Axis settings
@@ -111,12 +120,4 @@ function plot_pie(elId, data) {
 
     return chart;
   });
-}
-
-function formatXAxisForTime(chart) {
-  chart.xAxis
-    .tickFormat(function(d)
-      {
-        return d3.time.format('%x')(new Date(d));
-      });
 }

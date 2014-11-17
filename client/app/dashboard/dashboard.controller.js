@@ -33,8 +33,8 @@ angular.module('figureApp')
     };
 
     $scope.noGraphsDrawn = function() {
-      if ($scope.graphs.length == 0) {
-        return false;
+      if ($scope.graphs.length === 0) {
+        return true;
       }
 
       for (var i = 0; i < $scope.graphs.length; i++) {
@@ -53,7 +53,7 @@ angular.module('figureApp')
     };
 
     $scope.remove = function(graph) {
-      if (confirm("This will remove this graph completely. This action is permanent. Continue?") == true) {
+      if (confirm('This will remove this graph completely. This action is permanent. Continue?') === true) {
         $http.delete('/api/graphs/' + graph._id);
       }
     };

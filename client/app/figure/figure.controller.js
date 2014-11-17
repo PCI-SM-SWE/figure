@@ -59,7 +59,7 @@ angular.module('figureApp')
     };
     $scope.setCodemirrorText = function (val) {
       if (!$scope.editor) {
-        throw 'Codemirror editor does not exist!'
+        throw 'Codemirror editor does not exist!';
       }
       $scope.editor.setValue(val);
     };
@@ -83,7 +83,7 @@ angular.module('figureApp')
       var drag = angular.element( document.getElementById(dragEl) );
       var drop = angular.element( document.getElementById(dropEl) );
 
-      if ( drop.val() != drag.data().value) {
+      if ( drop.val() !== drag.data().value) {
         $('.save-graph').text('Save').removeClass('disabled');
       }
 
@@ -114,12 +114,13 @@ angular.module('figureApp')
       var fields = $('.form-chart-config input:visible');
       var nvFields = [];
       var series = '';
-      for (var i = 0; i < fields.length; i++) {
-        var el = $(fields[i]);
-        var datum = {};
-        datum[fields[i].name] = el.val();
+      var datum = {};
+      for (var h = 0; h < fields.length; h++) {
+        var el = $(fields[h]);
+        datum = {};
+        datum[fields[h].name] = el.val();
 
-        if (fields[i].name === 'y') { series = el.val(); }
+        if (fields[h].name === 'y') { series = el.val(); }
         nvFields.push(datum);
       }
 
@@ -128,7 +129,7 @@ angular.module('figureApp')
       var xAxisDate = false;
       for (var i = 0; i < $scope.parsedData.length; i++ ) {
 
-        var datum = {};
+        datum = {};
 
         for (var j = 0; j < nvFields.length; j++) {
           var record = $scope.parsedData[i];
@@ -138,7 +139,7 @@ angular.module('figureApp')
           // Auto-detect date and convert to int
           // YYYY/....
           // YYYY-....
-          if (key == 'x' && typeof value == 'string' &&
+          if (key === 'x' && typeof value === 'string' &&
               moment(value, ['YYYY-MM-DD HH:mm:ss', 'YYYY-mm-DD']).isValid()) {
             var time = Date.parse(value);
 
@@ -195,7 +196,7 @@ angular.module('figureApp')
     // The drag and drop screws with apply...
     $scope.safeApply = function(fn) {
       var phase = this.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
+      if(phase === '$apply' || phase === '$digest') {
         if(fn && (typeof(fn) === 'function')) {
           fn();
         }
@@ -218,7 +219,7 @@ angular.module('figureApp')
         header: true,
         dynamicTyping: true,
         worker: true,
-        download: $scope.dataChanged == 'url',
+        download: $scope.dataChanged === 'url',
         step: function(row) {
           if (row.errors.length > 0) {
             for (var error in row.errors) {
@@ -288,7 +289,7 @@ angular.module('figureApp')
 
     function setEditModeState() {
       for (var i = 0; i < $scope.graphtypes.length; i++) {
-        if ($scope.graphtypes[i].type == $scope.editGraph.type) {
+        if ($scope.graphtypes[i].type === $scope.editGraph.type) {
           $scope.activeGraph = $scope.graphtypes[i];
           break;
         }

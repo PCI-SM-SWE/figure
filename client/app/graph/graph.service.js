@@ -16,5 +16,5 @@ angular.module('figureApp')
     return {
         set: set,
         get: get
-    }
+    };
   });
