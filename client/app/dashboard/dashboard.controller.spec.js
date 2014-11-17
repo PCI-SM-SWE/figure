@@ -3,7 +3,8 @@
 describe('Controller: DashboardCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('figureApp'));
+  beforeEach(window.angular.mock.module('figureApp'));
+  beforeEach(window.angular.mock.module('socketMock'));
 
   var DashboardCtrl, scope;
 

@@ -21,6 +21,9 @@ module.exports = function(config) {
       'client/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'client/bower_components/lodash/dist/lodash.compat.js',
       'client/bower_components/angular-socket-io/socket.js',
+      'client/bower_components/lvlDragDrop/script/*.js',
+      'client/bower_components/ngReact/*.js',
+      'client/bower_components/angular-ui-codemirror/*.js',
       'client/app/app.js',
       'client/app/app.coffee',
       'client/app/**/*.js',
@@ -37,6 +40,7 @@ module.exports = function(config) {
       '**/*.jade': 'ng-jade2js',
       '**/*.html': 'html2js',
       '**/*.coffee': 'coffee',
+      'client/app/**/*.js': 'coverage'
     },
 
     ngHtml2JsPreprocessor: {
@@ -71,6 +75,12 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: ['PhantomJS'],
+
+    reporters: ['progress', 'coverage'],
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage'
+    },
 
 
     // Continuous Integration mode

@@ -3,8 +3,8 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('figureApp'));
-  beforeEach(module('socketMock'));
+  beforeEach(window.angular.mock.module('figureApp'));
+  beforeEach(window.angular.mock.module('socketMock'));
 
   var MainCtrl,
       scope,

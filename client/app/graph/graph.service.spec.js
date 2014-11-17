@@ -3,7 +3,7 @@
 describe('Service: graph', function () {
 
   // load the service's module
-  beforeEach(module('figureApp'));
+  beforeEach(window.angular.mock.module('figureApp'));
 
   // instantiate service
   var graph;
