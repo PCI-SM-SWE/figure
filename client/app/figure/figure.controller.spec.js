@@ -22,6 +22,10 @@ describe('Controller: FigureCtrl', function () {
     });
   }));
 
+  it('should unhook on destroy', function () {
+    scope.$destroy();
+  });
+
   it('should ...', function () {
     expect(1).toEqual(1);
   });

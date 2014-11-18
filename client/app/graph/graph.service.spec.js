@@ -7,12 +7,15 @@ describe('Service: graph', function () {
 
   // instantiate service
   var graph;
+  var testGraph = { _id: 1, data: [], owner: 'test', type: 'line' };
+
   beforeEach(inject(function (_graph_) {
     graph = _graph_;
   }));
 
-  it('should do something', function () {
-    expect(!!graph).toBe(true);
+  it('should set a graph', function () {
+    graph.set(testGraph);
+    expect(graph.get()).toBe(testGraph);
   });
 
 });
