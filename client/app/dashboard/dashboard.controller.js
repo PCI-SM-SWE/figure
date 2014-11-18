@@ -53,7 +53,7 @@ angular.module('figureApp')
     };
 
     $scope.remove = function(graph) {
-      if (confirm('This will remove this graph completely. This action is permanent. Continue?') === true) {
+      if (window.confirm('This will remove this graph completely. This action is permanent. Continue?') === true) {
         $http.delete('/api/graphs/' + graph._id);
       }
     };

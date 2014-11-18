@@ -6,14 +6,15 @@ describe('Controller: DashboardCtrl', function () {
   beforeEach(window.angular.mock.module('figureApp'));
   beforeEach(window.angular.mock.module('socketMock'));
 
-  var DashboardCtrl, scope, $httpBackend;
+  var DashboardCtrl, scope, $httpBackend, graph;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_$httpBackend_, $controller, $rootScope) {
+  beforeEach(inject(function ($injector, _$httpBackend_, $controller, $rootScope) {
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET('/api/graphs/undefined')
-      .respond([{data:[], owner: 'test', type: 'line', title: 'test title'}]);
+      .respond([{_id: 1, data:[], owner: 'test', type: 'line', title: 'test title'}]);
 
+    graph = $injector.get('graph');
     scope = $rootScope.$new();
     DashboardCtrl = $controller('DashboardCtrl', {
       $scope: scope
@@ -63,7 +64,31 @@ describe('Controller: DashboardCtrl', function () {
   it('should hide the graph on edit and redirect', function () {
     $httpBackend.flush();
 
+    spyOn(graph, 'set');
     scope.edit(scope.graphs[0]);
+    expect(graph.set).toHaveBeenCalled();
     // Need to have some expectations here, but can't figure out how to hook into the dependencies.
+  });
+
+  it('should unhook on destroy', function () {
+    scope.$destroy();
+  });
+
+  it('should delete the graph on remove', function() {
+    $httpBackend.flush();
+
+    spyOn(window, 'confirm').and.returnValue(true);
+    $httpBackend.expectDELETE('/api/graphs/' + scope.graphs[0]._id).respond([]);
+    scope.remove(scope.graphs[0]);
+    expect(window.confirm).toHaveBeenCalled();
+    $httpBackend.flush();
+  });
+
+  it('should do nothing when remove is dismissed', function() {
+    $httpBackend.flush();
+
+    spyOn(window, 'confirm').and.returnValue(false);
+    scope.remove(scope.graphs[0]);
+    expect(window.confirm).toHaveBeenCalled();
   });
 });
