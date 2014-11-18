@@ -90,7 +90,7 @@ angular.module('figureApp')
       $scope.paramModel[drop.attr('name')] = drag.data().value;
       $scope.safeApply();
 
-      if (angular.element(chartConfForm).hasClass('ng-valid')) { $scope.graph(); }
+      if ($scope.chartConfForm.$valid) { $scope.graph(); }
     };
 
     $scope.clearChartConfig = function() {

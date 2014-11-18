@@ -67,7 +67,6 @@ describe('Controller: DashboardCtrl', function () {
     spyOn(graph, 'set');
     scope.edit(scope.graphs[0]);
     expect(graph.set).toHaveBeenCalled();
-    // Need to have some expectations here, but can't figure out how to hook into the dependencies.
   });
 
   it('should unhook on destroy', function () {
