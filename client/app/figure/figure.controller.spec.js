@@ -12,7 +12,8 @@ describe('Controller: FigureCtrl', function () {
   beforeEach(inject(function ($injector, _$httpBackend_, $controller, $rootScope) {
     $httpBackend = _$httpBackend_;
     $httpBackend.expectGET('/api/graphtypes')
-      .respond([{type: 'line', formalName: 'Line Chart', params: ['x','y'], learnMore: '', description: 'test description'}]);
+      .respond([{type: 'line', formalName: 'Line Chart', params: ['x','y'], learnMore: '', description: 'test description'},
+                {type: 'pie', formalName: 'Pie Chart', params: ['x','y'], learnMore: '', description: 'test description'}]);
     $httpBackend.expectGET('/api/paramtypes')
       .respond([{name: 'x', type: 'mixed', required: true, help: 'help'},
                 {name: 'y', type: 'mixed', required: false, help: 'help'}]);
@@ -28,7 +29,7 @@ describe('Controller: FigureCtrl', function () {
   it('should load graphtypes on start', function () {
     $httpBackend.flush();
 
-    expect(scope.graphtypes.length).toBe(1);
+    expect(scope.graphtypes.length).toBe(2);
   });
 
   it('should load paramtypes on start', function () {
@@ -160,5 +161,45 @@ describe('Controller: FigureCtrl', function () {
   it('should sort columns using indexing', function () {
     scope.columnSort.sortColumn = 'test';
     expect(scope.formatColumnSort({test:1})).toBe(1);
+  });
+
+  it('should clean up after parsing', function () {
+    scope.finishParsing();
+    expect(scope.dataChanged).toBe(false);
+    expect(scope.loadMask).toBe(false);
+  });
+
+  it('should clean up after parsing and call a callback', function () {
+    var obj = {cb: function(){return true;}};
+    spyOn(obj, 'cb');
+    scope.finishParsing(obj.cb);
+    expect(obj.cb).toHaveBeenCalled();
+  });
+
+  describe('Controller: FigureCtrl: Setting Edit Mode', function () {
+    beforeEach(function () {
+      spyOn(Papa, 'unparse');
+    });
+
+    it('should know when to begin edit mode when there is a graph', function () {
+      spyOn(scope, 'setCodemirrorText');
+      scope.editGraph = {_id: 1, data: [{test: 'val'}]};
+      scope.initializeEditMode();
+      expect(Papa.unparse).toHaveBeenCalled();
+    });
+
+    it('should know not to go into edit mode', function () {
+      scope.editGraph = null;
+      scope.initializeEditMode();
+      expect(Papa.unparse).not.toHaveBeenCalled();
+    });
+
+    it('should set the active graph correctly', function () {
+      $httpBackend.flush();
+      scope.editGraph = scope.graphtypes[1];
+      spyOn(graph, 'set');
+      scope.setEditModeState();
+      expect(graph.set).toHaveBeenCalled();
+    });
   });
 });

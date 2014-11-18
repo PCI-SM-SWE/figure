@@ -46,15 +46,15 @@ angular.module('figureApp')
 
           clearTimeout($scope.changeTimeout);
           $scope.changeTimeout = setTimeout( function() {
-            parseCodemirrorInput( cm.getValue() );
+            $scope.parseCodemirrorInput( cm.getValue() );
           }, 2000);
         });
         $scope.editor.on('blur', function(cm) {
           clearTimeout($scope.changeTimeout);
-          parseCodemirrorInput( cm.getValue() );
+          $scope.parseCodemirrorInput( cm.getValue() );
         });
 
-        initializeEditMode();
+        $scope.initializeEditMode();
       }
     };
     $scope.setCodemirrorText = function (val) {
@@ -67,7 +67,7 @@ angular.module('figureApp')
     // Control methods
     $scope.parseURL = function() {
       $scope.dataChanged = 'url';
-      parseCodemirrorInput($scope.dataURL);
+      $scope.parseCodemirrorInput($scope.dataURL);
     };
 
     $scope.setRawView = function(rawView) {
@@ -206,14 +206,13 @@ angular.module('figureApp')
       }
     };
 
-    // Private helpers
-    function parseCodemirrorInput(input, callback) {
+    $scope.parseCodemirrorInput = function(input, callback) {
       // If there were no changes, don't do anything.
       if (!$scope.dataChanged || input === '') {
         return;
       }
 
-      prepareParsing();
+      $scope.prepareParsing();
 
       Papa.parse(input, {
         header: true,
@@ -234,15 +233,15 @@ angular.module('figureApp')
           }
         },
         complete: function() {
-          finishParsing(callback);
+          $scope.finishParsing(callback);
         },
         error: function(err) {
           $scope.parseError = err;
         }
       });
-    }
+    };
 
-    function prepareParsing() {
+    $scope.prepareParsing = function() {
       // Clean up state pre-parse.
       $scope.parseError = '';
       $scope.parsedData = [];
@@ -256,9 +255,9 @@ angular.module('figureApp')
 
       // Tell angular to re-up.
       $scope.safeApply();
-    }
+    };
 
-    function finishParsing(callback) {
+    $scope.finishParsing = function(callback) {
       // Clean up state after parse.
 
       // These reset regardless of success.
@@ -271,9 +270,9 @@ angular.module('figureApp')
       }
       // Tell angular to re-up.
       $scope.safeApply();
-    }
+    };
 
-    function initializeEditMode() {
+    $scope.initializeEditMode = function() {
       // See if the graph service has a graph. Because that means we're coming from an edit
       // and need to pull that in.
       if (!$scope.editGraph) {
@@ -284,10 +283,10 @@ angular.module('figureApp')
       $scope.setCodemirrorText(data);
 
       clearTimeout($scope.changeTimeout);
-      parseCodemirrorInput(data, setEditModeState);
-    }
+      $scope.parseCodemirrorInput(data, $scope.setEditModeState);
+    };
 
-    function setEditModeState() {
+    $scope.setEditModeState = function() {
       for (var i = 0; i < $scope.graphtypes.length; i++) {
         if ($scope.graphtypes[i].type === $scope.editGraph.type) {
           $scope.activeGraph = $scope.graphtypes[i];

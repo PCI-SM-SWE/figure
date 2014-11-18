@@ -165,7 +165,8 @@
                                         typeahead="field for field in fields | filter:$viewValue | limitTo:4">
                                     <span ng-if="param.name == 'x'" style="top: 9px"
                                         class="fa fa-question-circle form-control-feedback"
-                                        title="Values in the form YYYY-MM-DD [HH:mm:ss] will be treated as time."></span>
+                                        tooltip-append-to-body="true"
+                                        tooltip="Values in the form YYYY-MM-DD [HH:mm:ss] will be treated as time."></span>
                                 </div>
                             </div>
                         <button class="btn btn-success hide" type="submit">Graph</button>

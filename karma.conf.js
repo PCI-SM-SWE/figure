@@ -24,6 +24,8 @@ module.exports = function(config) {
       'client/bower_components/lvlDragDrop/script/*.js',
       'client/bower_components/angular-ui-codemirror/*.js',
       'client/bower_components/papa-parse/papaparse.js',
+      'client/bower_components/d3/d3.js',
+      'client/bower_components/nvd3/nv.d3.js',
       'client/app/app.js',
       'client/app/**/*.js',
       'client/components/**/*.js',
