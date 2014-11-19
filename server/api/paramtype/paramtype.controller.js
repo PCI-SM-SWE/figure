@@ -5,7 +5,7 @@ var Paramtype = require('./paramtype.model');
 
 // Get list of paramtypes
 exports.index = function(req, res) {
-  Paramtype.find(function (err, paramtypes) {
+  Paramtype.find({}, null, {sort: {name: 1}}, function (err, paramtypes) {
     if(err) { return handleError(res, err); }
     return res.json(200, paramtypes);
   });

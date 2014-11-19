@@ -143,3 +143,8 @@ table {
 .analyze {
     height: $section_height;
 }
+
+/* Override */
+.file-preview {
+    display: none !important;
+}
