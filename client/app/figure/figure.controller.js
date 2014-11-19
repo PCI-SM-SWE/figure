@@ -46,12 +46,12 @@ angular.module('figureApp')
 
           clearTimeout($scope.changeTimeout);
           $scope.changeTimeout = setTimeout( function() {
-            $scope.parseCodemirrorInput( cm.getValue() );
+            $scope.parseCodemirrorInput(cm.getValue(), null);
           }, 2000);
         });
         $scope.editor.on('blur', function(cm) {
           clearTimeout($scope.changeTimeout);
-          $scope.parseCodemirrorInput( cm.getValue() );
+          $scope.parseCodemirrorInput(cm.getValue(), null);
         });
 
         $scope.initializeEditMode();
@@ -67,7 +67,7 @@ angular.module('figureApp')
     // Control methods
     $scope.parseURL = function() {
       $scope.dataChanged = 'url';
-      $scope.parseCodemirrorInput($scope.dataURL);
+      $scope.parseCodemirrorInput($scope.dataURL, null);
     };
 
     $scope.setRawView = function(rawView) {
@@ -249,7 +249,7 @@ angular.module('figureApp')
       $scope.columnSort = {};
 
       $('.load-mask')
-        .height($(document).height())
+        .height(window.innerHeight + 2*window.scrollY)
         .width($(document).width());
       $scope.loadMask = true;
 
@@ -297,5 +297,6 @@ angular.module('figureApp')
 
       // Clear the service's graph.
       graph.set(null);
+      $scope.safeApply();
     }
   });
