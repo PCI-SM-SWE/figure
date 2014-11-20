@@ -2,7 +2,7 @@ figure
 =============
 
 ##Getting Started
-Standard MEAN application. Assuming you have Node and NPM installed and working correctly...
+Standard MEAN application. Assuming you have Node and NPM installed and working correctly... Also, ensure that the mongod service is running on the target machine.
 
 ```
 npm install
