@@ -202,4 +202,16 @@ describe('Controller: FigureCtrl', function () {
       expect(graph.set).toHaveBeenCalled();
     });
   });
+
+  it('should set the correct img src on hover', function() {
+    var obj = {target: {src: 'test.png'}};
+    scope.onChartEnter(obj);
+    expect(obj.target.src).toBe('test-hover.png');
+  });
+
+  it('should set the correct img src on leave', function() {
+    var obj = {target: {src: 'test-hover.png'}};
+    scope.onChartLeave(obj);
+    expect(obj.target.src).toBe('test.png');
+  });
 });

@@ -298,5 +298,13 @@ angular.module('figureApp')
       // Clear the service's graph.
       graph.set(null);
       $scope.safeApply();
-    }
+    };
+
+    $scope.onChartEnter = function(ev) {
+      ev.target.src = ev.target.src.split('.png').join('-hover.png');
+    };
+
+    $scope.onChartLeave = function(ev) {
+      ev.target.src = ev.target.src.split('-hover.png').join('.png');
+    };
   });

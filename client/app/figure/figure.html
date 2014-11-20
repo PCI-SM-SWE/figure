@@ -117,7 +117,9 @@
                 <div class="graph-images col-md-9">
                     <a ng-repeat="graph in ::graphtypes" class="graph thumbnail col-md-3"
                         ng-class="{'active': activeGraph.type === graph.type}">
-                        <img ng-src="assets/images/graphs/{{::graph.type}}-hover.png" ng-click="changeActiveGraph(graph)"
+                        <img ng-src="assets/images/graphs/{{::graph.type}}.png" ng-click="changeActiveGraph(graph)"
+                            ng-mouseover="onChartEnter($event)"
+                            ng-mouseout="onChartLeave($event)"
                             title="{{::graph.formalName}}" draggable="false" class="{{::graph.type}}" />
                     </a>
                 </div>
