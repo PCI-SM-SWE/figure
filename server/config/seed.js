@@ -41,10 +41,7 @@ User.find({}).remove(function() {
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
-  }, function() {
-      console.log('finished populating users');
-    }
-  );
+  });
 });
 
 Graphtype.find({}).remove(function() {
